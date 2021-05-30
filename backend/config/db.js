@@ -12,6 +12,7 @@ const connectDB = async () => {
         console.error('data import failed')
         process.exit(1)
     }
+
 }
 
 module.exports = connectDB
