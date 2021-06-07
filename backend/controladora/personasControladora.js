@@ -24,7 +24,7 @@ const getPersona = async (req, res) => {
 
 const setPersona = async (req, res) => {
     try {
-        const setPersona
+        let setPersona
         if(req.body.tipo === 'Dueño'){
             setPersona = new dueño({
                 escritura: req.body.escritura

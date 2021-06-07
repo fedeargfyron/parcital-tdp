@@ -2,8 +2,8 @@ const Venta = require('../modelos/Venta')
 const { propiedad } = require('../modelos/Propiedad')
 const getVentas = async (req, res) => {
     try {
-        const ventas
-        const compras
+        let ventas
+        let compras
         if(req.user.tipo === "agente"){  
             ventas = await Venta.find({
                 agente: req.user._id

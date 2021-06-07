@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const {servicio} = require('./Servicio')
+
 
 const propiedadSchema = new mongoose.Schema({
     ubicacion:{
@@ -23,11 +25,14 @@ const propiedadSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    servicio:{
+    servicios:[
+        {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Servicio"
-    },
+        }
+    ]
+    ,
     descripcion:{
         type: String,
         required: true
@@ -54,8 +59,22 @@ const propiedadSchema = new mongoose.Schema({
     },
     
 })
-propiedadSchema.methods.estadoPropiedad = function(){
-
+propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
+    const serviciosActivos = servicios.map(id => {
+        servicio.find({
+            _id: id,
+            estado: "Activo"
+        }
+    )})
+    if(serviciosActivos.length > 0) {
+        const reservaActiva = serviciosActivos.map(item => {
+            if(item.reserva !== null) return item //Quizás usar filter acá
+        })                                        //Si esto no anda sacarlo y
+        if (reservaActiva) this.estado = "Reservada" //asignar individualmente
+        else this.estado = "Disponible"
+    }
+    else this.estado = "No disponible"
+    
 }
 const propiedad = mongoose.model('Propiedad', propiedadSchema)
 

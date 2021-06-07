@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 var herencia = { discriminatorKey: 'tipo'}
 const servicioSchema = new mongoose.Schema({
-
+    estado: {
+        type: Boolean,
+        required: true
+    }
 }, herencia)
 
 const servicio = mongoose.model('Servicio', servicioSchema)
@@ -21,27 +24,27 @@ const servicioVentaSchema = new mongoose.Schema({
         required: true,
         default: Date.now()
     },
-    visitas: [{
-        visita:{
+    visitas: [
+        {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "Visita"
         }
-    }],
-    ofertas: [{
-        oferta:{
+    ],
+    ofertas: [
+        {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "Oferta"
         }
-    }],
-    reservas: [{
-        reserva:{
+    ],
+    reservas: [
+        {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: "Reserva"
         }
-    }],
+    ],
 })
 
 const servicioVenta = servicio.discriminator('En venta', servicioVentaSchema)

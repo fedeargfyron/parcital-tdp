@@ -12,7 +12,12 @@
     estado:{
         type: Boolean, 
         required: true
-    }
+    },
+    acciones:[
+        {
+            type: mongoose.Schema.Types.ObjectId
+        }
+    ]
  })
 
  const grupo = mongoose.model('Grupo', grupoSchema)

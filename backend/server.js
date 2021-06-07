@@ -4,6 +4,7 @@ const session = require('express-session')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const passport = require('passport')
 const passportLocal = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')

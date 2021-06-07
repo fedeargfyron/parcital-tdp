@@ -10,4 +10,6 @@ module.exports = function(express, passport) {
     Router.get('/user', getUser)
     
     Router.get('/logout', logOut)
+
+    return Router
 }

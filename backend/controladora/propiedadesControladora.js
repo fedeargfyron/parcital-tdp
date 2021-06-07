@@ -23,7 +23,7 @@ const getPropiedad = async (req, res) => {
 
 const setPropiedad = async (req, res) => {
     try {
-        const tipo_propiedad
+        let tipo_propiedad
         if(req.body.tipo === "Departamento"){
             tipo_propiedad = new departamento({
                 cant_habitaciones: req.body.cant_habitaciones,

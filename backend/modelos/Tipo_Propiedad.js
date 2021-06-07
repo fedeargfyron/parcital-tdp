@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { discriminator } = require('./Reserva')
 
 var herencia = { discriminatorKey: 'tipo'}
 const tipoPropiedadSchema = new mongoose.Schema({

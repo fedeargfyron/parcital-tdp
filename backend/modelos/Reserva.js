@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const reservaSchema = mongoose.model({
+const reservaSchema = mongoose.Schema({
     cliente:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
