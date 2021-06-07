@@ -1,11 +1,11 @@
-module.exports = function(app, express, passport) {
+module.exports = function(express, passport) {
     const Router = express.Router()
     const {
         getUser,
         loginUser,
         logOut
-    } = require('../controladora/logUserControladora')
-    Router.post('/', loginUser(req, res, passport))
+    } = require('../controladora/logUserControladora')(passport)
+    Router.post('/', loginUser)
 
     Router.get('/user', getUser)
     

@@ -4,7 +4,7 @@ const {
     getReservas,
     getReservasAgente,
     setReserva,
-    updateReserva
+    anularReserva
 } = require('../controladora/reservasControladora')
 const Router = express.Router()
 
@@ -12,9 +12,7 @@ Router.get('/', getReservas)
 
 Router.get('/agente', getReservasAgente)
 
-Router.post('/', setReserva)
-
-Router.put('/', updateReserva)
+Router.put('/:id', anularReserva)
 
 module.exports = Router
 

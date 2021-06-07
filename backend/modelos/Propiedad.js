@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-var herencia = { discriminatorKey: 'tipo'}
-
 const propiedadSchema = new mongoose.Schema({
     ubicacion:{
         type: String,
@@ -18,7 +16,8 @@ const propiedadSchema = new mongoose.Schema({
     },
     estado:{
         type: String,
-        required: true
+        required: true,
+        default: "No disponible"
     },
     estado_propiedad:{
         type: String,
@@ -52,68 +51,14 @@ const propiedadSchema = new mongoose.Schema({
     superficie:{
         type: Number,
         required: true
-    }
-}, herencia)
+    },
+    
+})
+propiedadSchema.methods.estadoPropiedad = function(){
 
+}
 const propiedad = mongoose.model('Propiedad', propiedadSchema)
 
-const casaSchema = new mongoose.Schema({
-    cantidad_habitaciones:{
-        type: Number,
-        required: true
-    },
-    cantidad_pisos:{
-        type: Number,
-        required: true
-    },
-    cochera:{
-        type: Boolean,
-        required: true
-    },
-    cantidad_baños:{
-        type: Number,
-        required: true
-    },
-    antiguedad:{
-        type: String,
-        required: true
-    }
-})
-
-const casa = propiedad.discriminator('Casa', casaSchema)
-
-const departamentoSchema = new mongoose.Schema({
-    cantidad_habitaciones:{
-        type: Number,
-        required: true
-    },
-    piso:{
-        type: String,
-        required: true
-    },
-    acceso:{
-        type: String,
-        required: true
-    },
-    cochera:{
-        type: Boolean,
-        required: true
-    },
-    cantidad_baños:{
-        type: Number,
-        required: true
-    },
-    restricciones:{
-        type: String,
-        required: true
-    }
-})
-
-const departamento = propiedad.discriminator('Departamento', departamentoSchema)
-
-
 module.exports = {
-    propiedad,
-    casa,
-    departamento
+    propiedad
 }

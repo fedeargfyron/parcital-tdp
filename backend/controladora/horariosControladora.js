@@ -23,8 +23,7 @@ const getHorario = async (req, res) => {
 const setHorario = async (req, res) => {
     try {
         const horario = new Horario({
-            ejemplo: req.body.datos_ejemplo
-            //datos grupo
+            hora: req.body.hora
         })
         await horario.save()
         res.send('Horario creado')
@@ -37,7 +36,7 @@ const setHorario = async (req, res) => {
 const updateHorario = async (req, res) => {
     try {
         const horario = await Horario.findById(req.params.id)
-        //actualizar datos
+        horario.hora = req.body.hora
         await horario.save()
         res.send('Horario actualizado')
     } catch (err) {

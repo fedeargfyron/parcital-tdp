@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const ofertaSchema = new mongoose.Schema({
     fecha:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     monto:{
         type: Number,
@@ -16,7 +17,8 @@ const ofertaSchema = new mongoose.Schema({
     },
     estado:{
         type: String,
-        required: true
+        required: true,
+        default: "Pendiente"
     },
 })
 

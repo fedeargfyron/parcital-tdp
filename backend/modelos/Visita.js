@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const visitaSchema = new mongoose.Schema({
     fecha_inicio:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     horario:{
         type: String,
@@ -16,7 +17,8 @@ const visitaSchema = new mongoose.Schema({
     },
     estado:{
         type: String,
-        required: true
+        required: true,
+        default: "Pendiente"
     },
 })
 

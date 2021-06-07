@@ -18,7 +18,8 @@ const servicioVentaSchema = new mongoose.Schema({
     },
     fecha_inicio:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     visitas: [{
         visita:{
@@ -46,5 +47,6 @@ const servicioVentaSchema = new mongoose.Schema({
 const servicioVenta = servicio.discriminator('En venta', servicioVentaSchema)
 
 module.exports = {
+    servicio,
     servicioVenta
 }

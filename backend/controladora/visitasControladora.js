@@ -4,7 +4,7 @@ const { servicioVenta } = require('../modelos/Servicio')
 //Checkear bien esto
 const getVisitas = async (req, res) => {
     try {
-        const visitas = await Oferta.find({
+        const visitas = await Visita.find({
             interesado: req.user._id
         })
         res.json(visitas)
@@ -17,10 +17,13 @@ const getVisitas = async (req, res) => {
 const getVisitasAgente = async (req, res) => {
     try {
         const servicios = await servicioVenta.find({
-            agente: req.user._id
+            agente: req.user._id,
+            estado: "Activo"
         })
         const visitas = servicios.map(servicio => {
-            return servicio.visitas
+            servicio.visitas.map(async (visita) => {
+                return await Visita.findById(visita._id)
+            })
         })
         res.json(visitas)
     } catch {
@@ -31,22 +34,19 @@ const getVisitasAgente = async (req, res) => {
 
 const setVisita = async (req, res) => {
     try {
-        const visita = new Visita({
-
+        const prop = await propiedad.findById(req.body.propId)
+        const servicio = await servicioVenta.findById(prop.servicio._id)
+        const visita = new Oferta({
+            fecha: req.body.fecha,
+            horario: req.body.horario,
+            interesado: req.user._id,
+            //Settear default pendiente
         })
+        servicio.visitas.push(visita._id)
+        await servicio.save()
         await visita.save()
+        
         res.json('Visita creada')
-    } catch {
-        console.error(err)
-        res.status(500).json({message: "server error"})
-    }
-}
-
-const updateVisita = async (req, res) => {
-    try {
-        const visita = await Visita.findById(req.params.id)
-        await visita.save()
-        res.json('Visita actualizada')
     } catch {
         console.error(err)
         res.status(500).json({message: "server error"})
@@ -56,6 +56,5 @@ const updateVisita = async (req, res) => {
 module.exports = {
     getVisitas,
     getVisitasAgente,
-    setVisita,
-    updateVisita
+    setVisita
 }

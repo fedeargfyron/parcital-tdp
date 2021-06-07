@@ -19,7 +19,7 @@ const ventasRouter = require('./routes/ventasRouter')
 const propiedadesRouter = require('./routes/propiedadesRouter')
 const serviciosRouter = require('./routes/serviciosRouter')
 const personasRouter = require('./routes/personasRouter')
-const logUser = require('./routes/logUserRouter')(app, express, passport)
+const logUser = require('./routes/logUserRouter')(express, passport)
 connectDB()
 const app = express()
 
@@ -57,6 +57,7 @@ app.use('/api/logUser', logUser)
 app.use('/api/propiedades', propiedadesRouter)
 app.use('/api/servicios', serviciosRouter)
 app.use('/api/personas', personasRouter)
+
 const PORT = process.env.PORT || 4000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 

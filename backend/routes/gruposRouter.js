@@ -16,6 +16,6 @@ Router.post('/', setGrupo)
 
 Router.put('/:id', updateGrupo)
 
-Router.remove('/:id', deleteGrupo)
+Router.delete('/:id', deleteGrupo)
 
 module.exports = Router

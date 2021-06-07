@@ -13,6 +13,4 @@ Router.get('/agente', getVisitasAgente)
 
 Router.post('/', setVisita)
 
-Router.put('/:id', updateVisita)
-
 module.exports = Router

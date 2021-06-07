@@ -7,8 +7,9 @@ const {
     getPersona,
     setPersona,
     updatePersona,
-    removePersona
-} = require('../controladora')
+    removePersona,
+    registrarPersona
+} = require('../controladora/personasControladora')
 
 Router.get('/', getPersonas)
 
@@ -19,4 +20,6 @@ Router.post('/', setPersona)
 Router.put('/:id', updatePersona)
 
 Router.delete('/:id', removePersona)
+
+Router.post('/registrar', registrarPersona)
 module.exports = Router

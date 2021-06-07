@@ -5,7 +5,7 @@ const Router = express.Router()
 const {
     getServicio,
     getServicios,
-    setServicio,
+    setServicioVenta,
     removeServicio
 } = require('../controladora/serviciosControladora')
 
@@ -13,8 +13,8 @@ Router.get('/', getServicios)
 
 Router.get('/:id', getServicio)
 
-Router.post('/', setServicio)
+Router.post('/', setServicioVenta)
 
-Router.delete('/:id', removeServicio)
+Router.put('/:id', removeServicio)
 
 module.exports = Router

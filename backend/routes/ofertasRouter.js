@@ -15,4 +15,5 @@ Router.post('/', setOferta)
 
 Router.put('/:id', updateOferta)
 
+setOferta()
 module.exports = Router

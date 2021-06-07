@@ -4,7 +4,7 @@ const horarioSchema = new mongoose.Schema({
     hora:{
         type: String,
         required: true
-    },
+    }
 })
 
 const horario = mongoose.model('Horario', horarioSchema)

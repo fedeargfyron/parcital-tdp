@@ -12,15 +12,18 @@ const reservaSchema = mongoose.model({
     },
     fecha_inicio:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now()
     },
     fecha_fin:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now() + 30
     },
     estado:{
         type: String,
-        required: true
+        required: true,
+        default: "Pendiente"
     },
 })
 

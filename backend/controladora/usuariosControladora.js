@@ -23,7 +23,13 @@ const getUsuario = async (req, res) => {
 const setUsuario = async (req, res) => {
     try {
         const usuario = new Usuario({
-            //Data usuario
+            usuario: req.body.usuario,
+            contraseña: req.body.contraseña,
+            nombre: req.body.nombre,
+            apellido: req.body.apellido,
+            email: req.body.email,
+            grupos: req.body.grupos,
+            estado: req.body.estado
         })
         await usuario.save()
         res.json('Usuario creado')
@@ -36,7 +42,13 @@ const setUsuario = async (req, res) => {
 const updateUsuario = async (req, res) => {
     try {
         const usuario = await Usuario.findById(req.params.id)
-        //actualizar usuario
+        usuario.usuario = req.body.usuario
+        usuario.contraseña = req.body.contraseña
+        usuario.nombre = req.body.nombre
+        usuario.apellido = req.body.apellido
+        usuario.email = req.body.email
+        usuario.grupos = req.body.grupos
+        usuario.estado = req.body.estado
         await usuario.save()
         res.json('Usuario actualizado')
     } catch (err) {

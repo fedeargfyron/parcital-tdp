@@ -1,10 +1,12 @@
 const Reserva = require('../modelos/Reserva')
 const { servicioVenta } = require('../modelos/Servicio')
 const getReservas = async (req, res) => {
-    try{
-        const reservas = await Reserva.find({})
+    try {
+        const reservas = await Reserva.find({
+            cliente: req.user._id
+        })
         res.json(reservas)
-    } catch (err) {
+    } catch {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
@@ -13,10 +15,13 @@ const getReservas = async (req, res) => {
 const getReservasAgente = async (req, res) => {
     try {
         const servicios = await servicioVenta.find({
-            agente: req.user._id
+            agente: req.user._id,
+            estado: "Activa"
         })
         const reservas = servicios.map(servicio => {
-            return servicio.reservas
+            servicio.reservas.map(async (reserva) => {
+                return await Reserva.findById(reserva._id)
+            })
         })
         res.json(reservas)
     } catch {
@@ -25,34 +30,18 @@ const getReservasAgente = async (req, res) => {
     }
 }
 
-const setReserva = async (req, res) => {
-    try {
-        const reserva = new Reserva({
-            
-        })
-        await reserva.save()
-        res.json("Reserva creada")
-    } catch {
-        console.error(err)
-        res.status(500).json({message: "server error"})
-    }
-}
-
-const updateReserva = async (req, res) => {
-    try {
-        const reserva = await Reserva.findById(req.params.id)
-        //Actualizar datos
-        reserva.save()
-        res.json("Reserva actualizada")
-    } catch {
-        console.error(err)
-        res.status(500).json({message: "server error"})
-    }
+const anularReserva = async (req, res) => {
+    const reserva = await Reserva.findById(req.params.id)
+    const prop = await propiedad.findyById(req.body.propId)
+    reserva.estado = req.body.estado
+    await reserva.save()
+    prop.estadoPropiedad()
+    await prop.save()
+    res.json('Reserva anulada')
 }
 
 module.exports = {
     getReservas,
     getReservasAgente,
-    setReserva,
-    updateReserva
+    anularReserva
 }
