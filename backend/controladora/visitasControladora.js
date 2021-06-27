@@ -35,8 +35,17 @@ const getVisitasAgente = async (req, res) => {
 const setVisita = async (req, res) => {
     try {
         const prop = await propiedad.findById(req.body.propId)
-        const servicio = await servicioVenta.findById(prop.servicio._id)
-        const visita = new Oferta({
+        const servicio = await servicioVenta.find({
+            _id: prop.servicio,
+            estado: "Activo"
+        })
+        const visitaActiva = servicio.visitas.filter((visita) => {
+            visita.interesado === req.user._id && visita.fecha === req.body.fecha 
+        })
+        if(visitaActiva !== null){
+            res.json("Ya tiene una visita en ese mismo dia para esta propiedad")
+        }
+        const visita = new Visita({
             fecha: req.body.fecha,
             horario: req.body.horario,
             interesado: req.user._id,

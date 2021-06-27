@@ -28,9 +28,6 @@ const setServicioVenta = async (req, res) => {
         
         const servicio = new servicioVenta({
             agente: req.user._id,
-            visitas: [],
-            ofertas: [],
-            reservas: [],
         })
         servicio.calcularCoste(prop.precio)
         servicio.save()

@@ -23,10 +23,8 @@ const personasRouter = require('./routes/personasRouter')
 const logUser = require('./routes/logUserRouter')(express, passport)
 connectDB()
 const app = express()
-
 app.use(express.json())
 app.use(bodyParser.json())
-
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(
     cors({
@@ -46,7 +44,6 @@ app.use(methodOverride('_method'))
 /* Settear passport acá */
 app.use(passport.initialize())
 app.use(passport.session())
-
 app.use('/api/grupos', gruposRouter)
 app.use('/api/horarios', horariosRouter)
 app.use('/api/ofertas', ofertasRouter)
@@ -58,7 +55,5 @@ app.use('/api/logUser', logUser)
 app.use('/api/propiedades', propiedadesRouter)
 app.use('/api/servicios', serviciosRouter)
 app.use('/api/personas', personasRouter)
-
 const PORT = process.env.PORT || 4000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
-

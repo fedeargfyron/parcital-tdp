@@ -1,0 +1,35 @@
+.homescreen{
+    background-image: url('../imagenes/Comprar.jpg');
+    background-size: 100%;
+    width: 100vw;
+    max-width: 100%;
+    height: 100vh;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}   
+
+.homescreen:hover{
+    font-size: 1.75rem;
+    transition: all 0.2s ease-out;
+}
+
+.blackscreen{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.3);
+    position: absolute;
+}
+
+.title{
+    color: white;
+    top: 40%;
+    text-align: center;
+    margin: 0 auto;
+    text-shadow: 4px 4px 3px black;
+    z-index: 1;
+}

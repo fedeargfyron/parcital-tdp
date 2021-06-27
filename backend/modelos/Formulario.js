@@ -5,12 +5,14 @@ const formularioSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    acciones: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Accion"
-        }
-    ]
+    url: {
+        type: String,
+        required: true
+    },
+    modulo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Modulo"
+    }
 })
 
 const Formulario = mongoose.model('Formulario', formularioSchema)

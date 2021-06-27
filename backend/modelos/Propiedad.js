@@ -28,7 +28,6 @@ const propiedadSchema = new mongoose.Schema({
     servicios:[
         {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: "Servicio"
         }
     ]
@@ -44,8 +43,7 @@ const propiedadSchema = new mongoose.Schema({
     imagenes:[
         {
             imagen:{
-            type: String,
-            required: true
+            type: String
             }
         }
     ],
@@ -60,18 +58,13 @@ const propiedadSchema = new mongoose.Schema({
     
 })
 propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
-    const serviciosActivos = servicios.map(id => {
-        servicio.find({
-            _id: id,
-            estado: "Activo"
-        }
-    )})
-    if(serviciosActivos.length > 0) {
-        const reservaActiva = serviciosActivos.map(item => {
-            if(item.reserva !== null) return item //Quizás usar filter acá
-        })                                        //Si esto no anda sacarlo y
-        if (reservaActiva) this.estado = "Reservada" //asignar individualmente
-        else this.estado = "Disponible"
+    if(servicios.length > 0) {
+        const serviciosActivos = servicios.map(async (servicioActivo) => {
+            return await servicio.findById(servicioActivo)
+        })
+        const reservaActiva = serviciosActivos.filter(item => { item.reserva !== null })                                        //Si esto no anda sacarlo y
+        reservaActiva ? this.estado = "Reservada" //asignar individualmente
+        : this.estado = "Disponible"
     }
     else this.estado = "No disponible"
     

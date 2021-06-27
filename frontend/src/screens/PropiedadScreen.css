@@ -1,0 +1,82 @@
+.propiedadScreen{
+    position: relative;
+}
+
+.precioOferta{
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    text-align: center;
+    background-color: #e6e6e6;
+}
+
+.precioOferta p{
+    font-size: 1.5rem;
+    margin-right: 1.25rem;
+}
+
+.precioOferta span{
+    color:#8E0101;
+}
+
+.precioOferta button{
+    padding: .25rem;
+    font-size: 1rem;
+    font-family: 'Roboto Slab';
+    color: white;
+    background-color: #8E0101;
+    outline: none;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.precioOferta button:hover{
+    background-color: #b80000;
+    transition: all 0.2s ease-out;
+}
+
+.caracteristicas-generales,
+.descripcion,
+.galeria-imagenes{
+    font-family: 'Roboto Condensed';
+}
+
+.caracteristicas{
+    padding: 0 1rem;
+    font-size: 1rem;
+    margin: 0 1rem;
+}
+
+.caracteristicas li{
+    margin-bottom: .5rem;
+}
+
+.caracteristicas-title,
+.descripcion-title,
+.galeria-title{
+    margin: 1rem 0 .5rem 1rem;
+}
+
+.descripcion > p{
+    line-height: 1.1rem;
+    font-size: 1rem;
+    text-align: justify;
+    margin: 0 1rem .5rem;
+}
+
+.imagenes-container{
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 1rem;
+}
+
+.imagen-container{
+    border: 1px solid rgba(0, 0, 0, 0.9);
+    max-height: 200px;
+}
+
+.imagen-container img{
+    width: 100%;
+    height: 100%;
+}

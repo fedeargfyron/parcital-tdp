@@ -4,6 +4,10 @@ const accionSchema = mongoose.Schema({
     nombre: {
         type: String,
         required: true
+    },
+    formulario: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Formulario"
     }
 })
 

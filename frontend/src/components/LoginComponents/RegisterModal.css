@@ -1,0 +1,39 @@
+.blackscreen{
+    display: flex;
+}
+
+.input-container{
+    display: flex;
+}
+
+.input{
+    width: 50%;
+}
+
+
+.register-form{
+    border-radius: 2px;
+    background: rgba(255,255,255);
+    position: relative;
+    max-width: 380px;
+    padding: 1rem;
+}
+
+.titleRegister{
+    font-family: 'Roboto Mono';
+    font-size: 1.25rem;
+    color: black;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.fa-times{
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.register-btn{
+    margin-bottom: 0;
+}

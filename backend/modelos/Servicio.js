@@ -4,8 +4,21 @@ const servicioSchema = new mongoose.Schema({
     estado: {
         type: Boolean,
         required: true
+    },
+    coste: {
+        type: Number,
+        required: true
+    },
+    propiedad: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Propiedad"
     }
 }, herencia)
+
+servicioSchema.methods.calcularCoste = function calcularCoste(precioProp) {
+
+}
 
 const servicio = mongoose.model('Servicio', servicioSchema)
 
@@ -24,28 +37,13 @@ const servicioVentaSchema = new mongoose.Schema({
         required: true,
         default: Date.now()
     },
-    visitas: [
-        {
+    reserva: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "Visita"
-        }
-    ],
-    ofertas: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "Oferta"
-        }
-    ],
-    reservas: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
             ref: "Reserva"
-        }
-    ],
+    },
 })
+
+
 
 const servicioVenta = servicio.discriminator('En venta', servicioVentaSchema)
 

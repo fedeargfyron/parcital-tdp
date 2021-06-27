@@ -1,0 +1,132 @@
+.propiedadesScreen{
+    display: flex;
+    width: 100vw;
+    max-width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.leftside{
+    position: fixed;
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    max-width: 48%;
+}
+
+img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:cover;
+}
+
+.rightside{
+    flex: 50%;
+    margin: 2rem;
+    margin-left: 50%;
+    margin-top: 70px;
+    max-width: 50%;
+    transition: all 0.2s ease-out;
+}
+
+.propiedades-title{
+    font-size: 1.25rem;
+}
+
+.filter-container{
+    display: flex;
+    align-items: center;
+    margin: .5rem 0;
+}
+
+.filter-label{
+    font-size: 1rem;
+    margin-right: .5rem;
+}
+
+.filter-select{
+    padding: .25rem;
+    font-family: 'Roboto Mono';
+    font-size: 1rem;
+    font-weight: 1000;
+}
+
+.filter-select > option{
+    font-weight: 1000;
+}
+
+.propiedad-container{
+    display: flex;
+    margin: .75rem 0;
+    text-decoration: none;
+    color: black;
+}
+
+.propiedad-container:hover{
+    color: black;
+}
+
+.propiedad-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 0.5rem;
+}
+
+.img-container{
+    width: 300px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+
+.tipo, .descripcion{
+    font-size: 0.75rem;
+}
+
+.descripcion{
+    font-family: 'Roboto';
+}
+
+.direccion{
+    font-size: 1.5rem;
+    color: #00BDCB;
+}
+
+.precio{
+    font-size: 1.25rem;
+    color: #8E0101;
+}
+
+.sub-info{
+    display: flex;
+    font-size: .75rem;
+}
+
+.sub-info > p{
+    margin-right: 1rem;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.sub-info .fas{
+    color: #8E0101;
+}
+
+.sub-info > span{
+    font-size: .75rem;
+}
+
+@media screen and (max-width: 720px) {
+    .leftside{
+        display: none;
+    } 
+    .rightside{
+        margin: 3rem auto;
+        max-width: 100%;
+    }
+}
