@@ -20,7 +20,23 @@ const GestionDropdown = ({onClickGestion}) => {
         {
             nombre: "Gestionar personas",
             url: '/gestion/personas'
-        }
+        },
+        {
+            nombre: "Gestionar grupos",
+            url: '/gestion/grupos'
+        },
+        {
+            nombre: "Gestionar ventas",
+            url: '/gestion/ventas'
+        },
+        {
+            nombre: "Gestionar ofertas",
+            url: '/gestion/ofertas'
+        },
+        {
+            nombre: "Gestionar servicios de venta",
+            url: '/gestion/serviciosVenta'
+        },
     ])
     return(
         <>

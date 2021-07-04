@@ -8,7 +8,7 @@ import Logo from '../../imagenes/Logo.png'
 const Navbar = () => {
     //States de react para gestionar los clicks(mobile) y los dropdowns
     const [click, setClick] = useState(false)
-    const [dropdown, setDropdown] = useState(true)
+    const [dropdown, setDropdown] = useState(false)
     const [gestionDropdown, setGestionDropdown] = useState(false)
     //Para los formularios mismo redux que con el display
     const [formularios, setFormularios] = useState(["2"])
@@ -44,7 +44,7 @@ const Navbar = () => {
                 <img src={Logo} alt="Logo" className="logo"></img>
             </Link>
             <div className="menu-icon" onClick={handleClick}>
-                <i className={click ? 'fas fa-times' : 'fas fa-bars'} />
+                <i className={click ? 'fas fa-times fa-times-navbar' : 'fas fa-bars'} />
             </div>
             <ul onClick={closeMenu} className={click ? 'nav-menu active' : 'nav-menu'}>
                 <li className="nav-item venta" onMouseEnter={onMouseEnterVenta} onMouseLeave={onMouseLeaveVenta}>

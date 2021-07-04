@@ -17,6 +17,7 @@ import GestionUsuariosScreen from './screens/Gestiones/GestionUsuariosScreen';
 import GestionVentasScreen from './screens/Gestiones/GestionVentasScreen';
 function App() {
   const [user, setUser] = useState("")
+  
   return (
     <Router>
       <div className="App">

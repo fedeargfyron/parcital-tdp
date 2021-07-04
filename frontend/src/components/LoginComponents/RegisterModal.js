@@ -6,7 +6,7 @@ const RegisterModal = ({setRegister}) => {
         <div className="blackscreen">
             <div className="form-container register-form">
                 <h4 className="titleRegister">Registrarse</h4>
-                <i className="fas fa-times" onClick={() => setRegister(false)}></i>
+                <i className="fas fa-times fa-times-register" onClick={() => setRegister(false)}></i>
                 <form className="form">
                     <div className="input-container">
                         <input className="input" type="text" placeholder="Nombre" required/>

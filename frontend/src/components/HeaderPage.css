@@ -1,5 +1,10 @@
+.header{
+    padding-top: .25rem;
+}
+
 .header-title{
     font-size: 1.5rem;
     padding: .5rem 1rem;
+    margin-bottom: 0;
 }
 

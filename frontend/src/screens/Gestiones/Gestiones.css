@@ -1,0 +1,149 @@
+.gestionScreen{
+    background: url(../../imagenes/Gestiones.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment:fixed;
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 100%;
+    width: 100vw;
+
+}
+
+.gestion-container{
+    max-width: 1050px;
+    padding-top: 60px;
+    margin: auto;
+    min-height: 100vh;
+    height: auto;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.table-container{
+    overflow-x: auto;
+}
+
+.table-container::-webkit-scrollbar{
+    height: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb{
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.table-container::-webkit-scrollbar-thumb:hover{
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.table{
+    margin: 1rem auto;
+    font-size: 1rem;
+    width: fit-content;
+    background:rgba(255, 255, 255, 1);
+    
+}
+
+.table > thead {
+    text-align: center;
+}
+
+.table thead th,
+.table tbody td{
+    vertical-align: middle;
+}
+
+.new-item-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.new-item-row > button{
+    display: flex;
+    padding: .25rem 1rem;
+    border-radius: 4px;
+    margin: 0 .125rem;
+    align-items: center;
+    font-weight: 1000;
+    justify-content: center;
+    text-align: center;
+}
+
+.new-item-row > button > p{
+    margin-right: .5rem;
+}
+.table > tbody{
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+}
+
+.gestion-buttons-container{
+    display: flex;
+    font-size: 1rem;
+}
+
+.gestion-buttons-container > button{
+    padding: 0rem .375rem;
+    border-radius: 4px;
+    margin: 0 .125rem;
+}
+
+.btn-green{
+    background: #97ff74;
+    transition: all 0.2s ease-out;
+    
+}
+
+.btn-yellow{
+    background: #fff941;
+    transition: all 0.2s ease-out;
+}
+
+.btn-red{
+    background: #ff7482;
+    transition: all 0.2s ease-out;
+}
+
+.btn-blue{
+    background: #69ebff;
+    transition: all 0.2s ease-out;
+}
+
+.btn-orange{
+    background: #ffa02c;
+    transition: all 0.2s ease-out;
+}
+
+.btn-green:hover{
+    background: #53f71c;
+    transform: scale(1.1);
+}
+
+.btn-yellow:hover{
+    background: #f1e900;
+    transform: scale(1.05);
+}
+
+.btn-red:hover{
+    background: #ff3f53;
+    transform: scale(1.05);
+}
+
+.btn-blue:hover{
+    background: #20defc;
+    transform: scale(1.05);
+}
+
+.btn-orange:hover{
+    background: #ff9615;
+    transform: scale(1.1);
+}

@@ -11,7 +11,7 @@ const PropiedadScreen = () => {
             <HeaderPage titulo={"Dirección de la propiedad"}/>
             <div className="precioOferta">
                 <p>Precio: <span>$Precio</span></p>
-                <button onClick={() => setOfertaForm(true)}>Ofertar por esta propiedad</button>
+                <button onClick={() => setOfertaForm(true)} id="Ofertar propiedad">Ofertar por esta propiedad</button>
             </div>
             <div className="line"></div>
             <div className="caracteristicas-generales">
