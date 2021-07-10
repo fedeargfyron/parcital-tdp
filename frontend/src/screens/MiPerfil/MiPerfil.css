@@ -1,0 +1,66 @@
+.perfilScreen{
+    background: url(../../imagenes/Gestiones.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment:fixed;
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 100%;
+    width: 100vw;
+}
+
+.perfil-container,
+.reservas-container,
+.visitas-container,
+.compras-container,
+.ofertas-container{
+    max-width: 1050px;
+    padding-top: 60px;
+    margin: auto;
+    min-height: 100vh;
+    height: auto;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+}
+
+.detalles-usuario{
+    margin: 1rem;
+
+}
+
+.detalles-info{
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+}
+
+.table{
+    margin: 1rem auto;
+    font-size: 1rem;
+    width: fit-content;
+    background:rgba(255, 255, 255, 1);
+}
+
+.table-container{
+    margin: 1rem;
+    overflow-x: auto;
+}
+
+.table-container::-webkit-scrollbar{
+    height: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb{
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.table-container::-webkit-scrollbar-thumb:hover{
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}

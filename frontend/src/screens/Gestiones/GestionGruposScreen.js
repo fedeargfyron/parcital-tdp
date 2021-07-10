@@ -1,8 +1,10 @@
 import React from 'react'
+import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroGrupos from '../Filtros/FiltroGrupos'
 import './Gestiones.css'
 const GestionGruposScreen = () => {
+    const history = useHistory()
     return (
         <div className="gestionScreen">
             <div className="gestion-container">
@@ -22,7 +24,7 @@ const GestionGruposScreen = () => {
                             <tr>
                                 <td colSpan="4">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar grupo"><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar grupo" onClick={() => history.push('/formGrupo')}><i className="fas fa-plus"></i></button>
                                     </div>
                                 </td>
                             </tr>

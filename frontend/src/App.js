@@ -15,6 +15,15 @@ import GestionPropiedadesScreen from './screens/Gestiones/GestionPropiedadesScre
 import GestionServiciosVentaScreen from './screens/Gestiones/GestionServiciosVentaScreen';
 import GestionUsuariosScreen from './screens/Gestiones/GestionUsuariosScreen';
 import GestionVentasScreen from './screens/Gestiones/GestionVentasScreen';
+import FormGrupo from './screens/Forms/FormGrupo';
+import FormPersona from './screens/Forms/FormPersona';
+import FormPropiedad from './screens/Forms/FormPropiedad';
+import FormUsuario from './screens/Forms/FormUsuario';
+import Perfil from './screens/MiPerfil/Perfil';
+import Visitas from './screens/MiPerfil/Visitas';
+import Ofertas from './screens/MiPerfil/Ofertas';
+import Reservas from './screens/MiPerfil/Reservas';
+import Compras from './screens/MiPerfil/Compras';
 function App() {
   const [user, setUser] = useState("")
   
@@ -42,6 +51,15 @@ function App() {
             <Route exact path="/gestion/serviciosVenta" component={GestionServiciosVentaScreen} />
             <Route exact path="/gestion/usuarios" component={GestionUsuariosScreen} />
             <Route exact path="/gestion/ventas" component={GestionVentasScreen} />
+            <Route exact path="/formPropiedad" component={FormPropiedad} />
+            <Route exact path="/formGrupo" component={FormGrupo} />
+            <Route exact path="/formUsuario" component={FormUsuario} />
+            <Route exact path="/formPersona" component={FormPersona} />
+            <Route exact path="/perfil" component={Perfil} />
+            <Route exact path="/visitas" component={Visitas} />
+            <Route exact path="/ofertas" component={Ofertas} />
+            <Route exact path="/reservas" component={Reservas} />
+            <Route exact path="/compras" component={Compras} />
           </Switch>
         </main>
       </div>

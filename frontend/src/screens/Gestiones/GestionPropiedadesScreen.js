@@ -1,9 +1,11 @@
 import React from 'react'
+import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroPropiedades from '../Filtros/FiltroPropiedades'
 import './Gestiones.css'
 
 const GestionPropiedadesScreen = () => {
+    const history = useHistory()
     return (
         <div className="gestionScreen">
             <div className="gestion-container">
@@ -26,7 +28,7 @@ const GestionPropiedadesScreen = () => {
                             <tr>
                                 <td colSpan="7">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar propiedad"><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar propiedad" onClick={() => history.push('/formPropiedad')}><i className="fas fa-plus"></i></button>
                                     </div>
                                 </td>
                             </tr>

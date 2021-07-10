@@ -1,0 +1,251 @@
+.formScreen{
+    background: url(../../imagenes/Gestiones.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment:fixed;
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 100%;
+    width: 100vw;
+}
+
+.form-title{
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    font-size: 1.5rem;
+}
+
+.page-container{
+    min-height: 100vh;
+    max-width: 1050px;
+    padding-top: 60px;
+    margin: auto;
+    height: auto;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.form-container{
+    max-width: 600px;
+    margin: 1rem auto;
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0, 0.3);
+}
+
+.tabs-container{
+    background: rgb(251, 251, 251);
+}
+
+.cochera-checkbox,
+.estado-checkbox,
+.usuario-checkbox,
+.grupo-checkbox,
+.accion-checkbox{
+    padding: 0 .25rem;
+    width: 25px;
+    height: 25px;
+    margin: .25rem;
+    border: 1px solid black;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.55;
+    transition: all 0.2s ease-out;
+}
+
+.inputs-container{
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    font-size: 1rem;
+    text-align: center;
+    align-items: center;
+}
+
+.cochera-check,
+.estado-check{
+    display: flex;
+    width: 90%;
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    font-size: 1rem;
+    margin: .25rem 0;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.inputs-container > *{
+    width: 100%;
+    padding: .375rem;
+    margin: .25rem;
+    font-weight: 1000;
+    text-align:start;
+}
+
+.inputs-container > textarea{
+    height: 120px;
+    resize: none;
+}
+
+.inputs-container > select > option{
+    font-weight: 1000;
+}
+
+.form-buttons-container{
+    display: flex;
+    font-size: 1rem;
+}
+
+.form-buttons-container > button{
+    padding: 0rem .375rem;
+    border-radius: 4px;
+    margin: .25rem .25rem;
+    width: 3rem;
+}
+
+.encabezados{
+    width: 90%;
+    text-align: start;
+}
+
+.encabezados > button{
+    border: none;
+    padding: .5rem;
+    outline: none;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    transition: all 0.2s ease-out;
+    font-size: 1rem;
+}
+
+.encabezados > button:hover{
+    background-color: #f8f8f8;
+}
+
+.active-btn{
+    background-color: white !important;
+    box-shadow: 0px -2px 10px 0.3px rgba(0,0,0, 0.2);
+}
+
+.tab{
+    width: 90%;
+    background: white;
+    padding: 1rem;
+    margin: 0 auto .75rem;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px;
+    box-shadow: 0px 2px 10px 1px rgba(0,0,0, 0.1);
+    display: none;
+}
+
+.tab .inputs-container{
+    width: 100%;
+}
+
+.user-container,
+.grupo-container{
+    display: flex;
+    align-items: center;
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    font-size: 1rem;
+}
+
+.focused{
+    display: block !important;
+}
+
+.checked,
+.usuarioChecked,
+.grupoChecked,
+.accionChecked{
+    background: #97ff74;
+    transition: all 0.2s ease-out;
+}
+
+.checked:hover,
+.usuarioChecked:hover,
+.grupoChecked:hover,
+.accionChecked:hover{
+    background: #53f71c;
+    transform: scale(1.1);
+}
+
+.modulo-acciones-container{
+    text-align: start;
+    font-size: 1rem;
+}
+
+.modulo-acciones-container{
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    color: black;
+}
+
+.submodulo-acciones-container{
+    position: relative;
+    margin-left: 1rem;
+    padding-left: .75rem;
+}
+
+.formulario-acciones-container{
+    position: relative;
+    margin-left: 2.25rem;
+    padding-left: .75rem;
+}
+
+.accion-acciones-container{
+    position: relative;
+    margin-left: 2.25rem;
+    padding-left: .75rem;
+}
+
+.grupo-container{
+    font-size: 1rem;
+}
+
+.display{
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.borde-inicio{
+    width: 20px;
+    height: 15px;
+    border: 1px solid grey;
+    border-top: none;
+    border-right: none;
+    position: relative;
+    top: -7px;
+}
+
+.border-line,
+.border-line-accion{
+    height: 105%;
+    width: 1px;
+    border-left: 1px solid grey;
+    position: absolute;
+}
+
+.border-line-accion{
+    height: 110%;
+}
+
+.submodulo-acciones-container:last-child .border-line,
+.formulario-acciones-container:last-child .border-line,
+.accion-acciones-container:last-child .border-line-accion{
+    height: 0;
+}
+
+.display-button{
+    font-size: .75rem;
+    padding-left: .1rem;
+    cursor: pointer;
+}
+
+.not-display{
+    display: none;
+}

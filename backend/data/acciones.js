@@ -3,7 +3,8 @@ const acciones = [
     //Control
     //Inicio submodulo seguridad
     {
-        nombre: "Agregar persona"
+        nombre: "Agregar persona",
+        formulario: mongo
     },
     {
         nombre: "Modificar persona"

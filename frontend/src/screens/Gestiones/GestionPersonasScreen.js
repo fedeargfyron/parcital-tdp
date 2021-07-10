@@ -1,9 +1,11 @@
 import React from 'react'
+import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroPersonas from '../Filtros/FiltroPersonas'
 import './Gestiones.css'
 
 const GestionPersonasScreen = () => {
+    const history = useHistory()
     return(
         <div className="gestionScreen">
             <div className="gestion-container">
@@ -26,7 +28,7 @@ const GestionPersonasScreen = () => {
                             <tr>
                                 <td colSpan="7">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar persona"><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar persona" onClick={() => history.push('/formPersona')}><i className="fas fa-plus"></i></button>
                                     </div>
                                 </td>
                             </tr>

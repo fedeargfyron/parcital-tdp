@@ -73,7 +73,7 @@ const Navbar = () => {
                 
                 {user &&
                     <>
-                        <li className="nav-item perfil" onMouseEnter={onMouseEnterPerfil} onMouseLeave={onMouseLeavePerfil}>
+                        <li className="nav-item perfil" onMouseEnter={onMouseEnterPerfil} onMouseLeave={onMouseLeavePerfil} onClick={() => setPerfilDropdown(false)}>
                             <Link to="/perfil" className="nav-links">
                                 Perfil
                             </Link>

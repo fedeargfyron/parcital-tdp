@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const herencia = { discriminatorKey: "Tipo"}
+const herencia = { discriminatorKey: "tipo"}
 
 const moduloSchema = mongoose.Schema({
     nombre: {
