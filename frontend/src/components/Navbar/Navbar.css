@@ -149,7 +149,7 @@
     .menu-icon {
       display: block;
       position: absolute;
-      top: 0;
+      top: -3px;
       right: 0;
       transform: translate(-60%, 30%);
       font-size: 1.8rem;
@@ -159,6 +159,9 @@
     .fa-times-navbar {
       color: #fff;
       font-size: 2rem;
+      position: relative;
+      top: -5px;
+      right: 4px;
     }
   
     .nav-links-mobile {

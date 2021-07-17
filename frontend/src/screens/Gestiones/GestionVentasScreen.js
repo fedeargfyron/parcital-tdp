@@ -2,6 +2,8 @@ import React from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroVentas from '../Filtros/FiltroVentas'
 import './Gestiones.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 const GestionVentasScreen = () => {
     return (
         <div className="gestionScreen">
@@ -32,8 +34,8 @@ const GestionVentasScreen = () => {
                                 <td>25/11/20</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                    <button className="btn-green" id="Confirmar venta"><i className="fas fa-check"></i></button>
-                                    <button className="btn-red" id="Anular reserva"><i className="fas fa-times"></i></button>
+                                    <button className="btn-green" id="Confirmar venta"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
+                                    <button className="btn-red" id="Anular reserva"><FontAwesomeIcon icon='times' className="fas fa-times"/></button>
                                     </div>
                                 </td>
                             </tr>

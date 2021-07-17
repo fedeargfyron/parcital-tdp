@@ -1,5 +1,6 @@
 import React from 'react'
 import './Filtros.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const FiltroOfertas = () => {
     return(
@@ -25,7 +26,7 @@ const FiltroOfertas = () => {
                         <input type="date"/>
                     </div>
                     <button className="filtro-btn">
-                        <i className="fas fa-search"></i>
+                        <FontAwesomeIcon icon='search' className="fas fa-search"/>
                     </button>
                 </div>
             </div>

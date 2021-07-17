@@ -37,12 +37,10 @@
 }
 
 .cochera-checkbox,
-.estado-checkbox,
-.usuario-checkbox,
-.grupo-checkbox,
-.accion-checkbox{
+.estado-checkbox
+{
     padding: 0 .25rem;
-    width: 25px;
+    width: 25px !important;
     height: 25px;
     margin: .25rem;
     border: 1px solid black;
@@ -51,6 +49,20 @@
     line-height: 1.55;
     transition: all 0.2s ease-out;
 }
+
+.grupo-checkbox,
+.usuario-checkbox,
+.accion-checkbox{
+    margin: .25rem;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.55;
+    transition: all 0.2s ease-out;
+    border: 1px solid black;
+}
+
 
 .inputs-container{
     display: flex;
@@ -161,15 +173,15 @@
 .usuarioChecked,
 .grupoChecked,
 .accionChecked{
-    background: #97ff74;
-    transition: all 0.2s ease-out;
+    padding: .25rem;
+    width: 1.5em !important;
+    height: 25px;
 }
 
 .checked:hover,
 .usuarioChecked:hover,
 .grupoChecked:hover,
 .accionChecked:hover{
-    background: #53f71c;
     transform: scale(1.1);
 }
 
@@ -223,7 +235,8 @@
 }
 
 .border-line,
-.border-line-accion{
+.border-line-accion,
+.border-line-formulario{
     height: 105%;
     width: 1px;
     border-left: 1px solid grey;
@@ -235,7 +248,7 @@
 }
 
 .submodulo-acciones-container:last-child .border-line,
-.formulario-acciones-container:last-child .border-line,
+.formulario-acciones-container:last-child .border-line-formulario,
 .accion-acciones-container:last-child .border-line-accion{
     height: 0;
 }
@@ -244,6 +257,9 @@
     font-size: .75rem;
     padding-left: .1rem;
     cursor: pointer;
+    width: 12px;
+    height: 15px;
+    color: black;
 }
 
 .not-display{

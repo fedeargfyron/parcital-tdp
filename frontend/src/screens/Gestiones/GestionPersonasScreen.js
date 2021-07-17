@@ -3,6 +3,7 @@ import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroPersonas from '../Filtros/FiltroPersonas'
 import './Gestiones.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const GestionPersonasScreen = () => {
     const history = useHistory()
@@ -28,7 +29,7 @@ const GestionPersonasScreen = () => {
                             <tr>
                                 <td colSpan="7">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar persona" onClick={() => history.push('/formPersona')}><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar persona" onClick={() => history.push('/formPersona')}><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
                                     </div>
                                 </td>
                             </tr>
@@ -41,8 +42,8 @@ const GestionPersonasScreen = () => {
                                 <td>Agente</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                        <button className="btn-blue" id="Modificar persona"><i className="fas fa-edit"></i></button>
-                                        <button className="btn-red" id="Eliminar persona"><i className="fas fa-trash"></i></button>
+                                        <button className="btn-blue" id="Modificar persona"><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
+                                        <button className="btn-red" id="Eliminar persona"><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
                                     </div>
                                 </td>
                             </tr>

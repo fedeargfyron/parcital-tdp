@@ -1,10 +1,43 @@
+require('dotenv').config()
 const { propiedad } = require('../modelos/Propiedad')
 const { servicio } = require('../modelos/Servicio')
+const { MongoClient } = require('mongodb')
 const { Tipo_Propiedad, casa, departamento } = require('../modelos/Tipo_Propiedad')
 const getPropiedades = async (req, res) => {
     try {
-        const propiedades = await propiedad.find({})
-        res.json(propiedades)
+        const filtros = req.query.tipo
+        buscar = {
+            estado: filtros[0],
+            
+        }
+        /* $Search
+        index: 'custom',Index que creo yo
+        text: { 
+        query: 'Agregar', query es texto a buscar 
+        path: 'nombre' Path es donde lo voy a encontrar 
+        }
+        { $Lookup
+        from: 'Tipo_propiedads',
+        localField: 'nombre', Objeto_id 
+        foreignField: '_id', Id de objeto
+        as: 'Objeto_id'
+        }*/
+        const uri = process.env.MONGO_URL
+        const client = new MongoClient(uri, { useUnifiedTopology: true })
+        await client.connect()
+        const pipeline = [{
+            "$search": {"index": 'custom',
+            "text": { 
+              "query": 'Agregar',
+              "path": 'nombre'
+            }
+          }
+        }]
+        const aggCursor = client.db('Inmobiliaria').collection('accions').aggregate(pipeline)
+        await aggCursor.forEach(accion => {
+            console.log(accion._id)
+        })
+        res.json("propiedades obtenidas con aggCursor")
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})

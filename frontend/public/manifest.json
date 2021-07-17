@@ -21,5 +21,20 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "content_scripts":[
+      {
+          "css":[
+              "css/font-awesome.min.css"
+          ]
+      }
+  ],
+  "web_accessible_resources": [
+      "fonts/FontAwesome.otf",
+      "fonts/fontawesome-webfont.eot",
+      "fonts/fontawesome-webfont.svg",
+      "fonts/fontawesome-webfont.ttf",
+      "fonts/fontawesome-webfont.woff",
+      "fonts/fontawesome-webfont.woff2"
+  ]
 }

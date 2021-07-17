@@ -1,6 +1,18 @@
 module.exports = function(passport){
     const getUser = async (req, res) => {
-        res.send(req.user)
+        let dtoUser = null
+        if(req.user){
+            dtoUser = {
+                id: req.user._id,
+                nombre: req.user.nombre,
+                apellido: req.user.apellido,
+                usuario: req.user.usuario,
+                grupos: req.user.grupos,
+                email: req.user.email,
+                telefono: req.user.telefono,
+            }
+        }
+        res.send(dtoUser)
     }
 
     const loginUser = async (req, res, next) => {

@@ -8,10 +8,13 @@ const {
     setPersona,
     updatePersona,
     removePersona,
-    registrarPersona
+    registrarPersona,
+    getDuenos
 } = require('../controladora/personasControladora')
 
 Router.get('/', getPersonas)
+
+Router.get('/duenos', getDuenos)
 
 Router.get('/:id', getPersona)
 

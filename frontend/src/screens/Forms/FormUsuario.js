@@ -3,6 +3,7 @@ import './Forms.css'
 import HeaderPage from '../../components/HeaderPage'
 import Grupo from './FormUsuarioComponents/Grupo'
 import { useHistory } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const FormUsuario = () => {
     const history = useHistory()
     const [usuarioEstado, setUsuarioEstado] = useState(true)
@@ -51,7 +52,7 @@ const FormUsuario = () => {
                         </div>
                         <div className="estado-check">
                             <div className={usuarioEstado ? "btn-green estado-checkbox" : "btn-red estado-checkbox"} onClick={() => setUsuarioEstado(!usuarioEstado)}>
-                                {usuarioEstado ? <i className="fas fa-check"></i> : <i className="fas fa-times"></i>}<i></i>
+                                <FontAwesomeIcon icon={usuarioEstado ? 'check': 'times'} className={usuarioEstado ? "fas fa-check" : "fas fa-times"}/>
                             </div>
                             <p>Estado</p>
                         </div>
@@ -61,8 +62,8 @@ const FormUsuario = () => {
                         {grupos && grupos.map(grupo => <Grupo grupo={grupo} key={grupo.id}/> )}
                     </div>
                     <div className="form-buttons-container">
-                        <button className="btn-green" onClick={() => getChecked()}><i className="fas fa-check"></i></button>
-                        <button className="btn-red" onClick={() => history.goBack()}><i className="fas fa-times"></i></button>
+                        <button className="btn-green" onClick={() => getChecked()}><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
+                        <button className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times' className="fas fa-times"/></button>
                     </div>
                 </div>
             </div>

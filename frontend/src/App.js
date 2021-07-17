@@ -2,6 +2,7 @@ import Navbar from './components/Navbar/Navbar'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import './App.css';
 import { useState } from 'react'
+import { useSelector } from 'react-redux';
 import LoginScreen from './screens/LoginScreen'
 import HomeScreen from './screens/HomeScreen'
 import CambiarContraScreen from './screens/CambiarContraScreen';
@@ -24,23 +25,23 @@ import Visitas from './screens/MiPerfil/Visitas';
 import Ofertas from './screens/MiPerfil/Ofertas';
 import Reservas from './screens/MiPerfil/Reservas';
 import Compras from './screens/MiPerfil/Compras';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus } from '@fortawesome/free-solid-svg-icons'
+
 function App() {
-  const [user, setUser] = useState("")
-  
+  library.add(fab, faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus)
+  const setUser = useSelector((state) => state.user)
+  const { user, loading } = setUser
   return (
     <Router>
       <div className="App">
         <Navbar></Navbar>
         <main>
-          
-          <Switch>
+        <Switch>
             <Route exact path="/" component={HomeScreen}/>
-            <Route exact path="/login" component={LoginScreen}>
-              {user && <Redirect to="/"/>}
-            </Route>
-            <Route exact path="/cambiarContraseña" component={CambiarContraScreen}>
-              {user && <Redirect to="/login" />}
-            </Route>
+            <Route exact path="/login" component={LoginScreen} />
+            <Route exact path="/cambiarContraseña" component={CambiarContraScreen} />
             <Route exact path="/propiedades/:tipo" component={PropiedadesScreen}/>
             <Route exact path="/propiedad/:id" component={PropiedadScreen} />
             <Route exact path="/gestion/personas" component={GestionPersonasScreen} />
@@ -60,7 +61,7 @@ function App() {
             <Route exact path="/ofertas" component={Ofertas} />
             <Route exact path="/reservas" component={Reservas} />
             <Route exact path="/compras" component={Compras} />
-          </Switch>
+          </Switch> 
         </main>
       </div>
     </Router>

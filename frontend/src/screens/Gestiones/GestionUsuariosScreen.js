@@ -3,6 +3,7 @@ import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroUsuarios from '../Filtros/FiltroUsuarios'
 import './Gestiones.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const GestionUsuariosScreen = () => {
     const history = useHistory()
@@ -27,7 +28,7 @@ const GestionUsuariosScreen = () => {
                             <tr>
                                 <td colSpan="6">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar usuario" onClick={() => history.push('/formUsuario')}><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar usuario" onClick={() => history.push('/formUsuario')}><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
                                     </div>
                                 </td>
                             </tr>
@@ -39,9 +40,9 @@ const GestionUsuariosScreen = () => {
                                 <td>Activo</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                        <button className="btn-blue" id="Modificar usuario"><i className="fas fa-edit"></i></button>
-                                        <button className="btn-red" id="Eliminar usuario"><i className="fas fa-trash"></i></button>
-                                        <button className="btn-orange" id="Resetear contraseña"><i className="fas fa-redo"></i></button>
+                                        <button className="btn-blue" id="Modificar usuario"><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
+                                        <button className="btn-red" id="Eliminar usuario"><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
+                                        <button className="btn-orange" id="Resetear contraseña"><FontAwesomeIcon icon='redo' className="fas fa-redo"/></button>
                                     </div>
                                 </td>
                             </tr>

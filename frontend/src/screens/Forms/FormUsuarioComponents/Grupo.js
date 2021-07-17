@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const Grupo = ({grupo}) => {
     const [grupoChecked, setGrupoChecked] = useState(false)
     return(
         <div className="grupo-container" name="checkbox">
-            <i 
-            className={grupoChecked ? "grupo-checkbox fas fa-check grupoChecked" : "grupo-checkbox"}
-            onClick={() => setGrupoChecked(!grupoChecked)}
-            id={grupo.id}>
-            </i>
+            <div onClick={() => setGrupoChecked(!grupoChecked)} className={grupoChecked ? "grupo-checkbox btn-green" : "grupo-checkbox"}>
+                {grupoChecked && 
+                <FontAwesomeIcon 
+                    icon='check'
+                    className="grupoChecked"
+                    id={grupo.id}
+                />}
+            </div>
+
+
             <p>{grupo.nombre}</p>
         </div>
     )

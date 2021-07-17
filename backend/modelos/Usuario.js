@@ -32,7 +32,8 @@ const usuarioSchema = new mongoose.Schema({
     ],
     estado: {
         type: Boolean,
-        required: true
+        required: true,
+        default: true
     }
 })
 

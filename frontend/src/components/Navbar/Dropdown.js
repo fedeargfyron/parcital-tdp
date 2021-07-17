@@ -2,7 +2,7 @@ import "./Dropdown.css"
 import { Link } from 'react-router-dom'
 import React, { useState } from 'react'
 import Habitaciones from "./Habitaciones"
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const Dropdown = (setGestionDropdown) => {
     const [click, setClick] = useState(false)
     const [habitacionesCasas, setHabitacionesCasas] = useState(false)
@@ -25,13 +25,13 @@ const Dropdown = (setGestionDropdown) => {
         <ul onClick={handleClick} className='dropdown-menu-component'>
             <li onMouseEnter={onMouseEnterCasas} onMouseLeave={onMouseLeaveCasas}>
                 <Link className="dropdown-link" to ="/propiedades/venta_casas">
-                    Casas <i className="fas fa-caret-right"></i>
+                    Casas <FontAwesomeIcon icon="caret-right" className="fa-caret-right"/>
                 </Link>
                 {habitacionesCasas && <Habitaciones tipo={"casas"} />}
             </li>
             <li onMouseEnter={onMouseEnterDepartamentos} onMouseLeave={onMouseLeaveDepartamentos}>
                 <Link className="dropdown-link" to ="/propiedades/venta_departamentos">
-                    Departamentos <i className="fas fa-caret-right"></i>
+                    Departamentos <FontAwesomeIcon icon="caret-right" className="fa-caret-right"/>
                 </Link>
                 {habitacionesDepartamentos && <Habitaciones tipo={"departamentos"}/>}
             </li>

@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const Usuario = ({usuario}) => {
     const [usuarioChecked, setUsuarioChecked] = useState(false)
     return(
         <div className="user-container" name="checkbox">
-            <i 
-            className={usuarioChecked ? "usuario-checkbox fas fa-check usuarioChecked" : "usuario-checkbox"} 
-            onClick={() => setUsuarioChecked(!usuarioChecked)}
-            id={usuario.id}>
-            </i>
+
+            
+            <div onClick={() => setUsuarioChecked(!usuarioChecked)} className={usuarioChecked ? "usuario-checkbox btn-green" : "usuario-checkbox"}>
+                {usuarioChecked && 
+                <FontAwesomeIcon 
+                    icon='check'
+                    className="usuarioChecked"
+                    id={usuario.id}
+                />}
+            </div>
             <p>{usuario.username}</p>
         </div>
     )

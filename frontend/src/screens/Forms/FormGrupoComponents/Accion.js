@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Accion = ({accion, formularioChecked}) => {
     const [accionChecked, setAccionChecked] = useState(false)
@@ -10,12 +11,16 @@ const Accion = ({accion, formularioChecked}) => {
             <div className="border-line-accion"></div>
             <div className="display">
                 <div className="borde-inicio"></div>
-                <i
-                className={accionChecked ? "accion-checkbox fas fa-check accionChecked" : "accion-checkbox"}
-                onClick={() => (setAccionChecked(!accionChecked))}
-                id={accion._id}>
-                </i>
+                <div onClick={() => (setAccionChecked(!accionChecked))} className={accionChecked ? "accion-checkbox btn-green" : "accion-checkbox"}>
+                    {accionChecked && 
+                    <FontAwesomeIcon 
+                        icon='check'
+                        className="accionChecked"
+                        id={accion._id}
+                    />}
+                </div>
                 <p>{accion.nombre}</p>
+                
             </div>
         </div>
     )

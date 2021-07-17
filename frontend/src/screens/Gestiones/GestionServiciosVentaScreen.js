@@ -2,6 +2,7 @@ import React from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroServiciosVenta from '../Filtros/FiltroServiciosVenta'
 import './Gestiones.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const GestionServiciosVentaScreen = () => {
     return (
@@ -26,7 +27,7 @@ const GestionServiciosVentaScreen = () => {
                             <tr>
                                 <td colSpan="7">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar servicio venta"><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar servicio venta"><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
                                     </div>
                                 </td>
                             </tr>
@@ -39,8 +40,8 @@ const GestionServiciosVentaScreen = () => {
                                 <td>10</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                    <button className="btn-yellow" id="Consultar servicio venta"><i className="fas fa-question"></i></button>
-                                    <button className="btn-red" id="Eliminar servicio venta"><i className="fas fa-trash"></i></button>
+                                    <button className="btn-yellow" id="Consultar servicio venta"><FontAwesomeIcon icon='question' className="fas fa-question"/></button>
+                                    <button className="btn-red" id="Eliminar servicio venta"><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
                                     </div>
                                 </td>
                             </tr>

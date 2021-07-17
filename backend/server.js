@@ -45,6 +45,7 @@ app.use(methodOverride('_method'))
 /* Settear passport acá */
 app.use(passport.initialize())
 app.use(passport.session())
+require('./passportConfig')(passport)
 app.use('/api/grupos', gruposRouter)
 app.use('/api/horarios', horariosRouter)
 app.use('/api/ofertas', ofertasRouter)

@@ -1,5 +1,6 @@
 import React from 'react'
 import './VisitaForm.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const VisitaForm = () => {
     return(
         <form className="visita-form">
@@ -17,7 +18,7 @@ const VisitaForm = () => {
                 <p className="horario">14:00</p>
                 <p className="horario">15:00</p>
             </div>
-            <button className="btn-solicitar-visita" id="Solicitar visita"><i className="fas fa-check"></i></button>
+            <button className="btn-solicitar-visita" id="Solicitar visita"><FontAwesomeIcon icon='check' className="fa-check"/></button>
         </form>
     )
 }

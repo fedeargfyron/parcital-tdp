@@ -26,11 +26,7 @@ const personaSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'Usuario'
-    },
-    tipo:{
-        type: String,
-        required: true
-    },
+    }
 }, herencia)
 const persona = mongoose.model('Persona', personaSchema)
 

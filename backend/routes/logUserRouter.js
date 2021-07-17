@@ -7,7 +7,7 @@ module.exports = function(express, passport) {
     } = require('../controladora/logUserControladora')(passport)
     Router.post('/', loginUser)
 
-    Router.get('/user', getUser)
+    Router.get('/', getUser)
     
     Router.get('/logout', logOut)
 

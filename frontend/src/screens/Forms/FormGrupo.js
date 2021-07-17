@@ -5,6 +5,8 @@ import HeaderPage from '../../components/HeaderPage'
 import { useHistory } from 'react-router'
 import Modulo from './FormGrupoComponents/Modulo'
 import Usuario from './FormGrupoComponents/Usuario'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 const FormGrupo = () => {
     const [modulos, setModulos] = useState()
     const [tabs, setTabs] = useState("Grupo")
@@ -61,7 +63,7 @@ const FormGrupo = () => {
                         </div>
                         <div className="estado-check">
                             <div className={grupoEstado ? "btn-green estado-checkbox" : "btn-red estado-checkbox"} onClick={() => setGrupoEstado(!grupoEstado)}>
-                                {grupoEstado ? <i className="fas fa-check"></i> : <i className="fas fa-times"></i>}<i></i>
+                            <FontAwesomeIcon icon={grupoEstado ? 'check' : 'times'} className={grupoEstado ? "fas fa-check" : "fas fa-times"}/>
                             </div>
                             <p>Estado</p>
                         </div>
@@ -83,8 +85,8 @@ const FormGrupo = () => {
                         )}
                     </div>
                     <div className="form-buttons-container">
-                        <button className="btn-green" onClick={() => getChecked()}><i className="fas fa-check"></i></button>
-                        <button className="btn-red" onClick={() => history.goBack()}><i className="fas fa-times"></i></button>
+                        <button className="btn-green" onClick={() => getChecked()}><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
+                        <button className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times' className="fas fa-times"/></button>
                     </div>
                 </div>
             </div>

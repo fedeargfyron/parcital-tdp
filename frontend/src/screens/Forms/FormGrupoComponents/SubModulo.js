@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Formulario from './Formulario'
 const SubModulo = ({subModulo, moduloChecked}) => {
     const [notDisplay, setNotDisplay] = useState(false)
@@ -11,14 +12,18 @@ const SubModulo = ({subModulo, moduloChecked}) => {
             <div className="border-line"></div>
             <div className="display">
                 <div className="borde-inicio"></div>
-                <i 
-                className={notDisplay ? "fas fa-plus display-button" : "fas fa-minus display-button"} 
-                onClick={() => setNotDisplay(!notDisplay)}>
-                </i>
-                <i 
-                className={subModuloChecked ? "accion-checkbox fas fa-check checked" : "accion-checkbox"}
-                onClick={() => (setSubModuloChecked(!subModuloChecked))}>
-                </i>
+                <FontAwesomeIcon 
+                    icon={notDisplay ? 'plus' : 'minus'}
+                    className={notDisplay ? "fas fa-plus display-button" : "fas fa-minus display-button"}
+                    onClick={() => setNotDisplay(!notDisplay)}
+                />
+                <div onClick={() => setSubModuloChecked(!subModuloChecked)} className={subModuloChecked ? "accion-checkbox btn-green" : "accion-checkbox"}>
+                    {subModuloChecked && 
+                    <FontAwesomeIcon 
+                        icon='check'
+                        className="fas fa-check checked"
+                    />}
+                </div>
                 <p>{subModulo.nombre}</p>
             </div>
             <div className={notDisplay ? "not-display" : ""}>

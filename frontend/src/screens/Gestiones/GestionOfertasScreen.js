@@ -2,6 +2,7 @@ import React from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroOfertas from '../Filtros/FiltroOfertas'
 import './Gestiones.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const GestionOfertasScreen = () => {
     return (
@@ -32,8 +33,8 @@ const GestionOfertasScreen = () => {
                                 <td>Pendiente</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                        <button className="btn-green" id="Aceptar oferta"><i className="fas fa-check"></i></button>
-                                        <button className="btn-red" id="Rechazar oferta"><i className="fas fa-times"></i></button>
+                                        <button className="btn-green" id="Aceptar oferta"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
+                                        <button className="btn-red" id="Rechazar oferta"><FontAwesomeIcon icon='times' className="fas fa-times"/></button>
                                     </div>
                                 </td>
                             </tr>

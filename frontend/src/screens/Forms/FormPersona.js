@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './Forms.css'
 import HeaderPage from '../../components/HeaderPage'
 import { useHistory } from 'react-router'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const FormPersona = () => {
     const [tipoPersona, setTipoPersona] = useState('Interesado')
@@ -48,8 +49,8 @@ const FormPersona = () => {
                     </div>
                     {/* Falta table con horarios */}
                     <div className="form-buttons-container">
-                        <button className="btn-green"><i className="fas fa-check"></i></button>
-                        <button className="btn-red" onClick={() => history.goBack()}><i className="fas fa-times"></i></button>
+                        <button className="btn-green"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
+                        <button className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times'className="fas fa-times"/></button>
                     </div>
                 </form>
             </div>

@@ -1,11 +1,24 @@
+const bcrypt = require('bcryptjs')
 const { persona, dueño, agente } = require('../modelos/Persona')
 const { servicio } = require('../modelos/Servicio')
 const { propiedad } = require('../modelos/Propiedad')
+const Usuario = require("../modelos/Usuario")
 
 const getPersonas = async (req, res) => {
     try {
         const personas = await persona.find({})
         res.json(personas)
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: "server error"})
+    }
+}
+
+const getDuenos = async (req, res) => {
+    try {
+        const dueños = await dueño.find({})
+        console.log(dueños)
+        res.json(dueños)
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
@@ -109,10 +122,60 @@ const removePersona = async (req, res) => {
 }
 
 const registrarPersona = async (req, res) => {
-
+    try{
+        
+        let validacion = await validarNuevo(req.body.usuario, req.body.email, req.body.telefono, req.body.contraseña)
+        if(validacion !== null){
+            return res.json(validacion)
+        } 
+        
+        const passwordEncriptada = await encriptarPassword(req.body.contraseña)
+        const newUsuario = new Usuario({
+            usuario: req.body.usuario,
+            contraseña: passwordEncriptada,
+            nombre: req.body.nombre,
+            apellido: req.body.apellido,
+            email: req.body.email
+        })
+        await newUsuario.save()
+        const newPersona = new persona({
+            nombre: req.body.nombre,
+            apellido: req.body.apellido,
+            telefono: req.body.telefono,
+            domicilio: req.body.domicilio,
+            email: req.body.email,
+            usuario: newUsuario._id
+        })
+        await newPersona.save()
+        res.json('Usuario creado')
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({message: "server error"})
+    }
 }
+
+const encriptarPassword = async (contraseña) => {
+    return await bcrypt.hash(contraseña, 10)
+}
+
+const validarNuevo = async (usuario, email, telefono, contraseña) => {
+    const buscarUsuario = await Usuario.findOne({
+        usuario: usuario
+    })
+    const buscarEmail = await Usuario.findOne({
+        email: email
+    })
+    if(buscarUsuario !== null) return 'usuario existente'
+    if(buscarEmail !== null) return 'email existente'
+    if(telefono < 1000000000) return ('Telefono no valido')
+    if(contraseña.length < 8) return ('Contraseña demasiado corta')
+    //Validar email
+    return null
+}
+
 module.exports = {
     getPersonas,
+    getDuenos,
     getPersona,
     setPersona,
     updatePersona,

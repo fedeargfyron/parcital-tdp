@@ -3,6 +3,8 @@ import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroGrupos from '../Filtros/FiltroGrupos'
 import './Gestiones.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 const GestionGruposScreen = () => {
     const history = useHistory()
     return (
@@ -24,7 +26,7 @@ const GestionGruposScreen = () => {
                             <tr>
                                 <td colSpan="4">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar grupo" onClick={() => history.push('/formGrupo')}><i className="fas fa-plus"></i></button>
+                                        <button className="btn-green" id="Agregar grupo" onClick={() => history.push('/formGrupo')}><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
                                     </div>
                                 </td>
                             </tr>
@@ -34,8 +36,8 @@ const GestionGruposScreen = () => {
                                 <td>Activo</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                        <button className="btn-blue" id="Modificar grupo"><i className="fas fa-edit"></i></button>
-                                        <button className="btn-red" id="Eliminar grupo"><i className="fas fa-trash"></i></button>
+                                        <button className="btn-blue" id="Modificar grupo"><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
+                                        <button className="btn-red" id="Eliminar grupo"><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
                                     </div>
                                 </td>
                             </tr>

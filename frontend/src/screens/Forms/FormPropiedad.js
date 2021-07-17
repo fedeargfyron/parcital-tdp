@@ -1,34 +1,100 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './Forms.css'
 import HeaderPage from '../../components/HeaderPage'
 import { useHistory } from 'react-router'
-
+import { getDueños } from '../../redux/ducks/dueñosReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 const FormPropiedad = () => {
+    const dispatch = useDispatch()
     const history = useHistory()
     const [tipoPropiedad, setTipoPropiedad] = useState("Casa")
+    const setDueños = useSelector((state) => state.dueños)
+    const { dueños, loading, error } = setDueños
+    useEffect(() => {
+        dispatch(getDueños())
+    }, [dispatch])
+
+    const [data, setData] = useState({
+        ubicacion: "",
+        estado_propiedad: "",
+        dueño: "",
+        tipo_propiedad: "Casa",
+        precio: "",
+        superficie: "",
+        descripcion: "",
+        entorno: "",
+        cant_habitaciones: 0,
+        cant_baños: 0,
+        cant_pisos: 0,
+        antiguedad: "",
+        cochera: false,
+        piso: "",
+        acceso: ""
+    })
     const [cochera, setCochera] = useState(false)
+    const sendPropiedad = (e) => {
+        e.preventDefault()
+
+    }
+
+    const handle = (e) => {
+        const newdata ={...data}
+        newdata[e.target.id] = e.target.value
+        setData(newdata)
+    }
+
+    const handleDueño = (e) => {
+        const newdata = {...data}
+        newdata["dueño"] = e.target.id
+        setData(newdata)
+    }
+
+    const handlePropiedad = (e) => {
+        console.log(e.target.value)
+        const newdata = {...data}
+        newdata["tipo_propiedad"] = e.target.value
+        setData(newdata)
+    }
+    const handleCochera = () => {
+        setCochera(!cochera)
+        const newdata = {...data}
+        newdata["cochera"] = !cochera
+        setData(newdata)
+    }
     return(
         <div className="formScreen">
             <div className="page-container">
                 <HeaderPage titulo="Propiedad"/>
-                <form className="form-container">
+                <form className="form-container" onSubmit={(e) => sendPropiedad(e)}>
                     <label className="form-title">Agregar propiedad</label>
                     <div className="inputs-container">
-                        <input type="text" placeholder="Ubicacion" required/>
+                        <input onChange={e => handle(e)} id="ubicacion" type="text" placeholder="Ubicacion" required/>
                     </div>
                     <div className="inputs-container">
-                        <input type="text" placeholder="Estado de propiedad" required/>
+                        <input onChange={e => handle(e)} id="estado_propiedad" type="text" placeholder="Estado de propiedad" />
                     </div>
                     <div className="inputs-container">
                         <p>Dueño</p> 
-                        <select>
-                            <option>Seleccionar...</option>
-                            {/* getDueños */}
+                        {/* Hacer componente de select dueño */}
+                        {/* Hacer componente de select dueño */}
+                        {/* Hacer componente de select dueño */}
+                        <select onChange={e => handleDueño(e)}>
+                            {loading ? 
+                            <option>"Cargando..."</option> 
+                            : error ? 
+                            <option>No hay dueños</option> 
+                            : dueños ? 
+                            dueños.map(dueño => {
+                                <option id={dueño._id}>{dueño.nombre} {dueño.apellido}</option>
+                            })
+                            : <option>No hay dueños</option>
+                            }
                         </select>
                     </div>
                     <div className="inputs-container">
                         <p>Tipo de propiedad</p> 
-                        <select onChange={(e) => setTipoPropiedad(e.target.value)}>
+                        <select onChange={(e) => handlePropiedad(e)}>
                             <option value="Casa">Casa</option>
                             <option value="Departamento">Departamento</option>
                             <option value="Cochera">Cochera</option>
@@ -37,31 +103,33 @@ const FormPropiedad = () => {
                         </select>
                     </div>
                     <div className="inputs-container">
-                        <input type="text" placeholder="Precio" required/>
-                        <input type="text" placeholder="Superficie (m²)" required/>
+                        <input onChange={e => handle(e)} type="number" id="precio" placeholder="Precio" required/>
+                        <input onChange={e => handle(e)} type="number" id="superficie" placeholder="Superficie m²" required/>
                     </div>
-                    {(tipoPropiedad === "Casa" || tipoPropiedad === "Departamento") && 
+                    {(data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") && 
                         <div className="inputs-container">
-                            <input type="text" placeholder="Cant. habitaciones" required/>
-                            <input type="text" placeholder="Cant. baños" required/>
+                            <input onChange={e => handle(e)} id="cant_habitaciones" type="number" placeholder="Cant. habitaciones" required/>
+                            <input onChange={e => handle(e)} id="cant_baños" type="number" placeholder="Cant. baños" required/>
                         </div>
                     }
-                    {tipoPropiedad === "Casa" && 
+                    {data.tipo_propiedad === "Casa" && 
                         <div className="inputs-container">
-                            <input type="text" placeholder="Cant. pisos" required/>
-                            <input type="text" placeholder="Antiguedad" required/>
+                            <input onChange={e => handle(e)} id="cant_pisos" type="number" placeholder="Cant. pisos" required/>
+                            <input onChange={e => handle(e)} id="antiguedad" type="text" placeholder="Antiguedad" required/>
                         </div>
                     }
-                    {tipoPropiedad === "Departamento" && 
+                    {data.tipo_propiedad === "Departamento" && 
                         <div className="inputs-container">
-                            <input type="text" placeholder="Piso" required/>
-                            <input type="text" placeholder="Acceso" required/>
+                            <input onChange={e => handle(e)} id="piso" type="text" placeholder="Piso" required/>
+                            <input onChange={e => handle(e)} id="acceso" type="text" placeholder="Acceso" required/>
                         </div>
                     }
-                    { (tipoPropiedad === "Casa" || tipoPropiedad === "Departamento") &&
+                    { (data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") &&
                         <div className="cochera-check">
-                            <div className={cochera ? "btn-green cochera-checkbox" : "btn-red cochera-checkbox"} onClick={() => setCochera(!cochera)}>
-                                {cochera ? <i className="fas fa-check"></i> : <i className="fas fa-times"></i>}<i></i>
+                            <div className={cochera ? "btn-green cochera-checkbox" : "btn-red cochera-checkbox"} onClick={() => {
+                                handleCochera()
+                            }}>
+                                <FontAwesomeIcon icon={cochera ? 'check' : 'times'} className={cochera ? "fas fa-check" : "fas fa-times"}/><i></i>
                             </div>
                             <p>Cochera</p>
                         </div>
@@ -74,8 +142,8 @@ const FormPropiedad = () => {
                     </div>
                     {/* Falta seleccionador de imagenes */}
                     <div className="form-buttons-container">
-                        <button className="btn-green"><i className="fas fa-check"></i></button>
-                        <button className="btn-red" onClick={() => history.goBack()}><i className="fas fa-times"></i></button>
+                        <button className="btn-green"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
+                        <button className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times' className="fas fa-times" /></button>
                     </div>
                 </form>
             </div>
