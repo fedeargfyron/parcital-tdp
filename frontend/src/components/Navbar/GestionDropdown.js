@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 
 const GestionDropdown = ({onClickGestion}) => {
     //axios.get(formularios de usuario sin propiedad)
+    //obtene acciones del usuario, --> busque los formularios a los que pertenece
+    //acciones ----- formularios 
     const [formularios, setFormularios] = useState([
         {
             nombre: "Gestionar propiedades",
@@ -43,7 +45,7 @@ const GestionDropdown = ({onClickGestion}) => {
             <ul onClick={onClickGestion}  className={'gestion-dropdown-menu'}>
                 {formularios.map(formulario => {
                     return (
-                    <li>
+                    <li key={formulario.nombre}>
                         <Link className="dropdown-link" to ={formulario.url}>
                             {formulario.nombre}
                         </Link>

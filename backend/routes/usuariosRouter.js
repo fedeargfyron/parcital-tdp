@@ -7,9 +7,12 @@ const {
     getUsuarios,
     setUsuario,
     updateUsuario,
-    removeUsuario
+    removeUsuario,
+    getUsuariosDisponibles
 } = require('../controladora/usuariosControladora')
 Router.get('/', getUsuarios)
+
+Router.get('/disponibles', getUsuariosDisponibles)
 
 Router.get('/:id', getUsuario)
 

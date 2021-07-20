@@ -17,7 +17,6 @@ const getPersonas = async (req, res) => {
 const getDuenos = async (req, res) => {
     try {
         const dueños = await dueño.find({})
-        console.log(dueños)
         res.json(dueños)
     } catch (err) {
         console.error(err)
@@ -38,21 +37,21 @@ const getPersona = async (req, res) => {
 const setPersona = async (req, res) => {
     try {
         let setPersona
-        if(req.body.tipo === 'Dueño'){
+        if(req.body.tipoPersona === 'Dueño'){
             setPersona = new dueño({
                 escritura: req.body.escritura
             })
         }
-        else if (req.body.tipo === "Agente"){
+        else if (req.body.tipoPersona === "Agente"){
             setPersona = new agente({
                 titulo: req.body.titulo,
                 horarios: req.body.horarios,
                 cuil: req.body.cuil
             })
         }
-        if(!setPersona){
+        else{
             setPersona = new persona({
-                tipo: req.body.tipo
+                tipo: req.body.tipoPersona
             })
         }
         setPersona.nombre = req.body.nombre
@@ -60,7 +59,7 @@ const setPersona = async (req, res) => {
         setPersona.telefono = req.body.telefono
         setPersona.domicilio = req.body.domicilio
         setPersona.email = req.body.email
-        setPersona.usuario = req.body.usuario
+        if(req.body.usuario !== '') setPersona.usuario = req.body.usuario
         await setPersona.save()
         res.send('Persona creada')
     } catch (err) {
@@ -132,10 +131,7 @@ const registrarPersona = async (req, res) => {
         const passwordEncriptada = await encriptarPassword(req.body.contraseña)
         const newUsuario = new Usuario({
             usuario: req.body.usuario,
-            contraseña: passwordEncriptada,
-            nombre: req.body.nombre,
-            apellido: req.body.apellido,
-            email: req.body.email
+            contraseña: passwordEncriptada
         })
         await newUsuario.save()
         const newPersona = new persona({
@@ -162,7 +158,7 @@ const validarNuevo = async (usuario, email, telefono, contraseña) => {
     const buscarUsuario = await Usuario.findOne({
         usuario: usuario
     })
-    const buscarEmail = await Usuario.findOne({
+    const buscarEmail = await persona.findOne({
         email: email
     })
     if(buscarUsuario !== null) return 'usuario existente'

@@ -12,24 +12,19 @@ const Tipo_Propiedad = mongoose.model('Tipo Propiedad', tipoPropiedadSchema)
 
 const tipoCasaSchema = new mongoose.Schema({
     cantidad_habitaciones:{
-        type: Number,
-        required: true
+        type: Number
     },
     cantidad_pisos:{
-        type: Number,
-        required: true
+        type: Number
     },
     cochera:{
-        type: Boolean,
-        required: true
+        type: Boolean
     },
     cantidad_baños:{
-        type: Number,
-        required: true
+        type: Number
     },
     antiguedad:{
-        type: String,
-        required: true
+        type: String
     }
 })
 
@@ -38,27 +33,21 @@ const casa = Tipo_Propiedad.discriminator('Casa', tipoCasaSchema)
 const tipoDepartamentoSchema = new mongoose.Schema({
     cantidad_habitaciones:{
         type: Number,
-        required: true
     },
     piso:{
-        type: String,
-        required: true
+        type: String
     },
     acceso:{
-        type: String,
-        required: true
+        type: String
     },
     cochera:{
-        type: Boolean,
-        required: true
+        type: Boolean
     },
     cantidad_baños:{
         type: Number,
-        required: true
     },
     restricciones:{
-        type: String,
-        required: true
+        type: String
     }
 })
 

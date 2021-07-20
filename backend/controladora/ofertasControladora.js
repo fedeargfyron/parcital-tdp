@@ -9,7 +9,7 @@ const getOfertas = async (req, res) => {
             interesado: req.user._id
         })
         res.json(ofertas)
-    } catch {
+    } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }

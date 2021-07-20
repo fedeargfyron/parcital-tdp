@@ -35,7 +35,7 @@ const getPropiedades = async (req, res) => {
         }]
         const aggCursor = client.db('Inmobiliaria').collection('accions').aggregate(pipeline)
         await aggCursor.forEach(accion => {
-            console.log(accion._id)
+            //console.log(accion._id)
         })
         res.json("propiedades obtenidas con aggCursor")
     } catch (err) {
@@ -57,33 +57,34 @@ const getPropiedad = async (req, res) => {
 const setPropiedad = async (req, res) => {
     try {
         let tipo_propiedad
-        if(req.body.tipo === "Departamento"){
+        if(req.body.tipo_propiedad === "Departamento"){
             tipo_propiedad = new departamento({
-                cant_habitaciones: req.body.cant_habitaciones,
                 piso: req.body.piso,
                 acceso: req.body.acceso,
                 cochera: req.body.cochera,
-                cant_baños: req.body.cant_baños,
+                cantidad_baños: req.body.cant_baños,
+                cantidad_habitaciones: req.body.cant_habitaciones,
                 restricciones: req.body.restricciones
             })
         }
-        else if(req.body.tipo === "Casa"){
+        else if(req.body.tipo_propiedad === "Casa"){
+            
             tipo_propiedad = new casa({
-                cant_habitaciones: req.body.cant_habitaciones,
-                cant_pisos: req.body.cant_pisos,
+                cantidad_habitaciones: req.body.cant_habitaciones,
+                cantidad_pisos: req.body.cant_pisos,
                 cochera: req.body.cochera,
-                cant_baños: req.body.cant_baños,
+                cantidad_baños: req.body.cant_baños,
                 antiguedad: req.body.antiguedad
             })
+            
         }
         else{
             tipo_propiedad = new Tipo_Propiedad({
-                tipo: req.body.tipo
+                tipo: req.body.tipo_propiedad
             })
         }
         const newPropiedad = new propiedad({
             ubicacion: req.body.ubicacion,
-            dueño: req.body.dueño,
             tipo: tipo_propiedad._id,
             estado_propiedad: req.body.estado_propiedad,
             descripcion: req.body.descripcion,
@@ -92,7 +93,10 @@ const setPropiedad = async (req, res) => {
             precio: req.body.precio,
             superficie: req.body.superficie
         })
-
+        if(req.body.dueño !== ""){
+            newPropiedad.dueño = req.body.dueño
+        }
+        await tipo_propiedad.save()
         await newPropiedad.save()
         res.send('Propiedad creada')
     } catch (err) {

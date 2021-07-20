@@ -9,7 +9,6 @@ const propiedadSchema = new mongoose.Schema({
     },
     dueño:{
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: "Persona"
     },
     tipo:{
@@ -18,12 +17,10 @@ const propiedadSchema = new mongoose.Schema({
     },
     estado:{
         type: String,
-        required: true,
         default: "No disponible"
     },
     estado_propiedad:{
-        type: String,
-        required: true
+        type: String
     },
     servicios:[
         {
@@ -33,12 +30,10 @@ const propiedadSchema = new mongoose.Schema({
     ]
     ,
     descripcion:{
-        type: String,
-        required: true
+        type: String
     },
     entorno:{
-        type: String,
-        required: true
+        type: String
     },
     imagenes:[
         {
@@ -48,12 +43,10 @@ const propiedadSchema = new mongoose.Schema({
         }
     ],
     precio:{
-        type: Number,
-        required: true
+        type: Number
     },
     superficie:{
-        type: Number,
-        required: true
+        type: Number
     },
     
 })

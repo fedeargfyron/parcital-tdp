@@ -6,9 +6,10 @@ const getVisitas = async (req, res) => {
     try {
         const visitas = await Visita.find({
             interesado: req.user._id
+            
         })
         res.json(visitas)
-    } catch {
+    } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
@@ -26,8 +27,8 @@ const getVisitasAgente = async (req, res) => {
             })
         })
         res.json(visitas)
-    } catch {
-        console.error(err)
+    } catch (error) {
+        console.error(error)
         res.status(500).json({message: "server error"})
     }
 }

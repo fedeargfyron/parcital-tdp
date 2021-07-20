@@ -6,7 +6,7 @@ const getReservas = async (req, res) => {
             cliente: req.user._id
         })
         res.json(reservas)
-    } catch {
+    } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }

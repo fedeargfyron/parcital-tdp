@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroCompras from '../Filtros/FiltroCompras'
 import './MiPerfil.css'
-
+import { getVentas } from '../../redux/ducks/ventasReducer'
+import { useSelector, useDispatch } from 'react-redux'
 const Compras = () => {
+    const dispatch = useDispatch()
+    const ventasInfo = useSelector(state => state.ventas)
+    useEffect(() => {
+        dispatch(getVentas())
+    }, [dispatch])
     return(
         <div className="perfilScreen">
             <div className="compras-container">

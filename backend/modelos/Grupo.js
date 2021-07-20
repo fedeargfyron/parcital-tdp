@@ -15,7 +15,8 @@
     },
     acciones:[
         {
-            type: mongoose.Schema.Types.ObjectId
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Accion'
         }
     ]
  })

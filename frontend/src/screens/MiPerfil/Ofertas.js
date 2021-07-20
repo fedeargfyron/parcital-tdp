@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroOfertas from '../Filtros/FiltroOfertas'
 import './MiPerfil.css'
-
+import { getOfertas } from '../../redux/ducks/ofertasReducer'
+import { useSelector, useDispatch } from 'react-redux'
 const Ofertas = () => {
+    const dispatch = useDispatch()
+    const ofertasInfo = useSelector(state => state.ofertas)
+    useEffect(() => {
+        dispatch(getOfertas())
+    }, [dispatch])
     return(
         <div className="perfilScreen">
             <div className="ofertas-container">

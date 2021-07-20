@@ -11,10 +11,10 @@ const Usuario = ({usuario}) => {
                 <FontAwesomeIcon 
                     icon='check'
                     className="usuarioChecked"
-                    id={usuario.id}
+                    id={usuario._id}
                 />}
             </div>
-            <p>{usuario.username}</p>
+            <p>{usuario.usuario}</p>
         </div>
     )
 }

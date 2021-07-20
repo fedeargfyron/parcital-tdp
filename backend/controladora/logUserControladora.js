@@ -18,11 +18,12 @@ module.exports = function(passport){
     const loginUser = async (req, res, next) => {
         passport.authenticate('local', (err, user, info) => {
             if(err) throw err
-            if(!user) res.send("No user exists")
+            if(!user) res.send("No existe usuario")
+            if(!user.estado) res.send("Usuario no disponible")
             else {
                 req.logIn(user, err => {
                     if(err) throw err
-                    res.send("Succesfully authenticated")
+                    res.send("Autentificado satisfactoriamente")
                 })
             }
         }) (req, res, next)

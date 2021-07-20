@@ -9,25 +9,10 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    nombre: {
-        type: String,
-        required: true
-    },
-    apellido:{
-        type: String,
-        required: true
-    },
-    email:{
-        type: String,
-        required: true
-    },
     grupos: [
         {
-            grupo:{
-                type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: 'Grupo',
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Grupo',
         }
     ],
     estado: {

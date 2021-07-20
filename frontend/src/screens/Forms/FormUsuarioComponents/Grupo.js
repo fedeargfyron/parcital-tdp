@@ -9,11 +9,9 @@ const Grupo = ({grupo}) => {
                 <FontAwesomeIcon 
                     icon='check'
                     className="grupoChecked"
-                    id={grupo.id}
+                    id={grupo._id}
                 />}
             </div>
-
-
             <p>{grupo.nombre}</p>
         </div>
     )

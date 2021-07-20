@@ -24,8 +24,12 @@ const personaSchema = new mongoose.Schema({
     },
     usuario:{
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
         ref: 'Usuario'
+    },
+    tipo:{
+        type: String,
+        required: true,
+        default: 'interesado'
     }
 }, herencia)
 const persona = mongoose.model('Persona', personaSchema)
@@ -34,7 +38,6 @@ const persona = mongoose.model('Persona', personaSchema)
 const dueñoSchema = new mongoose.Schema({
     escritura:{
         type: String,
-        required: true
     }
 })
 const dueño = persona.discriminator('Dueño', dueñoSchema)
@@ -42,16 +45,13 @@ const dueño = persona.discriminator('Dueño', dueñoSchema)
 const agenteSchema = new mongoose.Schema({
     cuil:{
         type: Number,
-        required: true
     },
     titulo:{
         type: String,
-        required: true
     },
     horarios:[{
         horario:{
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
             ref: 'Horario'
         }
     }]

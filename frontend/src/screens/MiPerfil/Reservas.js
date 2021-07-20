@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroOfertas from '../Filtros/FiltroOfertas'
 import './MiPerfil.css'
-
+import { getReservas } from '../../redux/ducks/reservasReducer'
+import { useSelector, useDispatch } from 'react-redux'
 const Reservas = () => {
+    const dispatch = useDispatch()
+    const reservasInfo = useSelector(state => state.reservas)
+    useEffect(() => {
+        dispatch(getReservas())
+    }, [dispatch])
     return(
         <div className="perfilScreen">
             <div className="reservas-container">

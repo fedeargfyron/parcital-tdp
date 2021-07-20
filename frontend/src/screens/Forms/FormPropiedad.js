@@ -5,10 +5,11 @@ import { useHistory } from 'react-router'
 import { getDueños } from '../../redux/ducks/dueñosReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import axios from 'axios'
+
 const FormPropiedad = () => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const [tipoPropiedad, setTipoPropiedad] = useState("Casa")
     const setDueños = useSelector((state) => state.dueños)
     const { dueños, loading, error } = setDueños
     useEffect(() => {
@@ -33,9 +34,14 @@ const FormPropiedad = () => {
         acceso: ""
     })
     const [cochera, setCochera] = useState(false)
-    const sendPropiedad = (e) => {
+    const sendPropiedad = async (e) => {
         e.preventDefault()
-
+        await axios({
+            method:'POST',
+            withCredentials: true,
+            data: data,
+            url: 'http://localhost:4000/api/propiedades'
+        }).then(res => console.log(res))
     }
 
     const handle = (e) => {
@@ -86,7 +92,7 @@ const FormPropiedad = () => {
                             <option>No hay dueños</option> 
                             : dueños ? 
                             dueños.map(dueño => {
-                                <option id={dueño._id}>{dueño.nombre} {dueño.apellido}</option>
+                                return(<option id={dueño._id}>{dueño.nombre} {dueño.apellido}</option>)
                             })
                             : <option>No hay dueños</option>
                             }
@@ -103,25 +109,25 @@ const FormPropiedad = () => {
                         </select>
                     </div>
                     <div className="inputs-container">
-                        <input onChange={e => handle(e)} type="number" id="precio" placeholder="Precio" required/>
-                        <input onChange={e => handle(e)} type="number" id="superficie" placeholder="Superficie m²" required/>
+                        <input onChange={e => handle(e)} type="number" id="precio" placeholder="Precio" />
+                        <input onChange={e => handle(e)} type="number" id="superficie" placeholder="Superficie m²" />
                     </div>
                     {(data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") && 
                         <div className="inputs-container">
-                            <input onChange={e => handle(e)} id="cant_habitaciones" type="number" placeholder="Cant. habitaciones" required/>
-                            <input onChange={e => handle(e)} id="cant_baños" type="number" placeholder="Cant. baños" required/>
+                            <input onChange={e => handle(e)} id="cant_habitaciones" type="number" placeholder="Cant. habitaciones" />
+                            <input onChange={e => handle(e)} id="cant_baños" type="number" placeholder="Cant. baños" />
                         </div>
                     }
                     {data.tipo_propiedad === "Casa" && 
                         <div className="inputs-container">
-                            <input onChange={e => handle(e)} id="cant_pisos" type="number" placeholder="Cant. pisos" required/>
-                            <input onChange={e => handle(e)} id="antiguedad" type="text" placeholder="Antiguedad" required/>
+                            <input onChange={e => handle(e)} id="cant_pisos" type="number" placeholder="Cant. pisos" />
+                            <input onChange={e => handle(e)} id="antiguedad" type="text" placeholder="Antiguedad" />
                         </div>
                     }
                     {data.tipo_propiedad === "Departamento" && 
                         <div className="inputs-container">
-                            <input onChange={e => handle(e)} id="piso" type="text" placeholder="Piso" required/>
-                            <input onChange={e => handle(e)} id="acceso" type="text" placeholder="Acceso" required/>
+                            <input onChange={e => handle(e)} id="piso" type="text" placeholder="Piso" />
+                            <input onChange={e => handle(e)} id="acceso" type="text" placeholder="Acceso" />
                         </div>
                     }
                     { (data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") &&
@@ -135,10 +141,10 @@ const FormPropiedad = () => {
                         </div>
                     }
                     <div className="inputs-container">
-                        <textarea placeholder="Descripcion" required/>
+                        <textarea placeholder="Descripcion" />
                     </div>
                     <div className="inputs-container">
-                        <textarea placeholder="Entorno" required/>
+                        <textarea placeholder="Entorno" />
                     </div>
                     {/* Falta seleccionador de imagenes */}
                     <div className="form-buttons-container">

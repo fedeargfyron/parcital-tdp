@@ -1,4 +1,5 @@
 const Grupo = require('../modelos/Grupo')
+const Usuario = require('../modelos/Usuario')
 
 const getGrupos = async (req, res) => {
     try {
@@ -23,10 +24,19 @@ const getGrupo = async (req, res) => {
 const setGrupo = async (req, res) => {
     try{
         const grupo = new Grupo({
-            ejemplo: req.body.datos_ejemplo
-            //datos grupo
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            estado: req.body.estado,
+            acciones: req.body.acciones
         })
-        await grupo.save()
+        const usuariosId = req.body.usuarios
+        if(usuariosId.length > 0){
+            usuariosId.forEach(async (usuario) => {
+                usuarioActualizado = await Usuario.findById(usuario)
+                usuarioActualizado.grupos.push(grupo._id)
+                usuarioActualizado.save()
+            })
+        }
         res.send('Grupo creado')
     } catch (err) {
         console.error(err)

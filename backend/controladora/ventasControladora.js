@@ -12,7 +12,7 @@ const getVentas = async (req, res) => {
         compras = await Venta.find({
             cliente: req.user._id
         })
-        res.json(ventas, compras)
+        res.json(ventas) //mandar compras también
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})

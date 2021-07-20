@@ -1,18 +1,17 @@
 import axios from 'axios'
-
-const GET_USERS_REQUEST = 'GET_USERS_REQUEST'
+const GET_USERS_REQUEST = 'GET_USERS'
 const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS'
 const GET_USERS_FAIL = 'GET_USERS_FAIL'
 
-export const getUsers = () => async (dispatch) => {
-    try{
+export const getUsersDisponibles = () => async (dispatch) => {
+    try {
         dispatch({
             type: GET_USERS_REQUEST
         })
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
-            url: 'http://localhost:4000/api/usuarios'
+            url: 'http://localhost:4000/api/usuarios/disponibles'
         })
         dispatch({
             type: GET_USERS_SUCCESS,
@@ -29,23 +28,23 @@ export const getUsers = () => async (dispatch) => {
 }
 
 const initialState = {
-    users: null
+    usersDisponibles: null
 }
 
-export const getUsersReducer = (state = initialState, action) => {
+export const getUsersDisponiblesReducer = (state = initialState, action) => {
     switch(action.type){
-        case GET_USERS_REQUEST: return {
-            loadingUsers: true
+        case GET_USERS_REQUEST: return{
+            loading: true
         }
-        case GET_USERS_SUCCESS: return {
-            loadingUsers: false,
-            users: action.payload
+        case GET_USERS_SUCCESS: return{
+            loading: false,
+            usersDisponibles: action.payload
         }
-        case GET_USERS_FAIL: return {
-            loadingUsers: false,
-            errorUsers: action.payload
+        case GET_USERS_FAIL: return{
+            loading: false,
+            error: action.payload
         }
         default: return state
     }
-    
-}
+} 
+
