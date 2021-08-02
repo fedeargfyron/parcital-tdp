@@ -1,17 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroPropiedades from '../Filtros/FiltroPropiedades'
 import './Gestiones.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { getPropiedades } from '../../redux/ducks/propiedadesReducer'
+import { CircularProgress } from '@material-ui/core'
 const GestionPropiedadesScreen = () => {
     const history = useHistory()
+    const dispatch = useDispatch()
+    
+    const propiedadesInfo = useSelector(state => state.propiedades)
+    const { propiedades, errorPropiedades, loadingPropiedades } = propiedadesInfo
+
+    useEffect(() => {
+        dispatch(getPropiedades())
+    }, [dispatch])
+
     return (
         <div className="gestionScreen">
             <div className="gestion-container">
                 <HeaderPage titulo="Gestion de propiedades"/>
-                <FiltroPropiedades />
+                <FiltroPropiedades dispatch={dispatch} getPropiedades={getPropiedades} />
                 <div className="table-container">
                     <table className="table table-striped table-bordered">
                         <thead>
@@ -33,6 +44,9 @@ const GestionPropiedadesScreen = () => {
                                     </div>
                                 </td>
                             </tr>
+                            { loadingPropiedades ? <tr><td colSpan="7"><CircularProgress /></td></tr>
+                            : errorPropiedades ? <tr><td colSpan="7">Error cargando propiedades!</td></tr> 
+                            : propiedades && console.log("")/*propiedades.map(propiedad => )*/}
                             <tr>
                                 <td>3123</td>
                                 <td>Mendoza y Pueyrredon</td>

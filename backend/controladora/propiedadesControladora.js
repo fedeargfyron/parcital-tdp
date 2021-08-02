@@ -5,43 +5,80 @@ const { MongoClient } = require('mongodb')
 const { Tipo_Propiedad, casa, departamento } = require('../modelos/Tipo_Propiedad')
 const getPropiedades = async (req, res) => {
     try {
-        const filtros = req.query.tipo
-        buscar = {
-            estado: filtros[0],
-            
-        }
-        /* $Search
-        index: 'custom',Index que creo yo
-        text: { 
-        query: 'Agregar', query es texto a buscar 
-        path: 'nombre' Path es donde lo voy a encontrar 
-        }
-        { $Lookup
-        from: 'Tipo_propiedads',
-        localField: 'nombre', Objeto_id 
-        foreignField: '_id', Id de objeto
-        as: 'Objeto_id'
-        }*/
+        let pipeline = pipelineGenerator()
+        if(req.query.tipo)
+            pipeline = tipoFiltersAdd(req.query.tipo, pipeline)
+        else if (req.query.filtros)
+            pipeline = tipoFiltersAdd(req.query.filtros, pipeline)
+        
         const uri = process.env.MONGO_URL
         const client = new MongoClient(uri, { useUnifiedTopology: true })
         await client.connect()
-        const pipeline = [{
-            "$search": {"index": 'custom',
-            "text": { 
-              "query": 'Agregar',
-              "path": 'nombre'
-            }
-          }
-        }]
-        const aggCursor = client.db('Inmobiliaria').collection('accions').aggregate(pipeline)
-        await aggCursor.forEach(accion => {
-            //console.log(accion._id)
+
+        const aggCursor = client.db('Inmobiliaria').collection('propiedads').aggregate(pipeline)
+        await aggCursor.forEach(propiedad => {
+            console.log(propiedad)
         })
         res.json("propiedades obtenidas con aggCursor")
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
+}
+
+const tipoFiltersAdd = (tipo, pipeline) => {
+    
+    let arrayFiltros = tipo.split("_")
+    pipeline.push({
+        '$unwind': {
+          'path': '$servicios'
+        }
+      }, {
+        '$match': {
+          'servicios': arrayFiltros[0]
+        }
+      })
+    if(arrayFiltros[1])
+        pipeline.push({ '$match': { 'tipoDatos.tipo': arrayFiltros[1]}})
+
+    if(arrayFiltros[2])
+        pipeline.push({ '$match': { 'tipoDatos.cantidad_habitaciones': arrayFiltros[2]}})
+    
+    return pipeline
+}
+
+const filtrosFiltersAdd = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+    if(filtrosJson.estado !== "")
+        pipeline[0].$match.estado = filtrosJson.estado
+
+    if(filtrosJson.ubicacion !== "")
+        pipeline[0].$match.ubicacion = new RegExp(filtrosJson.ubicacion, "i")
+    
+    if(filtrosJson.tipo_propiedad !== "")
+        pipeline.push({ '$match': { 'tipoDatos.tipo': filtrosJson.tipo_propiedad}})
+
+    return pipeline
+}
+
+const pipelineGenerator = () => {
+    let pipelineBase = [
+        {
+          '$match': {}
+        }, {
+          '$lookup': {
+            'from': 'tipo propiedads', 
+            'localField': 'tipo', 
+            'foreignField': '_id', 
+            'as': 'tipoDatos'
+          }
+        }, {
+          '$unwind': {
+            'path': '$tipoDatos'
+          }
+        }
+      ]
+    return pipelineBase
 }
 
 const getPropiedad = async (req, res) => {

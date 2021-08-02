@@ -1,18 +1,48 @@
 const Visita = require('../modelos/Visita')
 const { propiedad } = require('../modelos/Propiedad')
-const { servicioVenta } = require('../modelos/Servicio')
+const { servicio } = require('../modelos/Servicio')
+const { persona, agente } = require('../modelos/Persona')
+const visita = require('../modelos/Visita')
 //Checkear bien esto
 const getVisitas = async (req, res) => {
     try {
-        const visitas = await Visita.find({
-            interesado: req.user._id
-            
-        })
+        const personaInfo = await persona.find({
+            usuario: req.user._id
+        }, '_id nombre tipo')
+        const visitas = await obtenerVisitas(personaInfo)
         res.json(visitas)
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
+}
+
+const obtenerVisitas = async (personaInfo) => {
+    let visitas = []
+    /*
+    visitas = await Visita.find({
+        interesado: personaInfo._id
+    })
+    visitas.map(visita => {
+        const servicioInfo = await servicio.find({
+            _id: visita.servicio
+        }, '_id propiedad agente')
+        const agenteInfo = await agente.findOne({_id: agente}, 'telefono')
+        visita = { ...visita, ...servicioInfo, ...agenteInfo}
+    })
+    if(personaInfo.tipo === 'agente'){
+        const servicios = await servicio.find({
+            agente: personaInfo._id
+        }, '_id propiedad')
+        servicios.map(servicio => {
+            let visitasServicio = await visita.find({
+                servicio: servicio._id
+            })
+
+            visitas.push(visitasServicio)
+        })
+    }*/
+    res.json(visitas)
 }
 
 const getVisitasAgente = async (req, res) => {

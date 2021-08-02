@@ -12,8 +12,9 @@ const propiedadSchema = new mongoose.Schema({
         ref: "Persona"
     },
     tipo:{
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Tipo propiedad"
     },
     estado:{
         type: String,

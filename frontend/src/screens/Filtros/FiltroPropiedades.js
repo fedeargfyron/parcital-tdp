@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Filtros.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const FiltroPropiedades = () => {
+const FiltroPropiedades = ({dispatch, getPropiedades}) => {
+    const [filtros, setFiltros] = useState({
+        tipo_propiedad: "",
+        estado: "",
+        ubicacion: ""
+    })
+
+    const handle = (e) => {
+        const newFiltros ={...filtros}
+        newFiltros[e.target.id] = e.target.value
+        setFiltros(newFiltros)
+    }
+
+    const filtrarClick = () => {
+        dispatch(getPropiedades(filtros))
+    }
     return(
         <>
             <div className= "filtro-container">
@@ -10,28 +25,28 @@ const FiltroPropiedades = () => {
                 <div className="options-container">
                     <div className="item-container">
                         <p>Tipo de propiedad</p>
-                        <select>
-                            <option>Todos</option>
-                            <option>Casas</option>
-                            <option>Departamentos</option>
-                            <option>Galpones</option>
-                            <option>Terrenos</option>
-                            <option>Cocheras</option>
+                        <select id="tipo_propiedad" onChange={(e) => handle(e)}>
+                            <option value="">Todos</option>
+                            <option value="Casa">Casas</option>
+                            <option value="Departamento">Departamentos</option>
+                            <option value="Galpon">Galpones</option>
+                            <option value="Terreno">Terrenos</option>
+                            <option value="Cochera">Cocheras</option>
                         </select>
                     </div>
                     <div className="item-container">
                         <p>Estado</p>
-                        <select>
-                            <option>Todos</option>
-                            <option>Disponible</option>
-                            <option>No disponible</option>
+                        <select id="estado" onChange={(e) => handle(e)}>
+                            <option value="">Todos</option>
+                            <option value="Disponible">Disponible</option>
+                            <option value="No disponible">No disponible</option>
                         </select>
                     </div>
                     <div className="item-container">
                         <p>Ubicacion</p>
-                        <input placeholder="Ej: Mendoza e iriondo"/>
+                        <input onChange={(e) => handle(e)} id="ubicacion" placeholder="Ej: Mendoza e iriondo"/>
                     </div>
-                    <button className="filtro-btn">
+                    <button className="filtro-btn" onClick={filtrarClick}>
                         <FontAwesomeIcon icon='search' className="fas fa-search"/>
                     </button>
                 </div>

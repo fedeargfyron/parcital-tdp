@@ -10,7 +10,7 @@ const {
     removePropiedad
 } = require('../controladora/propiedadesControladora')
 
-Router.get('/:tipo', getPropiedades)
+Router.get('/', getPropiedades)
 
 Router.get('/:id', getPropiedad)
 

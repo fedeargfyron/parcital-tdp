@@ -4,8 +4,9 @@ const GET_PROPIEDADES_REQUEST = 'GET_PROPIEDADES'
 const GET_PROPIEDADES_SUCCESS = 'GET_PROPIEDADES_SUCCESS'
 const GET_PROPIEDADES_FAIL = 'GET_PROPIEDADES_FAIL'
 
-export const getPropiedades = (tipo) => async (dispatch) => {
+export const getPropiedades = (tipo, filtros) => async (dispatch) => {
     try{
+        
         dispatch({
             type: GET_PROPIEDADES_REQUEST
         })
@@ -13,9 +14,10 @@ export const getPropiedades = (tipo) => async (dispatch) => {
             method:"GET",
             withCredentials: true,
             params: {
-                tipo: tipo
+                tipo: tipo,
+                filtros: filtros
             },
-            url: `http://localhost:4000/api/propiedades/${tipo}`
+            url: "http://localhost:4000/api/propiedades"
         })
         dispatch({
             type: GET_PROPIEDADES_SUCCESS,
@@ -38,15 +40,15 @@ const initialState = {
 export const getPropiedadesReducer = (state = initialState, action) => {
     switch(action.type){
         case GET_PROPIEDADES_REQUEST: return {
-            loading: true
+            loadingPropiedades: true
         }
         case GET_PROPIEDADES_SUCCESS: return{
-            loading: false,
+            loadingPropiedades: false,
             propiedades: action.payload
         }
         case GET_PROPIEDADES_FAIL: return{
-            loading: false,
-            error: action.payload
+            loadingPropiedades: false,
+            errorPropiedades: action.payload
         }
         default: return state
     }
