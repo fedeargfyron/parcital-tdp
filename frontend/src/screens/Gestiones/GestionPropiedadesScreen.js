@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import axios from 'axios'
 import { useHistory } from 'react-router'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroPropiedades from '../Filtros/FiltroPropiedades'
@@ -13,10 +14,20 @@ const GestionPropiedadesScreen = () => {
     
     const propiedadesInfo = useSelector(state => state.propiedades)
     const { propiedades, errorPropiedades, loadingPropiedades } = propiedadesInfo
-
     useEffect(() => {
         dispatch(getPropiedades())
     }, [dispatch])
+
+    const deletePropiedad = async (id) => {
+        //Mensaje confirmación
+        //Mensaje confirmación
+        //Mensaje confirmación
+        await axios({
+            method: 'DELETE',
+            withCredentials: true,
+            url: `http://localhost:4000/api/propiedades/${id}`
+        }).then(res => console.log(res))
+    }
 
     return (
         <div className="gestionScreen">
@@ -44,23 +55,25 @@ const GestionPropiedadesScreen = () => {
                                     </div>
                                 </td>
                             </tr>
-                            { loadingPropiedades ? <tr><td colSpan="7"><CircularProgress /></td></tr>
+                            { loadingPropiedades ? <tr><td colSpan="7" className="centerCircularProgress"><CircularProgress /></td></tr>
                             : errorPropiedades ? <tr><td colSpan="7">Error cargando propiedades!</td></tr> 
-                            : propiedades && console.log("")/*propiedades.map(propiedad => )*/}
-                            <tr>
-                                <td>3123</td>
-                                <td>Mendoza y Pueyrredon</td>
-                                <td>Federico Arrón</td>
-                                <td>Casa</td>
-                                <td>N/A</td>
-                                <td>No disponible</td>
+                            : propiedades && propiedades.map(propiedad => (
+                            <tr key={propiedad._id}>
+                                <td>{propiedad._id}</td>
+                                <td>{propiedad.ubicacion}</td>
+                                <td>{propiedad.dueñoDatos.nombre} {propiedad.dueñoDatos.apellido}</td>
+                                <td>{propiedad.tipoDatos.tipo}</td>
+                                <td>{propiedad.servicios.length > 0 ? propiedad.servicios.toString() : "N/A"}</td>
+                                <td>{propiedad.estado}</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                        <button className="btn-blue" id="Modificar propiedad"><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
-                                        <button className="btn-red" id="Eliminar propiedad"><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
+                                        <button className="btn-blue" id="Modificar propiedad" onClick={() => history.push(`/formPropiedad/${propiedad._id}`)}><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
+                                        <button className="btn-red" id="Eliminar propiedad" onClick={() => deletePropiedad(propiedad._id)}><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
                                     </div>
                                 </td>
                             </tr>
+                            ))}
+                            
                         </tbody>
                     </table>
                 </div>

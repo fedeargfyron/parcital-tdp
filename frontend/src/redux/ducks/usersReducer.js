@@ -4,7 +4,7 @@ const GET_USERS_REQUEST = 'GET_USERS_REQUEST'
 const GET_USERS_SUCCESS = 'GET_USERS_SUCCESS'
 const GET_USERS_FAIL = 'GET_USERS_FAIL'
 
-export const getUsers = () => async (dispatch) => {
+export const getUsers = (filtros) => async (dispatch) => {
     try{
         dispatch({
             type: GET_USERS_REQUEST
@@ -12,6 +12,9 @@ export const getUsers = () => async (dispatch) => {
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
+            params: {
+                filtros: filtros
+            },
             url: 'http://localhost:4000/api/usuarios'
         })
         dispatch({

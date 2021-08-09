@@ -2,14 +2,73 @@ require('dotenv').config()
 const Usuario = require('../modelos/Usuario')
 const bcrypt = require('bcryptjs')
 const { MongoClient } = require('mongodb')
+const MongoClientCreator = require('./client')
+const { persona, dueño, agente } = require('../modelos/Persona')
+
 const getUsuarios = async (req, res) => {
     try {
-        const usuarios = await Usuario.find({}, '_id usuario')
+        let usuarios = []
+        let pipeline = pipelineGenerator()
+        if(req.query.filtros)
+            pipeline = filtersAdd(req.query.filtros, pipeline)
+        const aggCursor = await MongoClientCreator('usuarios', pipeline)
+        await aggCursor.forEach(usuario => {
+            usuarios.push(usuario)
+        })
         res.json(usuarios)
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
+}
+
+const pipelineGenerator = () => {
+    const pipeline = [
+        {
+            '$match': { }
+        }, { "$lookup": {
+            'from': 'personas',
+            'let': { 'usuarioId': '$_id'},
+            'pipeline': [{
+              '$match': { 
+                '$expr': { '$eq': ["$$usuarioId", "$usuario"] }
+              } 
+            }, {
+            '$project': { '_id': 1, 'nombre': 1, 'apellido': 1, 'email': 1 }
+            }
+            ],
+            'as': 'personaDatos'
+          }
+    }, {
+        '$unwind': {
+          'path': '$personaDatos',
+          'preserveNullAndEmptyArrays': true
+        }
+      }, {
+        '$project': {
+          'usuario': 1, 
+          'estado': 1, 
+          'personaDatos': 1
+        }
+      }
+    ]
+    return pipeline
+}
+
+const filtersAdd = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+    if(filtrosJson.estado !== ""){
+        if(filtrosJson.estado === "activo"){
+            pipeline[0].$match.estado = true
+        }
+        else {
+            pipeline[0].$match.estado = false
+        }
+    }
+        
+    if(filtrosJson.nombre !== "")
+        pipeline[0].$match.nombre = new RegExp(filtrosJson.nombre, "i")
+    return pipeline
 }
 
 const getUsuariosDisponibles = async (req, res) => {
@@ -25,7 +84,7 @@ const getUsuariosDisponibles = async (req, res) => {
             "as": 'persona'
             }
         }, { "$match": {
-            "persona":  { "$size": 1 } 
+            "persona":  { "$size": 0 } 
         }
     }
     ]
@@ -47,7 +106,7 @@ const getUsuariosDisponibles = async (req, res) => {
 
 const getUsuario = async (req, res) => {
     try {
-        const usuario = await Usuario.findById(req.params.id)
+        const usuario = await Usuario.findById(req.params.id, "_id grupos estado usuario")
         res.json(usuario)
     } catch (err) {
         console.error(err)
@@ -77,7 +136,6 @@ const updateUsuario = async (req, res) => {
     try {
         const usuario = await Usuario.findById(req.params.id)
         usuario.usuario = req.body.usuario
-        usuario.contraseña = req.body.contraseña
         usuario.grupos = req.body.grupos
         usuario.estado = req.body.estado
         await usuario.save()
@@ -90,9 +148,16 @@ const updateUsuario = async (req, res) => {
 
 const removeUsuario = async (req, res) => {
     try {
-        const usuario = await Usuario.findById(req.params.id)
-        await usuario.remove()
-        res.json('Usuario eliminado')
+        const personaExistente = await persona.findOne({
+            usuario: req.params.id
+        })
+        if(personaExistente)
+            res.send('No se puede eliminar el usuario porque pertenece a una persona')
+        else{
+            let usuario = await Usuario.findById(req.params.id)
+            await usuario.remove()
+            res.send('Usuario eliminado')
+        }
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})

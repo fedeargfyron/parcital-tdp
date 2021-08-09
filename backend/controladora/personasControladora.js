@@ -131,7 +131,8 @@ const registrarPersona = async (req, res) => {
         const passwordEncriptada = await encriptarPassword(req.body.contraseña)
         const newUsuario = new Usuario({
             usuario: req.body.usuario,
-            contraseña: passwordEncriptada
+            contraseña: passwordEncriptada,
+            estado: true
         })
         await newUsuario.save()
         const newPersona = new persona({

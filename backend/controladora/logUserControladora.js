@@ -7,7 +7,7 @@ module.exports = function(passport){
                 nombre: req.user.nombre,
                 apellido: req.user.apellido,
                 usuario: req.user.usuario,
-                grupos: req.user.grupos,
+                grupos: req.user.grupos,    
                 email: req.user.email,
                 telefono: req.user.telefono,
             }
@@ -19,7 +19,7 @@ module.exports = function(passport){
         passport.authenticate('local', (err, user, info) => {
             if(err) throw err
             if(!user) res.send("No existe usuario")
-            if(!user.estado) res.send("Usuario no disponible")
+            else if(!user.estado) res.send("Usuario no disponible")
             else {
                 req.logIn(user, err => {
                     if(err) throw err

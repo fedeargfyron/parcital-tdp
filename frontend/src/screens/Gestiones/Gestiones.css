@@ -147,3 +147,7 @@
     background: #ff9615;
     transform: scale(1.1);
 }
+
+.centerCircularProgress{
+    text-align: center;
+}

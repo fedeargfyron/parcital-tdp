@@ -1,29 +1,66 @@
 require('dotenv').config()
 const { propiedad } = require('../modelos/Propiedad')
-const { servicio } = require('../modelos/Servicio')
 const { MongoClient } = require('mongodb')
+const MongoClientCreator = require('./client')
+const mongoose = require('mongoose')
 const { Tipo_Propiedad, casa, departamento } = require('../modelos/Tipo_Propiedad')
 const getPropiedades = async (req, res) => {
     try {
+        let propiedades = []
         let pipeline = pipelineGenerator()
         if(req.query.tipo)
             pipeline = tipoFiltersAdd(req.query.tipo, pipeline)
         else if (req.query.filtros)
-            pipeline = tipoFiltersAdd(req.query.filtros, pipeline)
-        
-        const uri = process.env.MONGO_URL
-        const client = new MongoClient(uri, { useUnifiedTopology: true })
-        await client.connect()
-
-        const aggCursor = client.db('Inmobiliaria').collection('propiedads').aggregate(pipeline)
+            pipeline = filtrosFiltersAdd(req.query.filtros, pipeline)
+        const aggCursor = await MongoClientCreator('propiedads', pipeline)
         await aggCursor.forEach(propiedad => {
-            console.log(propiedad)
+            propiedades.push(propiedad)
         })
-        res.json("propiedades obtenidas con aggCursor")
+        res.json(propiedades)
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
+}
+
+const pipelineGenerator = () => {
+    let pipelineBase = [
+        {
+          '$match': {}
+        }, {
+          '$lookup': {
+            'from': 'tipo propiedads', 
+            'localField': 'tipo', 
+            'foreignField': '_id', 
+            'as': 'tipoDatos'
+          }
+        }, {
+           '$lookup': {
+            'from': 'personas',
+            'let': { 'dueñoId': '$dueño'},
+            'pipeline': [{
+              '$match': { 
+                '$expr': { '$eq': ["$$dueñoId", "$_id"] }
+              } 
+            }, {
+            '$project': { '_id': 1, 'nombre': 1, 'apellido': 1 }
+            }
+            ],
+            'as': 'dueñoDatos'
+            
+          }
+          },{
+          '$unwind': {
+            'path': '$tipoDatos'
+            }
+        },
+        {
+        '$unwind': {
+            'path': '$dueñoDatos'
+            }
+        }
+      ]
+    return pipelineBase
 }
 
 const tipoFiltersAdd = (tipo, pipeline) => {
@@ -61,30 +98,16 @@ const filtrosFiltersAdd = (filtros, pipeline) => {
     return pipeline
 }
 
-const pipelineGenerator = () => {
-    let pipelineBase = [
-        {
-          '$match': {}
-        }, {
-          '$lookup': {
-            'from': 'tipo propiedads', 
-            'localField': 'tipo', 
-            'foreignField': '_id', 
-            'as': 'tipoDatos'
-          }
-        }, {
-          '$unwind': {
-            'path': '$tipoDatos'
-          }
-        }
-      ]
-    return pipelineBase
-}
-
 const getPropiedad = async (req, res) => {
     try {
-        const getPropiedad = await propiedad.findById(req.params.id)
-        res.json(getPropiedad)
+        let propiedadDto
+        let pipeline = pipelineGenerator()
+        pipeline[0].$match._id = mongoose.Types.ObjectId(req.params.id)
+        const aggCursor = await MongoClientCreator('propiedads', pipeline)
+        await aggCursor.forEach(propiedad => {
+            propiedadDto = propiedad
+        })
+        res.json(propiedadDto)
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
@@ -145,7 +168,8 @@ const setPropiedad = async (req, res) => {
 const updatePropiedad = async (req, res) => {
     try {
         const editPropiedad = await propiedad.findById(req.params.id)
-        const tipo_propiedad = await Tipo_Propiedad.findById(edit.Propiedad.tipo_propiedad)
+        
+        const tipo_propiedad = await Tipo_Propiedad.findById(editPropiedad.tipo)
         if(tipo_propiedad.tipo === "Departamento"){
             tipo_propiedad.cant_habitaciones = req.body.cant_habitaciones
             tipo_propiedad.piso = req.body.piso
@@ -167,6 +191,7 @@ const updatePropiedad = async (req, res) => {
         editPropiedad.imagenes = req.body.imagenes
         editPropiedad.precio = req.body.precio
         editPropiedad.superficie = req.body.superficie
+        editPropiedad.ubicacion = req.body.ubicacion
         await editPropiedad.save()
         res.send('Propiedad actualizada')
     } catch (err) {
@@ -177,13 +202,8 @@ const updatePropiedad = async (req, res) => {
 
 const removePropiedad = async (req, res) => {
     const deletePropiedad = await propiedad.findById(req.params.id)
-    const serviciosActivos = deletePropiedad.servicios.map(async (item) => {
-        await servicio.find({
-            _id: item,
-            estado: "Activo"
-        })
-    })
-    if(serviciosActivos !== null) res.send('No se puede eliminar la propiedad porque tiene un servicio activo')
+    if(deletePropiedad.servicios.length > 0) 
+        res.send('No se puede eliminar la propiedad porque tiene un servicio activo')
     else {  
         await deletePropiedad.remove()
         res.send('Propiedad eliminada')

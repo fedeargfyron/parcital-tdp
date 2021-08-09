@@ -83,7 +83,7 @@ const FormPersona = () => {
                             {loading ? <option>Cargando usuarios...</option> 
                             : error ? <option>Error obteniendo usuarios</option> 
                             : usersDisponibles && usersDisponibles.map(user => 
-                                <SelectUsuario {...user} />
+                                <SelectUsuario {...user} key={user._id}/>
                             )}
                         </select>
                     </div>

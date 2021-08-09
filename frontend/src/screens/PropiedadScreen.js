@@ -42,16 +42,16 @@ const PropiedadScreen = () => {
                 
                 <div className="imagenes-container">
                     <div className="imagen-container">
-                        <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
+                        <img alt="s" src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
                     </div>
                     <div className="imagen-container">
-                        <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
+                        <img alt="s" src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
                     </div>
                     <div className="imagen-container">
-                        <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
+                        <img alt="s" src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
                     </div>
                     <div className="imagen-container">
-                        <img src="https://i1.wp.com/moovemag.com/wp-content/uploads/2021/03/casa-contenedores-maritimos-boxhouse.jpeg?fit=700%2C836&ssl=1"/>
+                        <img alt="s" src="https://i1.wp.com/moovemag.com/wp-content/uploads/2021/03/casa-contenedores-maritimos-boxhouse.jpeg?fit=700%2C836&ssl=1"/>
                     </div>
                 </div>
             </div>

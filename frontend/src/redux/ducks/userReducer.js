@@ -34,15 +34,15 @@ const initialState = {
 export const getUserReducer = (state = initialState, action) => {
     switch(action.type){
         case GET_USER_REQUEST: return{
-            loading: true
+            loadingUser: true
         }
         case GET_USER_SUCCESS: return{
-            loading: false,
+            loadingUser: false,
             user: action.payload
         }
         case GET_USER_FAIL: return{
-            loading: false,
-            error: action.payload
+            loadingUser: false,
+            errorUser: action.payload
         }
         default: return state
     }

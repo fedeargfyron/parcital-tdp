@@ -16,7 +16,7 @@ const Navbar = () => {
     //En caso de clickear algo en un dropdown o mobile, se cierra el dropdown 
     const handleClick = () => setClick(!click)
     const userInfo = useSelector(state => state.user)
-    const { loading, user } = userInfo
+    const { loadingUser, user } = userInfo
     useEffect(() => {
         dispatch(getUser())
     }, [dispatch])
@@ -31,7 +31,7 @@ const Navbar = () => {
             <div className="menu-icon" onClick={handleClick}>
                 <FontAwesomeIcon icon={click ? 'times' : 'bars'} className={click ? 'fa-times-navbar' : 'fa-bars'}/>
             </div>
-            <NavbarItems user={user} click={click} setClick={setClick}/>
+            {!loadingUser && <NavbarItems user={user} click={click} setClick={setClick}/>}
         </nav>
     )
 }

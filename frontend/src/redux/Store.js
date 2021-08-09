@@ -12,6 +12,8 @@ import { getVentasReducer } from './ducks/ventasReducer'
 import { getVisitasReducer } from './ducks/visitasReducer'
 import { getReservasReducer } from './ducks/reservasReducer'
 import { getOfertasReducer } from './ducks/ofertasReducer'
+import { getPropiedadReducer } from './ducks/propiedadReducer'
+import { getUpdateUserReducer } from './ducks/updateUserReducer'
 const reducer = combineReducers({
     user: getUserReducer,
     propiedades: getPropiedadesReducer,
@@ -23,7 +25,9 @@ const reducer = combineReducers({
     visitas: getVisitasReducer,
     ventas: getVentasReducer,
     reservas: getReservasReducer,
-    ofertas: getOfertasReducer
+    ofertas: getOfertasReducer,
+    propiedad: getPropiedadReducer,
+    updateUser: getUpdateUserReducer
 })
 
 const middleware = [thunk]
