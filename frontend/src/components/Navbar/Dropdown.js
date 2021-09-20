@@ -24,29 +24,29 @@ const Dropdown = (setGestionDropdown) => {
     <>
         <ul onClick={handleClick} className='dropdown-menu-component'>
             <li onMouseEnter={onMouseEnterCasas} onMouseLeave={onMouseLeaveCasas}>
-                <Link className="dropdown-link" to ="/propiedades/venta_casas">
+                <Link className="dropdown-link" to ="/propiedades/venta_Casa">
                     Casas <FontAwesomeIcon icon="caret-right" className="fa-caret-right"/>
                 </Link>
-                {habitacionesCasas && <Habitaciones tipo={"casas"} />}
+                {habitacionesCasas && <Habitaciones tipo={"Casa"} />}
             </li>
             <li onMouseEnter={onMouseEnterDepartamentos} onMouseLeave={onMouseLeaveDepartamentos}>
-                <Link className="dropdown-link" to ="/propiedades/venta_departamentos">
+                <Link className="dropdown-link" to ="/propiedades/venta_Departamento">
                     Departamentos <FontAwesomeIcon icon="caret-right" className="fa-caret-right"/>
                 </Link>
-                {habitacionesDepartamentos && <Habitaciones tipo={"departamentos"}/>}
+                {habitacionesDepartamentos && <Habitaciones tipo={"Departamento"}/>}
             </li>
             <li>
-                <Link className="dropdown-link" to ="/propiedades/venta_galpones">
+                <Link className="dropdown-link" to ="/propiedades/venta_Galpon">
                     Galpones
                 </Link>
             </li>
             <li>
-                <Link className="dropdown-link" to ="/propiedades/venta_terrenos">
+                <Link className="dropdown-link" to ="/propiedades/venta_Terreno">
                     Terrenos
                 </Link>
             </li>
             <li>
-                <Link className="dropdown-link" to ="/propiedades/venta_cocheras">
+                <Link className="dropdown-link" to ="/propiedades/venta_Cochera">
                     Cocheras
                 </Link>
             </li>

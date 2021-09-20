@@ -4,7 +4,7 @@ const GET_PROPIEDAD_REQUEST = 'GET_PROPIEDAD'
 const GET_PROPIEDAD_SUCCESS = 'GET_PROPIEDAD_SUCCESS'
 const GET_PROPIEDAD_FAIL = 'GET_PROPIEDAD_FAIL'
 
-export const getPropiedad = (id) => async (dispatch) => {
+export const getPropiedad = (id, gestion) => async (dispatch) => {
     try{
         dispatch({
             type: GET_PROPIEDAD_REQUEST
@@ -12,6 +12,9 @@ export const getPropiedad = (id) => async (dispatch) => {
         const { data } = await axios({
             method:"GET",
             withCredentials: true,
+            params: {
+                gestion: gestion
+            },
             url: `http://localhost:4000/api/propiedades/${id}`
         })
         dispatch({

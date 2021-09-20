@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom"
-import React, {useState} from 'react'
+import React from 'react'
 import './PerfilDropdown.css'
 
 const PerfilDropdown = () => {
-    const [user, setUser] = useState("as")
     return(
         <>
             <ul className="perfil-dropdown-menu">
@@ -32,12 +31,13 @@ const PerfilDropdown = () => {
                         Compras
                     </Link>
                 </li>
-                {user.tipo === "Dueño" &&
+                
+                {/*user.tipo === "Dueño" &&
                 <li>
                     <Link className="dropdown-link" to ="/misPropiedades">
                         Mis propiedades
                     </Link>
-                </li>
+                </li>*/
                 }
             </ul>
         </>

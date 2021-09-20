@@ -4,7 +4,7 @@ const GET_OFERTAS_REQUEST = 'GET_OFERTAS_REQUEST'
 const GET_OFERTAS_SUCCESS = 'GET_OFERTAS_SUCCESS'
 const GET_OFERTAS_FAIL = 'GET_OFERTAS_FAIL'
 
-export const getOfertas = () => async (dispatch) => {
+export const getOfertas = (filtros, profile) => async (dispatch) => {
     try{
         dispatch({
             type: GET_OFERTAS_REQUEST
@@ -12,6 +12,10 @@ export const getOfertas = () => async (dispatch) => {
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
+            params: {
+                filtros: filtros,
+                profile: profile
+            },
             url: 'http://localhost:4000/api/ofertas'
         })
         dispatch({

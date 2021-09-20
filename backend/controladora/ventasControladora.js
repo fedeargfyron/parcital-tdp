@@ -1,26 +1,55 @@
 const Venta = require('../modelos/Venta')
 const { propiedad } = require('../modelos/Propiedad')
+const { persona } = require('../modelos/Persona')
+const mongoose = require('mongoose')
+const MongoClientCreator = require('./client')
 const getVentas = async (req, res) => {
     try {
-        let ventas
-        let compras
-        if(req.user.tipo === "agente"){  
-            ventas = await Venta.find({
-                agente: req.user._id
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ventas',
+                message: 'Inicie sesión'
             })
-        }
-        compras = await Venta.find({
-            cliente: req.user._id
+        let ventas = []
+        let limit = 10
+        const cliente = await persona.findOne({
+            usuario: req.user._id
         })
-        res.json(ventas) //mandar compras también
+        let pipeline = pipelineGenerator(mongoose.Types.ObjectId(cliente._id))
+        if (req.query.filtros)
+            pipeline = filtrosAdd(req.query.filtros, pipeline)
+
+        if(req.query.profile)
+            limit = 3
+        const aggCursor = await (await MongoClientCreator('ventas', pipeline)).limit(limit)
+        await aggCursor.forEach(venta => {
+            ventas.push(venta)
+        })
+        res.json(ventas)
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ventas',
+            message: 'Server error'
+        })
     }
+}
+
+const getVentasAgente = async (req, res) => {
+
 }
 
 const setVenta = async (req, res) => {
     try {
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ventas',
+                message: 'Inicie sesión'
+            })
+
         const prop = await propiedad.findById(req.body.propId)
         const venta = new Venta({
             propiedad: req.body.propiedad,
@@ -31,14 +60,63 @@ const setVenta = async (req, res) => {
         prop.estado = "Vendida"
         await prop.save()
         await venta.save()
-        res.send('Venta creada')
+        res.send({
+            type: 'success',
+            title: 'Gestion de ventas',
+            message: 'Venta creada'
+        })
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ventas',
+            message: 'Server error'
+        })
     }
 }
 
+const pipelineGenerator = (id) => {
+    return pipelineBase = [{
+        '$match': {
+            'cliente': id
+        }
+        }, {
+            '$lookup': {
+            'from': 'personas',
+            'let': { 'agenteId': '$agente'},
+            'pipeline': [{
+              '$match': { 
+                '$expr': { '$eq': ["$$agenteId", "$_id"] }
+              } 
+            }, {
+            '$project': { '_id': 1, 'nombre': 1, 'apellido': 1, 'telefono': 1 }
+            }
+            ],
+            'as': 'agenteDatos'
+            }
+          },
+        {
+        '$unwind': {
+            'path': '$agenteDatos'
+            }
+        }
+    ]
+}
+
+const filtrosAdd = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+  
+    if(filtrosJson.fecha_inicio !== "" && filtrosJson.fecha_fin !== "")
+        pipeline[0].$match.fecha = { '$gte': new Date(filtrosJson.fecha_inicio), '$lt': new Date(filtrosJson.fecha_fin)}
+    else if(filtrosJson.fecha_inicio !== "")
+        pipeline[0].$match.fecha = { '$gte': new Date(filtrosJson.fecha_inicio)}
+    else if(filtrosJson.fecha_fin !== "")
+        pipeline[0].$match.fecha = { '$lt': new Date(filtrosJson.fecha_fin)}
+    return pipeline
+  }
+
 module.exports = {
     getVentas,
+    getVentasAgente,
     setVenta
 }

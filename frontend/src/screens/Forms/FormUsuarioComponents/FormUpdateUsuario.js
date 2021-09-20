@@ -10,6 +10,7 @@ const FormUpdateUsuario = ({id, sendUsuario}) => {
     const dispatch = useDispatch()
     const history = useHistory()
     const [usuarioEstado, setUsuarioEstado] = useState(true)
+    const [render, setRender] = useState(true)
     const [tabs, setTabs] = useState('Usuario')
     const gruposData = useSelector(state => state.grupos)
     const { loadingGrupos, errorGrupos, grupos } = gruposData
@@ -26,11 +27,13 @@ const FormUpdateUsuario = ({id, sendUsuario}) => {
             setUsuarioEstado(newData.estado)
             setData(newData)
         }
-        if((updateUser === null && !loadingUpdateUser) || (updateUser && updateUser._id !== id))
+        if(render){
             dispatch(getUpdateUser(id))
+            setRender(false)
+        }
         if(updateUser)
             handleUpdate()
-    }, [dispatch, id, updateUser, loadingUpdateUser])
+    }, [dispatch, id, updateUser, render])
     const handle = (e) => {
         const newData = {...data}
         newData[e.target.id] = e.target.value

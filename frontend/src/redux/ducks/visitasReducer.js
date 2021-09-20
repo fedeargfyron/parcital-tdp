@@ -4,7 +4,7 @@ const GET_VISITAS_REQUEST = 'GET_VISITAS_REQUEST'
 const GET_VISITAS_SUCCESS = 'GET_VISITAS_SUCCESS'
 const GET_VISITAS_FAIL = 'GET_VISITAS_FAIL'
 
-export const getVisitas = () => async (dispatch) => {
+export const getVisitas = (filtros, profile) => async (dispatch) => {
     try{
         dispatch({
             type: GET_VISITAS_REQUEST
@@ -12,6 +12,10 @@ export const getVisitas = () => async (dispatch) => {
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
+            params: {
+                filtros: filtros,
+                profile: profile
+            },
             url: 'http://localhost:4000/api/visitas'
         })
         dispatch({

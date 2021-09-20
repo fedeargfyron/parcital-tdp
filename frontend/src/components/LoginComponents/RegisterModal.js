@@ -3,7 +3,10 @@ import '../../Styles/FormStyle.css'
 import './RegisterModal.css'
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useDispatch } from 'react-redux'
+import messageAdder from '../../MessageAdder'
 const RegisterModal = ({setRegister}) => {
+    const dispatch = useDispatch()
     const [data, setData] = useState({
         nombre: "",
         apellido: "",
@@ -18,15 +21,21 @@ const RegisterModal = ({setRegister}) => {
         newdata[e.target.id] = e.target.value
         setData(newdata)
     }
-    const sendRegister = (e) => {
+    const sendRegister = async (e) => {
         e.preventDefault()
-        axios({
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
+        await axios({
             method: "POST",
             data: data,
             withCredentials: true,
             url: 'http://localhost:4000/api/personas/registrar'
-        }).then({
-
+        }).then((res) => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
         })
     }
 

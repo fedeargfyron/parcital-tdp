@@ -3,7 +3,10 @@ import axios from 'axios'
 import '../../Styles/FormStyle.css'
 import './PasswordModal.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useDispatch } from 'react-redux'
+import messageAdder from '../../MessageAdder'
 const PasswordModal = ({setRecuperarPassword}) => {
+    const dispatch = useDispatch()
     const [data, setData] = useState({
         email: ""
     })
@@ -12,13 +15,25 @@ const PasswordModal = ({setRecuperarPassword}) => {
         newdata[e.target.id] = e.target.value
         setData(newdata)
     }
-    const sendEmail = (e) => {
+    const sendEmail = async (e) => {
         e.preventDefault()
-        axios({
-            //recuperar email
-        }).then({
-
+        dispatch({
+            type: 'LOADING_TRUE'
         })
+        await axios({
+            method: 'POST',
+            params: {
+                email: data.email
+            },
+            withCredentials: true,
+            url: 'http://localhost:4000/api/usuarios/resetPassword'
+        }).then((res) => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+        })
+    
     }
     return (
         <div className="blackscreen">

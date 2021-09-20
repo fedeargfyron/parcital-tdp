@@ -9,6 +9,7 @@
     top: 0;
     max-width: 100%;
     width: 100vw;
+    height: auto;
 }
 
 .form-title{
@@ -21,9 +22,10 @@
     min-height: 100vh;
     max-width: 1050px;
     padding-top: 60px;
+    padding-bottom: 60px;
     margin: auto;
-    height: auto;
     background: rgba(255, 255, 255, 0.9);
+
 }
 
 .form-container{
@@ -52,6 +54,7 @@
 
 .grupo-checkbox,
 .usuario-checkbox,
+.horario-checkbox,
 .accion-checkbox{
     margin: .25rem;
     width: 25px;
@@ -264,4 +267,76 @@
 
 .not-display{
     display: none;
+}
+
+.caracteristicas{
+    padding: 0 1rem;
+    font-size: 1rem;
+    margin: 0 1rem;
+    font-family: 'Roboto Condensed';
+}
+
+.caracteristicas li{
+    margin-bottom: .5rem;
+}
+
+.circular{
+    margin-top: 2rem;
+}
+
+.upload-image-container{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.imagenes-input > input{
+    display: none;
+}
+
+.upload-image-container > p{
+    width: fit-content;
+    text-align: center;
+    margin: 0;
+}
+
+.imagenes-input > label{
+    font-size: 1rem;
+    font-family: 'Roboto Mono';
+    font-weight: 600;
+    background: #025bee;
+    padding: .75rem;
+    border-radius: 6px;
+    color: white;
+    width: auto;
+    cursor: pointer;
+}
+
+.imagenes-input{
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#imagenes{
+    border: 1px solid black;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;
+    margin: .25rem;
+}
+
+.imagenes-title{
+    font-family: 'Roboto Condensed';
+    font-size: 1.1rem;
+}
+
+.imagen{
+    max-width: 250px;
+    width: 100%;
+    min-height: 225px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
 }

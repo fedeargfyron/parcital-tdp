@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import './Forms.css'
 import HeaderPage from '../../components/HeaderPage'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { getGrupos } from '../../redux/ducks/gruposReducer'
 import FormNewUsuario from './FormUsuarioComponents/FormNewUsuario'
 import FormUpdateUsuario from './FormUsuarioComponents/FormUpdateUsuario'
+import messageAdder from '../../MessageAdder'
 
 const FormUsuario = () => {
     const { id } = useParams()
     const dispatch = useDispatch()
-    const history = useHistory()
     const [modoUpdate, setModoUpdate] = useState(false)
     useEffect(() => {
         if(id !== undefined)
@@ -29,6 +29,9 @@ const FormUsuario = () => {
 
     const sendUsuario = async (e, data) => {
         e.preventDefault()
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
         let sendData = getCheckedData(data)
         let method
         let url
@@ -45,7 +48,12 @@ const FormUsuario = () => {
             withCredentials: true,
             data: sendData,
             url: url
-        }).then(res => console.log(res))
+        }).then(res => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+        })
     }
     return(
         <div className="formScreen">

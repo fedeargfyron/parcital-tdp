@@ -6,7 +6,6 @@ const GET_PROPIEDADES_FAIL = 'GET_PROPIEDADES_FAIL'
 
 export const getPropiedades = (tipo, filtros) => async (dispatch) => {
     try{
-        
         dispatch({
             type: GET_PROPIEDADES_REQUEST
         })

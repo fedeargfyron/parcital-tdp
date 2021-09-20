@@ -17,10 +17,16 @@
     
 }
 
-.horarios-grid{
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: .5rem;
+.horarios-container{
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    font-size: 1.1rem;
+}
+
+.horarios-container > option{
+    font-family: 'Roboto Mono';
+    font-weight: 1000;
+    font-size: 1.1rem;
 }
 
 .horario-title{
@@ -60,6 +66,10 @@
 .btn-solicitar-visita:hover{
     background: #e1ffe5;
     
+}
+
+.sinHorarios{
+    font-size: 1rem;
 }
 
 @media screen and (max-width: 1720px) {

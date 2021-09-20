@@ -1,6 +1,6 @@
 .homescreen{
     background-image: url('../imagenes/Comprar.jpg');
-    background-size: 100%;
+    background-size: cover;
     width: 100vw;
     max-width: 100%;
     height: 100vh;

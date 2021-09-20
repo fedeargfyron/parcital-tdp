@@ -6,12 +6,11 @@ import '../Styles/FormStyle.css'
 import './LoginScreen.css'
 import RegisterModal from '../components/LoginComponents/RegisterModal'
 import PasswordModal from '../components/LoginComponents/PasswordModal'
-import { CircularProgress } from '@material-ui/core'
+import messageAdder from '../MessageAdder'
 import axios from 'axios'
 const LoginScreen = () => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const [loading, setLoading] = useState(false)
     const [data, setData] = useState({
         username: "",
         password: ""
@@ -25,13 +24,22 @@ const LoginScreen = () => {
     const [register, setRegister] = useState(false)
     const sendLogin = (e) => {
         e.preventDefault()
-        setLoading(true)
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
         axios({
             method: 'POST',
             data: data,
             withCredentials: true,
             url: 'http://localhost:4000/api/logUser'
-        }).then( async () => {
+        }).then( async (res) => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            console.log(res.data)
+            if(res.data.type === "danger")
+                return messageAdder(res.data)
+                
             await dispatch(getUser())
             history.push('/')
         })
@@ -40,7 +48,6 @@ const LoginScreen = () => {
         <div className="LoginScreen">
             <div className="form-container">
                 <h4 className="titleLogin">Inicio de sesión</h4>
-                {loading && <CircularProgress />}
                 <form className="form" onSubmit={(e) => sendLogin(e)}>
                     <input onChange={e => handle(e)} type="text" placeholder="Usuario" id="username" value={data.usuario} required/>
                     <input onChange={e => handle(e)} type="text" placeholder="Contraseña" id="password" value={data.contraseña} required/>

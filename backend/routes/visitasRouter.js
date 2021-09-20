@@ -4,8 +4,7 @@ const Router = express.Router()
 const {
     getVisitas,
     getVisitasAgente,
-    setVisita,
-    updateVisita
+    setVisita
 } = require('../controladora/visitasControladora')
 Router.get('/', getVisitas)
 

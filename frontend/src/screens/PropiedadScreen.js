@@ -1,62 +1,70 @@
 import './PropiedadesScreen.css'
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import { useParams } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { getPropiedad } from '../redux/ducks/propiedadReducer'
 import HeaderPage from '../components/HeaderPage'
 import './PropiedadScreen.css'
 import OfertaForm from '../components/PropiedadComponents/OfertaForm'
 import VisitaForm from '../components/PropiedadComponents/VisitaForm'
+import { CircularProgress } from '@material-ui/core'
 const PropiedadScreen = () => {
+    const { id, servicio } = useParams()
+    const dispatch = useDispatch()
+    const propiedadInfo = useSelector((state) => state.propiedad)
+    const { propiedad, loadingPropiedad, errorPropiedad } = propiedadInfo
+    useEffect(() => {
+        dispatch(getPropiedad(id, true))
+    }, [dispatch, id])
     const [ofertaForm, setOfertaForm] = useState(false)
     return(
         <div className="PropiedadScreen">
             <HeaderPage titulo={"Dirección de la propiedad"}/>
-            <div className="precioOferta">
-                <p>Precio: <span>$Precio</span></p>
-                <button onClick={() => setOfertaForm(true)} id="Ofertar propiedad">Ofertar por esta propiedad</button>
+            { loadingPropiedad ? <div className="circular centerCircularProgress"><CircularProgress /></div> 
+            : errorPropiedad ? <h4>Error!</h4> 
+            : propiedad && <>
+        <div className="precioOferta">
+            <p>Precio: <span>${propiedad.precio}</span></p>
+            <button onClick={() => setOfertaForm(true)} id="Ofertar propiedad">Ofertar por esta propiedad</button>
+        </div>
+        <div className="line"></div>
+        <div className="caracteristicas-generales">
+            <h4 className="caracteristicas-title">Caracteristicas generales</h4>
+            <ul className="caracteristicas">
+                <li><span>{propiedad.tipoDatos.tipo} de {propiedad.tipoDatos.cantidad_habitaciones} dormitorios</span> en Rosario</li>
+                <li>Baños: <span>{propiedad.tipoDatos.cantidad_baños}</span></li>
+                <li>Cochera: <span>{propiedad.tipoDatos.cochera ? "Si" : "No"}</span></li>
+                <li>Antiguedad: <span>{propiedad.tipoDatos.antiguedad}</span></li>
+                <li>Superficie: <span>{propiedad.superficie}m²</span></li>
+                <li>Estado: <span>{propiedad.estado_propiedad}</span></li>
+                <li>Cantidad de pisos: <span>{propiedad.tipoDatos.cantidad_pisos}</span></li>
+            </ul>
+        </div>
+        <div className="line"></div>
+        <div className="descripcion">
+            <h4 className="descripcion-title">Descripción</h4>
+            <p>
+                {propiedad.descripcion}
+                Acá va a haber una descripción del edificio completa. Para rellenar espacio voy a usar un lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            </p>
+            <p>
+                {propiedad.entorno}
+                Acá va a haber una descripción del entorno del edificio. Para rellenar espacio voy a usar un lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+        </div>
+        <div className="line"></div>
+        <div className="galeria-imagenes">
+            <h4 className="galeria-title">Galería de imagenes</h4>
+            <div className="imagenes-container">
+                {propiedad.imagenes.map((imagen, index )=> 
+                <div className="imagen-container" key={index}>
+                    <img alt={index} src={imagen}/>
+                </div>)}
             </div>
-            <div className="line"></div>
-            <div className="caracteristicas-generales">
-                <h4 className="caracteristicas-title">Caracteristicas generales</h4>
-                <ul className="caracteristicas">
-                    <li><span>Casa de 2 dormitorios</span> en Rosario</li>
-                    <li>Baños: <span>1</span></li>
-                    <li>Cochera: <span>Si</span></li>
-                    <li>Antiguedad: <span>11 años</span></li>
-                    <li>Superficie: <span>73m²</span></li>
-                    <li>Estado: <span>A estrenar</span></li>
-                    <li>Cantidad de pisos: 1</li>
-                </ul>
-            </div>
-            <div className="line"></div>
-            <div className="descripcion">
-                <h4 className="descripcion-title">Descripción</h4>
-                <p>
-                    Acá va a haber una descripción del edificio completa. Para rellenar espacio voy a usar un lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                </p>
-                <p>
-                    Acá va a haber una descripción del entorno del edificio. Para rellenar espacio voy a usar un lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-            </div>
-            <div className="line"></div>
-            <div className="galeria-imagenes">
-                <h4 className="galeria-title">Galería de imagenes</h4>
-                
-                <div className="imagenes-container">
-                    <div className="imagen-container">
-                        <img alt="s" src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
-                    </div>
-                    <div className="imagen-container">
-                        <img alt="s" src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
-                    </div>
-                    <div className="imagen-container">
-                        <img alt="s" src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg"/>
-                    </div>
-                    <div className="imagen-container">
-                        <img alt="s" src="https://i1.wp.com/moovemag.com/wp-content/uploads/2021/03/casa-contenedores-maritimos-boxhouse.jpeg?fit=700%2C836&ssl=1"/>
-                    </div>
-                </div>
-            </div>
-            {ofertaForm && <OfertaForm setOfertaForm={setOfertaForm}/>}
-            <VisitaForm />
+        </div>
+        {ofertaForm && propiedad && <OfertaForm setOfertaForm={setOfertaForm} propiedad={propiedad._id} servicio={servicio}/>}
+        <VisitaForm servicio={propiedad.servicioDatos._id} visitas={propiedad.visitasHorarios} agenteHorarios={propiedad.agenteDatos.horarios} />
+        </>}
         </div>
     )
 }

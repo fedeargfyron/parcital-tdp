@@ -1,12 +1,24 @@
 import React, { useState, useEffect} from 'react'
 import Accion from './Accion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-const Formulario = ({formulario, subModuloChecked}) => {
+const Formulario = ({formulario, subModuloChecked, grupo, setOnClickChangedSubModulo, onClickChangedSubModulo}) => {
     const [notDisplay, setNotDisplay] = useState(false)
     const [formularioChecked, setFormularioChecked] = useState(false)
+    const [render, setRender] = useState(true)
     useEffect(() => {
-        subModuloChecked ? setFormularioChecked(true) : setFormularioChecked(false)
-    }, [subModuloChecked])
+        if(onClickChangedSubModulo){
+            subModuloChecked ? setFormularioChecked(true) : setFormularioChecked(false)
+            setOnClickChangedSubModulo(false)
+        }
+        const verificarFormulario = () => {
+            setRender(false)
+            subModuloChecked ? setFormularioChecked(true) : setFormularioChecked(false)
+            let difference = formulario.acciones.filter(accionInForm => grupo.acciones.includes(accionInForm._id))
+            if(difference.length === formulario.acciones.length)
+                setFormularioChecked(true)
+        }
+        grupo && render && verificarFormulario()
+    }, [subModuloChecked, formulario.acciones, grupo, render, onClickChangedSubModulo, setOnClickChangedSubModulo])
     return(
         <div className="formulario-acciones-container">
             <div className="border-line-formulario"></div>
@@ -28,7 +40,7 @@ const Formulario = ({formulario, subModuloChecked}) => {
             </div>
             <div className={notDisplay ? "not-display" : ""}>
             {formulario.acciones && formulario.acciones.map(accion => 
-                <Accion accion={accion} formularioChecked={formularioChecked}key={accion._id}/>
+                <Accion accion={accion} grupo={grupo} formularioChecked={ formularioChecked }key={accion._id}/>
             )}
             </div>
         </div>

@@ -4,7 +4,7 @@ const GET_GRUPOS_REQUEST = 'GET_GRUPOS'
 const GET_GRUPOS_SUCCESS = 'GET_GRUPOS_SUCCESS'
 const GET_GRUPOS_FAIL = 'GET_GRUPOS_FAIL'
 
-export const getGrupos = () => async (dispatch) => {
+export const getGrupos = (filtros) => async (dispatch) => {
     try{
         dispatch({
             type: GET_GRUPOS_REQUEST
@@ -12,6 +12,9 @@ export const getGrupos = () => async (dispatch) => {
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
+            params: {
+                filtros: filtros
+            },
             url: 'http://localhost:4000/api/grupos'
         })
         dispatch({

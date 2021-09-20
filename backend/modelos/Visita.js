@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 
 const visitaSchema = new mongoose.Schema({
-    fecha_inicio:{
+    fecha:{
         type: Date,
-        required: true,
-        default: Date.now()
+        required: true
     },
     horario:{
         type: String,
@@ -14,6 +13,11 @@ const visitaSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Persona"
+    },
+    servicio: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Servicio"
     },
     estado:{
         type: String,

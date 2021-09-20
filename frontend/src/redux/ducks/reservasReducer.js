@@ -4,7 +4,7 @@ const GET_RESERVAS_REQUEST = 'GET_RESERVAS_REQUEST'
 const GET_RESERVAS_SUCCESS = 'GET_RESERVAS_SUCCESS'
 const GET_RESERVAS_FAIL = 'GET_RESERVAS_FAIL'
 
-export const getReservas = () => async (dispatch) => {
+export const getReservas = (filtros) => async (dispatch) => {
     try{
         dispatch({
             type: GET_RESERVAS_REQUEST
@@ -12,6 +12,9 @@ export const getReservas = () => async (dispatch) => {
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
+            params: {
+                filtros: filtros
+            },
             url: 'http://localhost:4000/api/reservas'
         })
         dispatch({

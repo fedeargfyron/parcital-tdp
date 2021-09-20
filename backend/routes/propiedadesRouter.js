@@ -7,10 +7,13 @@ const {
     getPropiedad,
     setPropiedad,
     updatePropiedad,
-    removePropiedad
+    removePropiedad,
+    getPropiedadesDisponibles
 } = require('../controladora/propiedadesControladora')
 
 Router.get('/', getPropiedades)
+
+Router.get('/disponibles', getPropiedadesDisponibles)
 
 Router.get('/:id', getPropiedad)
 

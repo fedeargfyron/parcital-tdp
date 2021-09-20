@@ -1,8 +1,8 @@
 import Navbar from './components/Navbar/Navbar'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import './App.css';
+import { useSelector } from 'react-redux'
 import { useEffect, useState, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios'
 import LoginScreen from './screens/LoginScreen'
 import HomeScreen from './screens/HomeScreen'
@@ -17,6 +17,7 @@ import GestionPropiedadesScreen from './screens/Gestiones/GestionPropiedadesScre
 import GestionServiciosVentaScreen from './screens/Gestiones/GestionServiciosVentaScreen';
 import GestionUsuariosScreen from './screens/Gestiones/GestionUsuariosScreen';
 import GestionVentasScreen from './screens/Gestiones/GestionVentasScreen';
+import ServicioVentaScreen from './screens/Forms/ServicioVentaScreen';
 import FormGrupo from './screens/Forms/FormGrupo';
 import FormPersona from './screens/Forms/FormPersona';
 import FormPropiedad from './screens/Forms/FormPropiedad';
@@ -28,11 +29,18 @@ import Reservas from './screens/MiPerfil/Reservas';
 import Compras from './screens/MiPerfil/Compras';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
-import { faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus, faUpload, faDoorOpen } from '@fortawesome/free-solid-svg-icons'
 import PrivateRoute from './PrivateRoute';
+import PermissionRoute from './PermissionRoute';
+import ReactNotification from 'react-notifications-component'
+import { CircularProgress } from '@material-ui/core';
+import 'animate.css/animate.min.css';
+import 'react-notifications-component/dist/theme.css'
 
 function App() {
   const [render, setRender] = useState(false)
+  const loadingScreen = useSelector(state => state.generalLoading)
+
   const userReload = useRef("")
   useEffect(() => {
       const buscarUser = async () => {
@@ -46,59 +54,60 @@ function App() {
     }
     buscarUser()
 }, [])
-  console.log(userReload.current)
-  library.add(fab, faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus)
+  library.add(fab, faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus, faUpload, faDoorOpen)
   return !render ? <></> : (
     <Router>
       <div className="App">
         <Navbar></Navbar>
+        <ReactNotification />
+        {loadingScreen && <div className="loading-container"><CircularProgress /></div>}
         <main>
         <Switch>
             <Route exact path="/" component={HomeScreen}/>
             <Route exact path="/login" component={LoginScreen}>
             </Route>
             <Route exact path="/propiedades/:tipo" component={PropiedadesScreen}/>
-            <Route exact path="/propiedad/:id" component={PropiedadScreen} />
+            <Route exact path="/propiedad/:id/:servicio" component={PropiedadScreen} />
 
-            {/* Permisos de PrivateRoute con validación de acciones */}
             <Route exact path="/gestion/personas">
-              <PrivateRoute component={<GestionPersonasScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionPersonasScreen />} userReload={userReload.current} formulario={"Gestionar personas"}/>
             </Route>
             <Route exact path="/gestion/grupos">
-              <PrivateRoute component={<GestionGruposScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionGruposScreen />} userReload={userReload.current} formulario={"Gestionar grupos"}/>
             </Route>
             <Route exact path="/gestion/horarios">
-              <PrivateRoute component={<GestionHorariosScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionHorariosScreen />} userReload={userReload.current} formulario={"Gestionar horarios"}/>
             </Route>
             <Route exact path="/gestion/ofertas">
-              <PrivateRoute component={<GestionOfertasScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionOfertasScreen />} userReload={userReload.current} formulario={"Gestionar ofertas"}/>
             </Route>
             <Route exact path="/gestion/propiedades">
-              <PrivateRoute component={<GestionPropiedadesScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionPropiedadesScreen />} userReload={userReload.current} formulario={"Gestionar propiedades"}/>
             </Route>
-            <Route exact path="/gestion/serviciosVenta">
-              <PrivateRoute component={<GestionServiciosVentaScreen />} userReload={userReload.current}/>
+            <Route exact path="/gestion/servicioVenta">
+              <PermissionRoute component={<GestionServiciosVentaScreen />} userReload={userReload.current} formulario={"Gestionar servicio venta"}/>
             </Route>
             <Route exact path="/gestion/usuarios">
-              <PrivateRoute component={<GestionUsuariosScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionUsuariosScreen />} userReload={userReload.current} formulario={"Gestionar usuarios"}/>
             </Route>
             <Route exact path="/gestion/ventas">
-              <PrivateRoute component={<GestionVentasScreen />} userReload={userReload.current}/>
+              <PermissionRoute component={<GestionVentasScreen />} userReload={userReload.current} formulario={"Gestionar ventas"}/>
             </Route>
             <Route exact path="/formPropiedad/:id?">
-              <PrivateRoute component={<FormPropiedad />} userReload={userReload.current}/>
+              <PermissionRoute component={<FormPropiedad />} userReload={userReload.current} formulario={"Gestionar propiedades"}/>
             </Route>
             <Route exact path="/formGrupo/:id?">
-              <PrivateRoute component={<FormGrupo />} userReload={userReload.current}/>
+              <PermissionRoute component={<FormGrupo />} userReload={userReload.current} formulario={"Gestionar grupos"}/>
             </Route>
             <Route exact path="/formUsuario/:id?">
-              <PrivateRoute component={<FormUsuario />} userReload={userReload.current}/>
+              <PermissionRoute component={<FormUsuario />} userReload={userReload.current} formulario={"Gestionar usuarios"}/>
             </Route>
             <Route exact path="/formPersona/:id?">
-              <PrivateRoute component={<FormPersona />} userReload={userReload.current}/>
+              <PermissionRoute component={<FormPersona />} userReload={userReload.current} formulario={"Gestionar personas"}/>
             </Route>
-            {/* Fin permisos de PrivateRoute con validación de acciones */}
-            {/* Permisos de PrivateRoute normal */}
+            <Route exact path="/servicioVenta/:id">
+              <PermissionRoute component={<ServicioVentaScreen />} userReload={userReload.current} formulario={"Gestionar servicio venta"}/>
+            </Route>
             <Route exact path="/perfil">
               <PrivateRoute component={<Perfil />} userReload={userReload.current}/>
             </Route>

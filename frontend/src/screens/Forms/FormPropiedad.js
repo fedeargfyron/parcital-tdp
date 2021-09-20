@@ -2,22 +2,29 @@ import React, { useState, useEffect } from 'react'
 import './Forms.css'
 import HeaderPage from '../../components/HeaderPage'
 import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import FormNewPropiedad from './FormPropiedadComponents/FormNewPropiedad'
 import axios from 'axios'
 import FormUpdatePropiedad from './FormPropiedadComponents/FormUpdatePropiedad'
+import messageAdder from '../../MessageAdder'
 
 
 const FormPropiedad = () => {
     const { id } = useParams()
+    const dispatch = useDispatch()
     const [modoUpdate, setModoUpdate] = useState(false)
 
     useEffect(() => {
-        if(id !== undefined)
+        if(id)
             setModoUpdate(true)
     }, [id])
 
     const sendPropiedad = async (e, data) => {
         e.preventDefault()
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
+
         let method
         let url
         if(modoUpdate){
@@ -34,7 +41,12 @@ const FormPropiedad = () => {
             withCredentials: true,
             data: data,
             url: url
-        }).then(res => console.log(res))
+        }).then(res => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+        })
     }
 
     return(

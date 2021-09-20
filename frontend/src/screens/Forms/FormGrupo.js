@@ -1,38 +1,26 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import './Forms.css'
+import { useParams } from 'react-router-dom'
 import HeaderPage from '../../components/HeaderPage'
-import { useHistory } from 'react-router'
-import Modulo from './FormGrupoComponents/Modulo'
-import Usuario from './FormGrupoComponents/Usuario'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getUsers } from '../../redux/ducks/usersReducer'
 import { getModulos } from '../../redux/ducks/modulosReducer'
-import { CircularProgress } from '@material-ui/core'
-
+import FormNewGrupo from './FormGrupoComponents/FormNewGrupo'
+import FormUpdateGrupo from './FormGrupoComponents/FormUpdateGrupo'
+import messageAdder from '../../MessageAdder'
 const FormGrupo = () => {
     const dispatch = useDispatch()
-    const usersInfo = useSelector(state => state.users)
-    const ModulosInfo = useSelector(state => state.modulos)
-    const { users, loadingUsers, errorUsers } = usersInfo
-    const { modulos, loadingModulos, errorModulos } = ModulosInfo
-    const [tabs, setTabs] = useState("Grupo")
-    const [grupoEstado, setGrupoEstado] = useState(true)
-    const history = useHistory()
+    const { id } = useParams()
+    const [modoUpdate, setModoUpdate] = useState(false)
+
     useEffect(() => {
         dispatch(getUsers())
         dispatch(getModulos())
-    }, [dispatch])
-
-    const [data, setData] = useState({
-        nombre: '',
-        descripcion: '',
-        estado: true,
-        acciones: [],
-        usuarios: []
-    })
-    const getChecked = () => {
+        if(id)
+            setModoUpdate(true)
+    }, [dispatch, id])
+    const getChecked = (data) => {
         let usuariosId = []
         let accionesId = []
         const newdata ={...data}
@@ -42,84 +30,44 @@ const FormGrupo = () => {
         usuarios.forEach(usuario => usuariosId.push(usuario.id))
         newdata['acciones'] = accionesId
         newdata['usuarios'] = usuariosId
-        setData(newdata)
         return newdata
     }
 
-    const handle = (e) => {
-        const newdata ={...data}
-        newdata[e.target.id] = e.target.value
-        setData(newdata)
-    }
-
-    const handleEstado = () => {
-        setGrupoEstado(!grupoEstado)
-        const newdata = {...data}
-        newdata["estado"] = !grupoEstado
-        setData(newdata)
-    }
-
-    const sendGrupo = async (e) => {
+    const sendGrupo = async (e, data, grupoViejo) => {
         e.preventDefault()
-        let sendData = getChecked()
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
+        let sendData = getChecked(data)
+        sendData.grupoViejo = grupoViejo
+        let method
+        let url
+        if(modoUpdate){
+            method = 'PUT'
+            url = `http://localhost:4000/api/grupos/${id}`
+        }
+        else{
+            method = 'POST'
+            url = 'http://localhost:4000/api/grupos'
+        }
         await axios({
-            method: 'POST',
+            method: method,
             withCredentials: true,
             data: sendData,
-            url: 'http://localhost:4000/api/grupos'
-        }).then(res => console.log(res))
+            url: url
+        }).then(res => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+        })
     }
     return(
         <div className="formScreen">
             <div className="page-container">
                 <HeaderPage titulo="Grupo"/>
-                <form className="form-container tabs-container" onSubmit={(e) => sendGrupo(e)}>
-                    <label className="form-title">Agregar grupo</label>
-                    <div className="encabezados">
-                        <button type='button' className={tabs === "Grupo" ? "active-btn" : ""} value="Grupo" onClick={() => setTabs("Grupo")}>Grupo</button>
-                        <button type='button' className={tabs === "Usuarios" ? "active-btn" : ""} value="Usuarios" onClick={() => setTabs("Usuarios")}>Usuarios</button>
-                        <button type='button' className={tabs === "Acciones" ? "active-btn" : ""} value="Acciones" onClick={() => setTabs("Acciones")}>Acciones</button>
-                    </div>
-                    <div className={tabs === "Grupo" ? "tab tab-grupo focused" : "tab tab-grupo" }>
-                        <p>Crear</p>
-                        <div className="inputs-container">
-                            <input onChange={(e) => handle(e)} id="nombre" type="text" placeholder="Nombre" required/>
-                        </div>
-                        <div className="inputs-container">
-                            <textarea onChange={(e) => handle(e)} id="descripcion" placeholder="Descripcion" required/>
-                        </div>
-                        <div className="estado-check">
-                            <div className={grupoEstado ? "btn-green estado-checkbox" : "btn-red estado-checkbox"} onClick={() => handleEstado()}>
-                            <FontAwesomeIcon icon={grupoEstado ? 'check' : 'times'} className={grupoEstado ? "fas fa-check" : "fas fa-times"}/>
-                            </div>
-                            <p>Estado</p>
-                        </div>
-                    </div>
-                    {/* ///////////////////////////////////////////////////////////////////// */}
-                    <div className={tabs === "Usuarios" ? "tab tab-usuarios focused" : "tab tab-usuarios"}>
-                        <p>Asignar</p>
-                        <div className="usuarios-container" id="usuarios-container">
-                            {loadingUsers ? <CircularProgress/> 
-                            : errorUsers ? <p>Ocurrió un error cargando los usuarios</p> 
-                            : users && users.map(usuario => 
-                                <Usuario usuario={usuario} key={usuario._id}/>
-                            )}
-                        </div>
-                    </div>
-                    {/* ///////////////////////////////////////////////////////////////////// */}
-                    <div className={tabs === "Acciones" ? "tab tab-acciones focused" : "tab tab-acciones"}>
-                        <p>Acciones</p>
-                        {loadingModulos ? <CircularProgress/> 
-                        : errorModulos ? <p>Ocurrió un error cargando los modulos</p> 
-                        : modulos && modulos.map(modulo => 
-                            <Modulo modulo={modulo} key={modulo.id}/>
-                        )}
-                    </div>
-                    <div className="form-buttons-container">
-                        <button className="btn-green"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
-                        <button type='button' className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times' className="fas fa-times"/></button>
-                    </div>
-                </form>
+                {modoUpdate ? <FormUpdateGrupo id={id} sendGrupo={sendGrupo} /> 
+                : <FormNewGrupo sendGrupo={sendGrupo}/> }
             </div>
         </div>
     )

@@ -20,7 +20,8 @@ const FormNewPropiedad = ({sendPropiedad}) => {
         antiguedad: "",
         cochera: false,
         piso: "",
-        acceso: ""
+        acceso: "",
+        imagenes: []
     })
 
     const handle = (e) => {
@@ -34,6 +35,34 @@ const FormNewPropiedad = ({sendPropiedad}) => {
         const newdata = {...data}
         newdata["cochera"] = !cochera
         setData(newdata)
+    }
+
+    const preview = async (e) => {
+        const newdata ={...data}
+        newdata["imagenes"] = await previewData([...e.target.files])
+        setData(newdata)
+    }
+
+    const previewData = async (files) => {
+        
+        return await Promise.all(files.map(async (file) => {
+            return await readUploadedFile(file)
+        }))
+    }
+    const readUploadedFile = (file) => {
+        let reader = new FileReader()
+
+        return new Promise((resolve, reject) => {
+            reader.onerror = () => {
+                reader.abort();
+                reject(new DOMException("Problem parsing input file."));
+            };
+        
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(file);
+        })
     }
 
     return(
@@ -97,10 +126,23 @@ const FormNewPropiedad = ({sendPropiedad}) => {
             <div className="inputs-container">
                 <textarea placeholder="Entorno" />
             </div>
-            {/* Falta seleccionador de imagenes */}
+            <div className="inputs-container  upload-image-container">
+                <p className="imagenes-title">Imagenes:  <span>{data.imagenes.length}</span></p>
+                <div id="imagenes">
+                    {data.imagenes.length > 0 && data.imagenes.map((imagen, index) => 
+                    <div className="imagen" key={index} style={{backgroundImage: "url('" + imagen + "')"}}>
+                    </div>)}
+                </div>
+                <div className="inputs-container imagenes-input">
+                    <input type="file" accept="image/png, image/jpeg" multiple id="file-input" onChange={(e) => preview(e)}></input>
+                    <label htmlFor="file-input">Imagenes <FontAwesomeIcon icon="upload" /></label>
+                </div>
+                
+            </div>
             <div className="form-buttons-container">
                 <button className="btn-green"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
                 <button type="button" className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times' className="fas fa-times" /></button>
+                
             </div>
         </form>
     )

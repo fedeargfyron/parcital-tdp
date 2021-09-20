@@ -3,13 +3,16 @@ module.exports = function(express, passport) {
     const {
         getUser,
         loginUser,
-        logOut
+        logOut,
+        userData
     } = require('../controladora/logUserControladora')(passport)
     Router.post('/', loginUser)
 
     Router.get('/', getUser)
     
-    Router.get('/logout', logOut)
+    Router.get('/userdata', userData)
+    
+    Router.post('/logOut', logOut)
 
     return Router
 }

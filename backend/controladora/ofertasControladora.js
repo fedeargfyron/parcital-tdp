@@ -1,92 +1,298 @@
 const Oferta = require('../modelos/Oferta')
 const { servicioVenta } = require('../modelos/Servicio')
+const { persona } = require('../modelos/Persona')
+const MongoClientCreator = require('./client')
 const { propiedad } = require('../modelos/Propiedad')
 const Reserva = require('../modelos/Reserva')
-//Checkear bien esto
+const mongoose = require('mongoose')
+
 const getOfertas = async (req, res) => {
     try {
-        const ofertas = await Oferta.find({
-            interesado: req.user._id
+        
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ofertas',
+                message: 'Inicie sesión'
+            })
+        let ofertas = []
+        let limit = 10
+        const interesado = await persona.findOne({
+            usuario: req.user._id
+        })
+        let pipeline = pipelineGenerator(mongoose.Types.ObjectId(interesado._id))
+        if (req.query.filtros)
+            pipeline = filtrosAdd(req.query.filtros, pipeline)
+
+        if(req.query.profile)
+            limit = 3
+        const aggCursor = await (await MongoClientCreator('ofertas', pipeline)).limit(limit)
+        await aggCursor.forEach(oferta => {
+            ofertas.push(oferta)
         })
         res.json(ofertas)
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ofertas',
+            message: 'Server error'
+        })
     }
 }
 
 const getOfertasAgente = async (req, res) => {
     try {
-        const servicios = await servicioVenta.find({
-            agente: req.user._id,
-            estado: "Activo"
-        })
-        const ofertas = servicios.map(servicio => {
-            servicio.ofertas.map(async (oferta) => {
-                return await Oferta.findById(oferta._id)
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ofertas',
+                message: 'Inicie sesión'
             })
+        let ofertas = []
+        let agente = await persona.findOne({
+            usuario: req.user._id
+        })
+        let pipeline = pipelineGeneratorAgente(mongoose.Types.ObjectId(agente._id))
+        if (req.query.filtros)
+            pipeline = filtrosAddAgente(req.query.filtros, pipeline)
+        
+        const aggCursor = await MongoClientCreator('servicios', pipeline)
+        await aggCursor.forEach(oferta => {
+            ofertas.push(oferta)
         })
         res.json(ofertas)
-    } catch {
+    } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ofertas',
+            message: 'Server error'
+        })
     }
 }
+
+
 
 const setOferta = async (req, res) => {
     try {
-        const prop = await propiedad.findById(req.body.propId)
-        const servicio = await servicioVenta.findById(prop.servicio._id)
-        const oferta = new Oferta({
-            monto: req.body.monto,
-            interesado: req.user._id,
-            //Settear default pendiente
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ofertas',
+                message: 'Inicie sesión'
+            })
+        const interesado = await persona.findOne({
+            usuario: req.user._id
         })
-        servicio.ofertas.push(oferta._id)
-        await servicio.save()
-        await oferta.save()
+
+        const ofertaPendiente = await Oferta.findOne({
+            interesado: interesado._id,
+            estado: "Pendiente"
+        })
+        if(ofertaPendiente)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ofertas',
+                message: 'Ya tiene una oferta pendiente en esta propiedad'
+            })
         
-        res.json('Oferta creada')
-    } catch {
+        const servicio = await servicioVenta.findOne({
+            propiedad: mongoose.Types.ObjectId(req.body.propiedad),
+            estado: "Activo",
+            tipo: req.body.servicio
+        })
+
+        const oferta = new Oferta({
+            monto: req.body.oferta,
+            interesado: interesado._id,
+            servicio: servicio._id
+        })
+        await oferta.save()
+        res.send({
+            type: 'success',
+            title: 'Gestion de ofertas',
+            message: 'Oferta creada'
+        })
+    } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ofertas',
+            message: 'Server error'
+        })
     }
 }
 
-const updateOferta = async (req, res) => {
+const aceptarOferta = async (req, res) => {
     try {
-        const oferta = await Oferta.findById(req.params.id)
-        oferta.estado = req.body.estado
-        if(req.body.estado === "Aceptada"){
-            const prop = await propiedad.findyById(req.body.propId)
-            const servicio = await servicioVenta.findById(prop.servicio._id)
-            const reserva = new Reserva({
-                cliente: oferta.interesado,
-                monto: oferta.monto,
-                estado: pendiente,
+        const prop = await propiedad.findById(req.query.propId)
+        if(prop.estado == "Reservada")
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de ofertas',
+                message: 'No se puede generar la reserva porque ya existe una pendiente en esta propiedad'
             })
-            servicio.reservas.push(reserva._id)
-            await servicio.save()
-            await reserva.save()
-            prop.estadoPropiedad()
-            await prop.save()
-            await oferta.save()
-            res.json('Reserva creada')
-        }
-        else {
-            await oferta.save()
-            res.json('Oferta rechazada')
-        }
+        const oferta = await Oferta.findById(req.params.id)
+        const reserva = new Reserva({
+            cliente: oferta.interesado,
+            monto: oferta.monto,
+            estado: "Pendiente",
+            servicio: oferta.servicio
+        })
+        oferta.estado = "Aceptada"
+        prop.estado = "Reservada"
+        await reserva.save()
+        await prop.save()
+        await oferta.save()
+        res.send({
+            type: 'success',
+            title: 'Gestion de ofertas',
+            message: 'Reserva creada!'
+        })
         
-    } catch {
+    } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ofertas',
+            message: 'Server error'
+        })
     }
 }
+
+const rechazarOferta = async (req, res) => {
+    try{
+        const oferta = await Oferta.findById(req.params.id)
+        oferta.estado = "Rechazada"
+        await oferta.save()
+        res.send({
+            type: 'success',
+            title: 'Gestion de ofertas',
+            message: 'Oferta rechazada!'
+        })
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de ofertas',
+            message: 'Server error'
+        })
+    }
+}
+
+const pipelineGenerator = (id) => {
+
+    let pipelineBase = [
+        {
+          '$match': {
+              'interesado': id
+          }
+        }, {
+            '$lookup': {
+              'from': 'servicios', 
+              'localField': 'servicio', 
+              'foreignField': '_id', 
+              'as': 'servicioDatos'
+            }
+          }, {
+            '$unwind': {
+              'path': '$servicioDatos'
+            }
+          }, {
+            '$lookup': {
+            'from': 'personas',
+            'let': { 'agenteId': '$servicioDatos.agente'},
+            'pipeline': [{
+              '$match': { 
+                '$expr': { '$eq': ["$$agenteId", "$_id"] }
+              } 
+            }, {
+            '$project': { '_id': 1, 'nombre': 1, 'apellido': 1, 'telefono': 1 }
+            }
+            ],
+            'as': 'agenteDatos'
+          }}, {
+            '$unwind': {
+              'path': '$agenteDatos'
+            }
+          }
+      ]
+    return pipelineBase
+}
+
+const pipelineGeneratorAgente = (id) => {
+
+    let pipelineBase = [
+        {
+          '$match': {
+              'agente': id
+          }
+        }, {
+            '$lookup': {
+              'from': 'ofertas', 
+              'localField': '_id', 
+              'foreignField': 'servicio', 
+              'as': 'ofertaDatos'
+            }
+          }, {
+            '$unwind': {
+              'path': '$ofertaDatos'
+            }
+          }, {
+            '$lookup': {
+            'from': 'personas',
+            'let': { 'interesadoId': '$ofertaDatos.interesado'},
+            'pipeline': [{
+              '$match': { 
+                '$expr': { '$eq': ["$$interesadoId", "$_id"] }
+              } 
+            }, {
+            '$project': { '_id': 1, 'nombre': 1, 'apellido': 1, 'telefono': 1 }
+            }
+            ],
+            'as': 'interesadoDatos'
+          }}, {
+            '$unwind': {
+              'path': '$interesadoDatos'
+            }
+          }
+      ]
+    return pipelineBase
+}
+
+const filtrosAdd = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+    if(filtrosJson.estado !== "")
+        pipeline[0].$match.estado = filtrosJson.estado
+    if(filtrosJson.fecha_inicio !== "" && filtrosJson.fecha_fin !== "")
+        pipeline[0].$match.fecha = { '$gte': new Date(filtrosJson.fecha_inicio), '$lt': new Date(filtrosJson.fecha_fin)}
+    else if(filtrosJson.fecha_inicio !== "")
+        pipeline[0].$match.fecha = { '$gte': new Date(filtrosJson.fecha_inicio)}
+    else if(filtrosJson.fecha_fin !== "")
+        pipeline[0].$match.fecha = { '$lt': new Date(filtrosJson.fecha_fin)}
+    return pipeline
+}
+
+const filtrosAddAgente = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+    if(filtrosJson.estado !== "")
+        pipeline.push( {'$match': {'ofertaDatos.estado': filtrosJson.estado}})
+
+    if(filtrosJson.fecha_inicio !== "" && filtrosJson.fecha_fin !== "")
+        pipeline.push( {'$match': {'ofertaDatos.fecha': { '$gte': new Date(filtrosJson.fecha_inicio), '$lt': new Date(filtrosJson.fecha_fin)}}})
+    else if(filtrosJson.fecha_inicio !== "")
+        pipeline.push( {'$match': {'ofertaDatos.fecha': { '$gte': new Date(filtrosJson.fecha_inicio)}}})
+    else if(filtrosJson.fecha_fin !== "")
+        pipeline.push( {'$match': {'ofertaDatos.fecha': { '$lt': new Date(filtrosJson.fecha_fin)}}})
+    return pipeline
+}
+
 
 module.exports = {
     getOfertas,
     getOfertasAgente,
     setOferta,
-    updateOferta
+    aceptarOferta,
+    rechazarOferta
 }

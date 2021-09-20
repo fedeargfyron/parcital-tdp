@@ -3,15 +3,73 @@ const { persona, dueño, agente } = require('../modelos/Persona')
 const { servicio } = require('../modelos/Servicio')
 const { propiedad } = require('../modelos/Propiedad')
 const Usuario = require("../modelos/Usuario")
+const MongoClientCreator = require('./client')
+const mongoose = require('mongoose')
 
 const getPersonas = async (req, res) => {
     try {
-        const personas = await persona.find({})
+        let personas = []
+        let pipeline = pipelineGenerator()
+        if(req.query.filtros)
+            pipeline = filtrosAdd(req.query.filtros, pipeline)
+        const aggCursor = await MongoClientCreator('personas', pipeline)
+        await aggCursor.forEach(persona => {
+            personas.push(persona)
+        })
         res.json(personas)
     } catch (err) {
         console.error(err)
         res.status(500).json({message: "server error"})
     }
+}
+const pipelineGenerator = () => {
+    let pipelineBase = [
+        {
+          '$match': {}
+        }, {
+            '$lookup': {
+              'from': 'usuarios', 
+              'let': {
+                'usuarioId': '$usuario'
+              }, 
+              'pipeline': [
+                {
+                  '$match': {
+                    '$expr': {
+                      '$eq': [
+                        '$$usuarioId', '$_id'
+                      ]
+                    }
+                  }
+                }, {
+                  '$project': {
+                    '_id': 1, 
+                    'usuario': 1
+                  }
+                }
+              ], 
+              'as': 'usuarioDatos'
+            }
+          }, {
+            '$unwind': {
+              'path': '$usuarioDatos',
+              'preserveNullAndEmptyArrays': true
+            }
+          }
+      ]
+    return pipelineBase
+}
+
+const filtrosAdd = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+    let nombreApellido = filtrosJson.nombreApellido.split(" ")
+    if(nombreApellido[0] && nombreApellido[0] != "")
+        pipeline[0].$match.nombre = new RegExp(nombreApellido[0], "i")
+    if(nombreApellido[1] && nombreApellido[1] != "")
+        pipeline[0].$match.apellido = new RegExp(nombreApellido[1], "i")
+    if(filtrosJson.email !== "")
+    pipeline[0].$match.email = new RegExp(filtrosJson.email, "i")
+    return pipeline
 }
 
 const getDuenos = async (req, res) => {
@@ -20,24 +78,58 @@ const getDuenos = async (req, res) => {
         res.json(dueños)
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de personas',
+            message: 'Server error'
+        })
     }
 }
 
 const getPersona = async (req, res) => {
     try {
-        const getPersona = await persona.findById(req.params.id)
-        res.json(getPersona)
+        let persona
+        let pipeline = pipelineGenerator()
+        pipeline[0].$match._id = mongoose.Types.ObjectId(req.params.id)
+        const aggCursor = await MongoClientCreator('personas', pipeline)
+        await aggCursor.forEach(personaObtenida => {
+            persona = personaObtenida
+        })
+        res.json(persona)
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de personas',
+            message: 'Server error'
+        })
     }
 }
 
 const setPersona = async (req, res) => {
     try {
+        let personaExistente = await persona.findOne({
+            telefono: req.body.telefono
+        })
+        if(personaExistente)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de personas',
+                message: 'Telefono existente'
+            })
+
         let setPersona
         if(req.body.tipoPersona === 'Dueño'){
+            personaExistente = await persona.findOne({
+                cuil: req.body.cuil
+            })
+            if(personaExistente)
+                return res.send({
+                    type: 'danger',
+                    title: 'Gestion de personas',
+                    message: 'CUIL existente'
+                })
+
             setPersona = new dueño({
                 escritura: req.body.escritura
             })
@@ -61,62 +153,129 @@ const setPersona = async (req, res) => {
         setPersona.email = req.body.email
         if(req.body.usuario !== '') setPersona.usuario = req.body.usuario
         await setPersona.save()
-        res.send('Persona creada')
+        res.send({
+            type: 'success',
+            title: 'Gestion de personas',
+            message: 'Persona creada!'
+        })
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de personas',
+            message: 'Server error'
+        })
     }
 }
 
 const updatePersona = async (req, res) => {
     try {
+        const id = mongoose.Types.ObjectId(req.params.id)
+        let personaExistente = await persona.find({
+            $and: [
+                {telefono: req.body.telefono},
+                {_id: { $ne: id } }
+            ]
+        })
+        if(personaExistente.length > 0)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de personas',
+                message: 'Telefono existente'
+            })
+
         const updatePersona = await persona.findById(req.params.id)
-        if(updatePersona.tipo === 'Dueño'){
-            updatePersona.escritura = req.body.escritura
-        }
-        else if (updatePersona.tipo === 'Agente'){
+        if (updatePersona.tipo === 'Agente'){
+            personaExistente = await persona.find({
+                $and: [
+                    {cuil: req.body.cuil},
+                    {_id: { $ne: id } }
+                ]
+            })
+            if(personaExistente.length > 0)
+                return res.send({
+                    type: 'danger',
+                    title: 'Gestion de personas',
+                    message: 'CUIL existente'
+                })
             updatePersona.titulo = req.body.titulo
             updatePersona.horarios = req.body.horarios
             updatePersona.cuil = req.body.cuil
         }
+        if(updatePersona.tipo === 'Dueño'){
+            updatePersona.escritura = req.body.escritura
+        }
+        
         updatePersona.nombre = req.body.nombre
         updatePersona.apellido = req.body.apellido
         updatePersona.telefono = req.body.telefono
         updatePersona.domicilio = req.body.domicilio
         updatePersona.email = req.body.email
-        updatePersona.usuario = req.body.usuario
+        if(updatePersona.usuario != "")
+            updatePersona.usuario = req.body.usuario
         await updatePersona.save()
-        res.send('Persona actualizada')
+        res.send({
+            type: 'success',
+            title: 'Gestion de personas',
+            message: 'Persona actualizada!'
+        })
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de personas',
+            message: 'Server error'
+        })
     }
 }
 
 const removePersona = async (req, res) => {
     try {
         const removePersona = await persona.findById(req.params.id)
-        if(removePersona.usuario.estado) return res.send('No se puede eliminar una persona con usuario activo')
+        if(removePersona.usuario)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de personas',
+                message: 'No se puede eliminar una persona con usuario activo'
+            })
         if(removePersona.tipo === "Agente"){
             const servicios = await servicio.find({
                 agente: removePersona._id,
                 estado: "activo"
             })
-            if(servicios !== null) return res.send('No se puede eliminar esta persona porque está con servicios activos')
+            if(servicios !== null) 
+                return res.send({
+                    type: 'danger',
+                    title: 'Gestion de personas',
+                    message: 'No se puede eliminar esta persona porque está con servicios activos'
+                })
         }
         if(removePersona.tipo === "Dueño"){
             const propiedades = await propiedad.find({
                 propietario: removePersona._id
             })
             propiedades.map(propiedad => {
-                if(propiedad.servicio !== null) return res.send('No se puede eliminar esta persona porque tiene una propiedad con servicios activos')
+                if(propiedad.servicios.length > 0) 
+                return res.send({
+                    type: 'danger',
+                    title: 'Gestion de personas',
+                    message: 'No se puede eliminar esta persona porque tiene una propiedad con servicios activos'
+                })
             })
         }
         await removePersona.remove()
-        res.send('Persona eliminada')
+        res.send({
+            type: 'success',
+            title: 'Gestion de personas',
+            message: 'Persona eliminada'
+        })
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de personas',
+            message: 'Server error'
+        })
     }
 }
 
@@ -125,7 +284,11 @@ const registrarPersona = async (req, res) => {
         
         let validacion = await validarNuevo(req.body.usuario, req.body.email, req.body.telefono, req.body.contraseña)
         if(validacion !== null){
-            return res.json(validacion)
+            return res.send({
+                type: 'danger',
+                title: 'Registro de usuario',
+                message: validacion
+            })
         } 
         
         const passwordEncriptada = await encriptarPassword(req.body.contraseña)
@@ -144,10 +307,18 @@ const registrarPersona = async (req, res) => {
             usuario: newUsuario._id
         })
         await newPersona.save()
-        res.json('Usuario creado')
+        res.send({
+            type: 'success',
+            title: 'Registro de usuario',
+            message: 'Usuario creado'
+        })
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Registro de usuario',
+            message: 'Server error'
+        })
     }
 }
 

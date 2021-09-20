@@ -16,7 +16,7 @@ const FiltroPropiedades = ({dispatch, getPropiedades}) => {
     }
 
     const filtrarClick = () => {
-        dispatch(getPropiedades(filtros))
+        dispatch(getPropiedades(null, filtros))
     }
     return(
         <>

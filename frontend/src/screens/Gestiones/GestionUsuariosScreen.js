@@ -8,21 +8,52 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getUsers } from '../../redux/ducks/usersReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { CircularProgress } from '@material-ui/core'
+import messageAdder from '../../MessageAdder'
 const GestionUsuariosScreen = () => {
     const dispatch = useDispatch()
     const history = useHistory()
     const setUsers = useSelector(state => state.users)
     const { users, loadingUsers, errorUsers } = setUsers
+
+    const userInfo = useSelector(state => state.user)
+    const { user: userData } = userInfo
     useEffect(() => {
         dispatch(getUsers())
     }, [dispatch])
 
     const deleteUsuario = async (id) => {
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
         await axios({
             method: 'DELETE',
             withCredentials: true,
             url: `http://localhost:4000/api/usuarios/${id}`
-        }).then(res => console.log(res))
+        }).then(res => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+        })
+    }
+
+    const resetearContraseña = async (email) => {
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
+        await axios({
+            method: 'POST',
+            params: {
+                email: email
+            },
+            withCredentials: true,
+            url: 'http://localhost:4000/api/usuarios/resetPassword'
+        }).then((res) => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+        })
     }
 
     return (
@@ -41,14 +72,17 @@ const GestionUsuariosScreen = () => {
                                 <th>Acciones</th>
                             </tr>
                         </thead>
+                        {userData &&
                         <tbody>
+                            { userData.acciones.includes("Agregar usuario") && 
                             <tr>
                                 <td colSpan="5">
                                     <div className="new-item-row">
-                                        <button className="btn-green" id="Agregar usuario" onClick={() => history.push('/formUsuario')}><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
+                                        <button className="btn-green" onClick={() => history.push('/formUsuario')}><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
                                     </div>
                                 </td>
                             </tr>
+                            }
                             {loadingUsers ? <tr><td colSpan="5" className="centerCircularProgress"><CircularProgress /></td></tr> 
                             : errorUsers ? <tr><td colSpan="5">Error cargando usuarios!</td></tr>  
                             : users && users.map(user => (
@@ -59,17 +93,22 @@ const GestionUsuariosScreen = () => {
                                 <td>{user.personaDatos ? user.personaDatos.email : "N/A" }</td>
                                 <td>
                                     <div className="gestion-buttons-container">
-                                        <button className="btn-blue" id="Modificar usuario" onClick={() => history.push(`/formUsuario/${user._id}`)}><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
-                                        <button className="btn-red" id="Eliminar usuario" onClick={() => deleteUsuario(user._id)}><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
-                                        <button className="btn-orange" id="Resetear contraseña"><FontAwesomeIcon icon='redo' className="fas fa-redo"/></button>
+                                        { userData.acciones.includes("Modificar usuario") && 
+                                        <button className="btn-blue" onClick={() => history.push(`/formUsuario/${user._id}`)}><FontAwesomeIcon icon='edit' className="fas fa-edit"/></button>
+                                        }
+                                        { userData.acciones.includes("Eliminar usuario") && 
+                                        <button className="btn-red" onClick={() => deleteUsuario(user._id)}><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>
+                                        }
+                                        { userData.acciones.includes("Resetear contraseña") && user.personaDatos &&
+                                        <button className="btn-orange" onClick={() => resetearContraseña(user.personaDatos.email)}><FontAwesomeIcon icon='redo' className="fas fa-redo"/></button>
+                                        }
                                     </div>
                                 </td>
                             </tr>
                             ))}
                         </tbody>
+                        }
                     </table>
-                    
-                    
                 </div>
             </div>
         </div>

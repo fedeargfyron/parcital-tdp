@@ -2,13 +2,15 @@ import React, { useEffect } from 'react'
 import HeaderPage from '../../components/HeaderPage'
 import FiltroCompras from '../Filtros/FiltroCompras'
 import './MiPerfil.css'
-import { getVentas } from '../../redux/ducks/ventasReducer'
+import { getCompras } from '../../redux/ducks/comprasReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import { CircularProgress } from '@material-ui/core'
 const Compras = () => {
     const dispatch = useDispatch()
-    const ventasInfo = useSelector(state => state.ventas)
+    const comprasInfo = useSelector(state => state.compras)
+    const { compras, loadingCompras, errorCompras } = comprasInfo
     useEffect(() => {
-        dispatch(getVentas())
+        dispatch(getCompras())
     }, [dispatch])
     return(
         <div className="perfilScreen">
@@ -22,19 +24,23 @@ const Compras = () => {
                             <tr>
                                 <th>Propiedad</th>
                                 <th>Fecha</th>
-                                <th>Cliente</th>
                                 <th>Agente</th>
+                                <th>Telefono</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            { loadingCompras ? <tr><td colSpan="5" className="centerCircularProgress"><CircularProgress /></td></tr>
+                            : errorCompras ? <tr><td colSpan="5">Error!</td></tr>
+                            : compras && Array.isArray(compras) && compras.map(compra => (
+                                <tr key={compra._id}>
+                                    <td>{compra.propiedad}</td>
+                                    <td>{new Date(compra.fecha).toLocaleString()}</td>
+                                    <td>{compra.agenteDatos.nombre} {compra.agenteDatos.apellido}</td>
+                                    <td>{compra.agenteDatos.telefono}</td>
+                                    <td>${compra.total}</td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

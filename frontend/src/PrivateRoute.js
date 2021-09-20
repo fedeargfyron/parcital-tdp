@@ -5,7 +5,6 @@ const PrivateRoute = ({component, userReload}) => {
 
     const getUser = useSelector(state => state.user)
     const { user } = getUser
-    console.log("user in private", userReload, user)
     if((user && user !== "") || (userReload && userReload !== ""))
         return component
     else

@@ -4,7 +4,7 @@ const GET_VENTAS_REQUEST = 'GET_VENTAS_REQUEST'
 const GET_VENTAS_SUCCESS = 'GET_VENTAS_SUCCESS'
 const GET_VENTAS_FAIL = 'GET_VENTAS_FAIL'
 
-export const getVentas = () => async (dispatch) => {
+export const getVentas = (filtros) => async (dispatch) => {
     try{
         dispatch({
             type: GET_VENTAS_REQUEST
@@ -12,6 +12,9 @@ export const getVentas = () => async (dispatch) => {
         const { data } = await axios({
             method: 'GET',
             withCredentials: true,
+            params: {
+                filtros: filtros
+            },
             url: 'http://localhost:4000/api/ventas'
         })
         dispatch({

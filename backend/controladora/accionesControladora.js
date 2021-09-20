@@ -1,9 +1,6 @@
 const Accion = require("../modelos/Acciones")
 const Formulario = require("../modelos/Formulario")
 const { Modulo, SubModulo } = require("../modelos/Modulo")
-const getAcciones = (req, res) => {
-    res.json("acciones")
-}
 
 const getAccionesModulo = async (req, res) => {
     try{
@@ -14,7 +11,11 @@ const getAccionesModulo = async (req, res) => {
         res.json(modulosOrganizados)
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de acciones',
+            message: 'Server error'
+          })
     }
 }
 
@@ -57,6 +58,5 @@ const organizadorFormularios = async (formulario) => {
 }
 
 module.exports = {
-    getAcciones,
     getAccionesModulo
 }

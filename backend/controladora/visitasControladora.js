@@ -1,48 +1,43 @@
 const Visita = require('../modelos/Visita')
-const { propiedad } = require('../modelos/Propiedad')
 const { servicio } = require('../modelos/Servicio')
-const { persona, agente } = require('../modelos/Persona')
-const visita = require('../modelos/Visita')
-//Checkear bien esto
+const { persona } = require('../modelos/Persona')
+const mongoose = require('mongoose')
+const MongoClientCreator = require('./client')
+
 const getVisitas = async (req, res) => {
     try {
-        const personaInfo = await persona.find({
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de visitas',
+                message: 'Inicie sesión'
+            })
+        let visitas = []
+        let limit = 10
+        const interesado = await persona.findOne({
             usuario: req.user._id
-        }, '_id nombre tipo')
-        const visitas = await obtenerVisitas(personaInfo)
+        })
+        let pipeline = pipelineGenerator(mongoose.Types.ObjectId(interesado._id))
+
+        if (req.query.filtros)
+            pipeline = filtrosAdd(req.query.filtros, pipeline)
+
+        if(req.query.profile)
+            limit = 3
+            
+        const aggCursor = await (await MongoClientCreator('visitas', pipeline)).limit(limit)
+        await aggCursor.forEach(visita => {
+            visitas.push(visita)
+        })
         res.json(visitas)
     } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
-    }
-}
-
-const obtenerVisitas = async (personaInfo) => {
-    let visitas = []
-    /*
-    visitas = await Visita.find({
-        interesado: personaInfo._id
-    })
-    visitas.map(visita => {
-        const servicioInfo = await servicio.find({
-            _id: visita.servicio
-        }, '_id propiedad agente')
-        const agenteInfo = await agente.findOne({_id: agente}, 'telefono')
-        visita = { ...visita, ...servicioInfo, ...agenteInfo}
-    })
-    if(personaInfo.tipo === 'agente'){
-        const servicios = await servicio.find({
-            agente: personaInfo._id
-        }, '_id propiedad')
-        servicios.map(servicio => {
-            let visitasServicio = await visita.find({
-                servicio: servicio._id
-            })
-
-            visitas.push(visitasServicio)
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de visitas',
+            message: 'Server error'
         })
-    }*/
-    res.json(visitas)
+    }
 }
 
 const getVisitasAgente = async (req, res) => {
@@ -59,39 +54,109 @@ const getVisitasAgente = async (req, res) => {
         res.json(visitas)
     } catch (error) {
         console.error(error)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de visitas',
+            message: 'Server error'
+        })
     }
 }
 
 const setVisita = async (req, res) => {
     try {
-        const prop = await propiedad.findById(req.body.propId)
-        const servicio = await servicioVenta.find({
-            _id: prop.servicio,
-            estado: "Activo"
+        if(!req.user)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de visitas',
+                message: 'Inicie sesión'
+            })
+        const interesado = await persona.findOne({
+            usuario: req.user._id
         })
-        const visitaActiva = servicio.visitas.filter((visita) => {
-            visita.interesado === req.user._id && visita.fecha === req.body.fecha 
+        const visitaExistente = await Visita.findOne({
+            servicio: req.body.servicio,
+            estado: "Pendiente",
+            interesado: interesado._id,
         })
-        if(visitaActiva !== null){
-            res.json("Ya tiene una visita en ese mismo dia para esta propiedad")
+        if(visitaExistente){
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de visitas',
+                message: 'Ya tiene una visita agendada para esta propiedad'
+            })
         }
         const visita = new Visita({
             fecha: req.body.fecha,
-            horario: req.body.horario,
-            interesado: req.user._id,
-            //Settear default pendiente
+            horario: req.body.hora,
+            interesado: interesado._id,
+            servicio: req.body.servicio
         })
-        servicio.visitas.push(visita._id)
-        await servicio.save()
         await visita.save()
-        
-        res.json('Visita creada')
-    } catch {
+        res.send({
+            type: 'success',
+            title: 'Gestion de visitas',
+            message: 'Visita creada'
+        })
+    } catch (err) {
         console.error(err)
-        res.status(500).json({message: "server error"})
+        res.status(500).send({
+            type: 'danger',
+            title: 'Gestion de visitas',
+            message: 'Server error'
+        })
     }
 }
+
+const pipelineGenerator = (id) => {
+    return pipelineBase = [
+            {
+            '$match': {
+                'interesado': id
+            }
+          }, {
+              '$lookup': {
+                'from': 'servicios', 
+                'localField': 'servicio', 
+                'foreignField': '_id', 
+                'as': 'servicioDatos'
+              }
+            }, {
+              '$unwind': {
+                'path': '$servicioDatos'
+              }
+            }, {
+              '$lookup': {
+              'from': 'personas',
+              'let': { 'agenteId': '$servicioDatos.agente'},
+              'pipeline': [{
+                '$match': { 
+                  '$expr': { '$eq': ["$$agenteId", "$_id"] }
+                } 
+              }, {
+              '$project': { '_id': 1, 'nombre': 1, 'apellido': 1, 'telefono': 1 }
+              }
+              ],
+              'as': 'agenteDatos'
+              }
+            }, {
+              '$unwind': {
+                'path': '$agenteDatos'
+              }
+            }
+    ]
+}
+
+const filtrosAdd = (filtros, pipeline) => {
+    let filtrosJson = JSON.parse(filtros)
+  
+    if(filtrosJson.fecha_inicio !== "" && filtrosJson.fecha_fin !== "")
+        pipeline[0].$match.fecha = { '$gte': new Date(filtrosJson.fecha_inicio), '$lt': new Date(filtrosJson.fecha_fin)}
+    else if(filtrosJson.fecha_inicio !== "")
+        pipeline[0].$match.fecha = { '$gte': new Date(filtrosJson.fecha_inicio)}
+    else if(filtrosJson.fecha_fin !== "")
+        pipeline[0].$match.fecha = { '$lt': new Date(filtrosJson.fecha_fin)}
+    return pipeline
+  }
 
 module.exports = {
     getVisitas,

@@ -20,6 +20,11 @@ const ofertaSchema = new mongoose.Schema({
         required: true,
         default: "Pendiente"
     },
+    servicio:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Servicio"
+    }
 })
 
 const oferta = mongoose.model('Oferta', ofertaSchema)

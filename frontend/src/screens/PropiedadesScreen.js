@@ -1,26 +1,32 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import './PropiedadesScreen.css'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getPropiedades } from '../redux/ducks/propiedadesReducer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt, faCarAlt, faBath } from '@fortawesome/free-solid-svg-icons'
+import { CircularProgress } from '@material-ui/core'
+import Map from '../components/ReactMapGL'
+
 const PropiedadesScreen = ({match}) => {
     const dispatch = useDispatch()
-    const propiedades = useSelector(state => state.propiedades)
+    const propiedadesInfo = useSelector(state => state.propiedades)
+    const { propiedades, errorPropiedades, loadingPropiedades} = propiedadesInfo
     const filtro = match.params.tipo
+    const filtroSplit = filtro.split("_")
+    const stringTitulo = `${filtroSplit[0]} ${filtroSplit[1] ? `de ${filtroSplit[1]}` : ""} ${filtroSplit[2] ? ` ${filtroSplit[2]} dormitorios` : ""}`
     useEffect(() => {
         dispatch(getPropiedades(filtro))
     }, [dispatch, filtro])
     return(
         <div className="propiedadesScreen">
-            <div className="leftside">
-                <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg" alt="Propiedad"/>
+            <div id="mapContainer" className="leftside">
+            <Map />
             </div>
             <div className="rightside">
                 <div className="rightside-container">
                     <div className="rightside-header">
-                        <h4 className="propiedades-title">Venta de casas de 2 dormitorios</h4>
+                        <h4 className="propiedades-title">{stringTitulo}</h4>
                         <div className="line"></div>
                         <div className="filter-container">
                             <p className="filter-label">Ordenar por:</p>
@@ -34,82 +40,31 @@ const PropiedadesScreen = ({match}) => {
                     </div>
                 </div>
                 <div className="propiedades-container">
-                    <Link to ="/propiedad/2"className="propiedad-container">
-                        <div className="img-container">
-                            <img onMouseEnter={() => console.log("hola")} src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg" alt="asd"></img>
+                    { loadingPropiedades ? <div className="circular centerCircularProgress"><CircularProgress /> </div>
+                    : errorPropiedades ? <h4>Error!</h4> 
+                    : propiedades && propiedades.map(propiedad => (
+                        <div key={propiedad._id}>
+                            <Link to ={`/propiedad/${propiedad._id}/${filtroSplit[0]}`}className="propiedad-container">
+                                <div className="img-container">
+                                    <img onMouseEnter={() => console.log("hola")} src={propiedad.imagenes[0]} alt="asd"></img>
+                                </div>
+                                <div className="propiedad-info">
+                                    <div>
+                                        <p className="tipo">{stringTitulo}</p>
+                                        <p className="direccion">{propiedad.ubicacion}</p>
+                                        <p className="precio">${propiedad.precio}</p>
+                                        <p className="descripcion">{propiedad.descripcion}</p>
+                                    </div>
+                                    <div className="sub-info">
+                                        <p><FontAwesomeIcon icon={faExpandArrowsAlt} className="fas fa-expand-arrows-alt"/><span>{propiedad.superficie}m²</span></p>
+                                        {propiedad.tipoDatos.cochera && <p><FontAwesomeIcon icon={faCarAlt} className="fas fa-car-alt" /><span>Cochera</span></p> }
+                                        <p><FontAwesomeIcon icon={faBath} className="fas fa-bath" /><span>{propiedad.tipoDatos.cantidad_baños}</span></p>
+                                    </div>
+                                </div>
+                            </Link>
+                            <div className="propiedad-line"></div>
                         </div>
-                        <div className="propiedad-info">
-                            <div>
-                                <p className="tipo">Venta casa 2 dormitorios</p>
-                                <p className="direccion">Mendoza y Crespo</p>
-                                <p className="precio">$250.000</p>
-                                <p className="descripcion">Piso exclusivo orientado al norte con ventilación cruzada, ubicado en planta baja.</p>
-                            </div>
-                            <div className="sub-info">
-                                <p><FontAwesomeIcon icon={faExpandArrowsAlt} className="fas fa-expand-arrows-alt"/><span>73m²</span></p>
-                                <p><FontAwesomeIcon icon={faCarAlt} className="fas fa-car-alt" /><span>Cochera</span></p>
-                                <p><FontAwesomeIcon icon={faBath} className="fas fa-bath" /><span>5 baños</span></p>
-                            </div>
-                        </div>
-                    </Link>
-                    <div className="propiedad-line"></div>
-                    <Link to ="/propiedad/2"className="propiedad-container">
-                        <div className="img-container">
-                            <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg" alt="asd"></img>
-                        </div>
-                        <div className="propiedad-info">
-                            <div>
-                                <p className="tipo">Venta casa 2 dormitorios</p>
-                                <p className="direccion">Mendoza y Crespo</p>
-                                <p className="precio">$250.000</p>
-                                <p className="descripcion">Piso exclusivo orientado al norte con ventilación cruzada, ubicado en planta baja.</p>
-                            </div>
-                            <div className="sub-info">
-                                <p><i className="fas fa-expand-arrows-alt"></i><span>73m²</span></p>
-                                <p><i className="fas fa-car-alt"></i><span>Cochera</span></p>
-                                <p><i className="fas fa-bath"></i><span>5 baños</span></p>
-                            </div>
-                        </div>
-                    </Link>
-                    <div className="propiedad-line"></div>
-                    <Link to ="/propiedad/2"className="propiedad-container">
-                        <div className="img-container">
-                            <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg" alt="asd"></img>
-                        </div>
-                        <div className="propiedad-info">
-                            <div>
-                                <p className="tipo">Venta casa 2 dormitorios</p>
-                                <p className="direccion">Mendoza y Crespo</p>
-                                <p className="precio">$250.000</p>
-                                <p className="descripcion">Piso exclusivo orientado al norte con ventilación cruzada, ubicado en planta baja.</p>
-                            </div>
-                            <div className="sub-info">
-                                <p><i className="fas fa-expand-arrows-alt"></i><span>73m²</span></p>
-                                <p><i className="fas fa-car-alt"></i><span>Cochera</span></p>
-                                <p><i className="fas fa-bath"></i><span>5 baños</span></p>
-                            </div>
-                        </div>
-                    </Link>
-                    <div className="propiedad-line"></div>
-                    <Link to ="/propiedad/2"className="propiedad-container">
-                        <div className="img-container">
-                            <img src="https://assets-global.website-files.com/5f4f67c5950db17954dd4f52/5f5b7ee442f1e5b9fee1c117_hacerse-una-casa.jpeg" alt="asd"></img>
-                        </div>
-                        <div className="propiedad-info">
-                            <div>
-                                <p className="tipo">Venta casa 2 dormitorios</p>
-                                <p className="direccion">Mendoza y Crespo</p>
-                                <p className="precio">$250.000</p>
-                                <p className="descripcion">Piso exclusivo orientado al norte con ventilación cruzada, ubicado en planta baja.</p>
-                            </div>
-                            <div className="sub-info">
-                                <p><i className="fas fa-expand-arrows-alt"></i><span>73m²</span></p>
-                                <p><i className="fas fa-car-alt"></i><span>Cochera</span></p>
-                                <p><i className="fas fa-bath"></i><span>5 baños</span></p>
-                            </div>
-                        </div>
-                    </Link>
-                    <div className="propiedad-line"></div>
+                    ))}
                 </div>
             </div>
         </div>

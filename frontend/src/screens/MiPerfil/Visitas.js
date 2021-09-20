@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import HeaderPage from '../../components/HeaderPage'
-import FiltroOfertas from '../Filtros/FiltroOfertas'
+import FiltroVisitas from '../Filtros/FiltroVisitas'
 import './MiPerfil.css'
 import { getVisitas } from '../../redux/ducks/visitasReducer'
 import { useSelector, useDispatch } from 'react-redux'
@@ -16,7 +16,7 @@ const Visitas = () => {
         <div className="perfilScreen">
             <div className="visitas-container">
                 <HeaderPage titulo="Mis visitas"/>
-                <FiltroOfertas />
+                <FiltroVisitas />
                 <div className="table-container">
                     <h4>Visitas</h4>
                     <table className="table table-striped table-bordered">
@@ -25,26 +25,24 @@ const Visitas = () => {
                                 <th>Propiedad</th>
                                 <th>Fecha</th>
                                 <th>Horario</th>
-                                <th>Interesado</th>
                                 <th>Agente</th>
                                 <th>Numero de agente</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            { loadingVisitas ? <CircularProgress /> 
-                            : errorVisitas ? <p>Error!</p> 
-                            : visitas && visitas.map(visita => {
+                            { loadingVisitas ? <tr><td colSpan="7" className="centerCircularProgress"><CircularProgress /></td></tr>
+                            : errorVisitas ? <tr><td colSpan="7">Error!</td></tr>
+                            : visitas && Array.isArray(visitas) && visitas.map(visita => (
                                 <tr key={visita._id}>
-                                <th>Propiedad</th>
-                                <th>{visita.fecha_inicio}</th>
-                                <th>{visita.horario}</th>
-                                <th>{visita.interesado}</th>
-                                <th>Agente</th>
-                                <th>Numero de agente</th>
-                                <th>{visita.estado}</th>
+                                    <td>{visita.servicioDatos.propiedad}</td>
+                                    <td>{new Date(visita.fecha).toLocaleString()}</td>
+                                    <td>{visita.horario}</td>
+                                    <td>{visita.agenteDatos.nombre} {visita.agenteDatos.apellido}</td>
+                                    <td>{visita.agenteDatos.telefono}</td>
+                                    <td>{new Date(visita.fecha).valueOf() <= Date.now().valueOf() ? "Realizada" : "Pendiente"}</td>
                                 </tr>
-                            })}
+                            ))}
                         </tbody>
                     </table>
                 </div>

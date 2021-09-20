@@ -6,14 +6,20 @@ const {
     getServicio,
     getServicios,
     setServicioVenta,
-    removeServicio
+    removeServicio,
+    getServiciosVenta,
+    getServicioVenta
 } = require('../controladora/serviciosControladora')
 
 Router.get('/', getServicios)
 
+Router.get('/venta', getServiciosVenta)
+
+Router.get('/venta/:id', getServicioVenta)
+
 Router.get('/:id', getServicio)
 
-Router.post('/', setServicioVenta)
+Router.post('/:id', setServicioVenta)
 
 Router.put('/:id', removeServicio)
 

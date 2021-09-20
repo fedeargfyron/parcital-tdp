@@ -14,6 +14,7 @@
     display: flex;
     justify-content: center;
     height: 100vh;
+    min-height: 100vh;
     max-width: 48%;
 }
 
@@ -67,6 +68,10 @@ img{
 
 .propiedad-container:hover{
     color: black;
+}
+
+.propiedad-line{
+    border: .5px dashed rgba(0, 0, 0, 0.3);
 }
 
 .propiedad-info{

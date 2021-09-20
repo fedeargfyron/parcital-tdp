@@ -23,6 +23,8 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
+            {!loadingUser && 
+            <>
             <Link to="/" className="navbar-logo">
                 <p>Arrón</p>
                 <p>Inmobiliarias</p>
@@ -31,7 +33,8 @@ const Navbar = () => {
             <div className="menu-icon" onClick={handleClick}>
                 <FontAwesomeIcon icon={click ? 'times' : 'bars'} className={click ? 'fa-times-navbar' : 'fa-bars'}/>
             </div>
-            {!loadingUser && <NavbarItems user={user} click={click} setClick={setClick}/>}
+            <NavbarItems user={user} click={click} setClick={setClick}/>
+            </>}
         </nav>
     )
 }

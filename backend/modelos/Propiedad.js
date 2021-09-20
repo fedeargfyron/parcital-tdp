@@ -9,7 +9,8 @@ const propiedadSchema = new mongoose.Schema({
     },
     dueño:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Persona"
+        ref: "Persona",
+        required: true
     },
     tipo:{
         type: mongoose.Schema.Types.ObjectId,
@@ -23,12 +24,7 @@ const propiedadSchema = new mongoose.Schema({
     estado_propiedad:{
         type: String
     },
-    servicios:[
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Servicio"
-        }
-    ]
+    servicios:[String]
     ,
     descripcion:{
         type: String
@@ -36,32 +32,27 @@ const propiedadSchema = new mongoose.Schema({
     entorno:{
         type: String
     },
-    imagenes:[
-        {
-            imagen:{
-            type: String
-            }
-        }
-    ],
+    imagenes:[String],
     precio:{
         type: Number
     },
     superficie:{
         type: Number
     },
-    
+    latitud:{
+        type: Number
+    },
+    longitud: {
+        type: Number
+    }
 })
 propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
-    if(servicios.length > 0) {
-        const serviciosActivos = servicios.map(async (servicioActivo) => {
-            return await servicio.findById(servicioActivo)
-        })
-        const reservaActiva = serviciosActivos.filter(item => { item.reserva !== null })                                        //Si esto no anda sacarlo y
-        reservaActiva ? this.estado = "Reservada" //asignar individualmente
-        : this.estado = "Disponible"
-    }
-    else this.estado = "No disponible"
-    
+    if(this.estado_propiedad && this.descripcion && this.imagenes && this.precio && this.superficie){
+        if(this.servicios && this.servicios.length > 0)
+            return this.estado = "Disponible"
+        return this.estado = "Preparada"
+    }    
+    return this.estado = "No disponible"
 }
 const propiedad = mongoose.model('Propiedad', propiedadSchema)
 

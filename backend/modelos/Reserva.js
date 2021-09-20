@@ -16,15 +16,18 @@ const reservaSchema = mongoose.Schema({
         default: Date.now()
     },
     fecha_fin:{
-        type: Date,
-        required: true,
-        default: Date.now() + 30
+        type: Date
     },
     estado:{
         type: String,
         required: true,
         default: "Pendiente"
     },
+    servicio:{
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'Servicio'
+    }
 })
 
 const reserva = mongoose.model('Reserva', reservaSchema)

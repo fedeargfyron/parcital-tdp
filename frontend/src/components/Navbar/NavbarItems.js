@@ -1,15 +1,23 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
 import Dropdown from './Dropdown'
 import GestionDropdown from "./GestionDropdown"
 import PerfilDropdown from "./PerfilDropdown"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { getUser } from "../../redux/ducks/userReducer"
+import messageAdder from "../../MessageAdder"
+import axios from 'axios'
 const NavbarItems = ({user, click, setClick}) => {
+    const dispatch = useDispatch()
+    const history = useHistory()
     const [perfilDropdown, setPerfilDropdown] = useState(false)
     const [dropdown, setDropdown] = useState(false)
     const [gestionDropdown, setGestionDropdown] = useState(false)
-    const [formularios, setFormularios] = useState(["2"])
-
+    let formsDto = []
+    if(user && user.formularios.length > 0)
+        formsDto = user.formularios.filter((e) => e.nombre !== "Propiedad")
+        
     const onClickGestion = () => {
         window.innerWidth < 960 ? setGestionDropdown(false) : setGestionDropdown(!gestionDropdown)
     }
@@ -29,6 +37,20 @@ const NavbarItems = ({user, click, setClick}) => {
         setClick(false)
         gestionDropdown && setGestionDropdown(false)
         dropdown && setDropdown(false)
+    }
+
+    const logOut = async () => {
+        axios({
+            method: 'POST',
+            withCredentials: true,
+            url: 'http://localhost:4000/api/logUser/logOut'
+        }).then( async (res) => {
+            if(res.data.type === "danger")
+                return messageAdder(res.data)
+                
+            dispatch(getUser())
+            history.push('/')
+        })
     }
     return(
         <ul onClick={closeMenu} className={click ? 'nav-menu active' : 'nav-menu'}>
@@ -59,14 +81,19 @@ const NavbarItems = ({user, click, setClick}) => {
                         </Link>
                         {perfilDropdown && <PerfilDropdown />}
                     </li>
-                    {formularios.length > 0 &&
+                    { formsDto.length > 0 &&
                     <li className="nav-item">
                         <button className="nav-links button" onClick={onClickGestion}>
                             <FontAwesomeIcon icon="user-cog" />
                         </button>
-                        {gestionDropdown && <GestionDropdown onClickGestion={onClickGestion}/>}
+                        {gestionDropdown && <GestionDropdown formularios={formsDto} onClickGestion={onClickGestion}/>}
                     </li>
                     }
+                    <li className="nav-item">
+                        <Link className="nav-links" to="/" onClick={logOut}>
+                            <FontAwesomeIcon icon="door-open"/>
+                        </Link>
+                    </li>
                 </> 
             }
         </ul>
