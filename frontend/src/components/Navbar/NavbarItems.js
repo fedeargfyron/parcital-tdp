@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useHistory } from 'react-router-dom'
 import Dropdown from './Dropdown'
@@ -14,9 +14,14 @@ const NavbarItems = ({user, click, setClick}) => {
     const [perfilDropdown, setPerfilDropdown] = useState(false)
     const [dropdown, setDropdown] = useState(false)
     const [gestionDropdown, setGestionDropdown] = useState(false)
+    const reportes = useRef(false)
     let formsDto = []
-    if(user && user.formularios.length > 0)
-        formsDto = user.formularios.filter((e) => e.nombre !== "Propiedad")
+    if(user && user.formularios.length > 0){
+        formsDto = user.formularios.filter((e) => e.nombre.includes("Gestionar"))
+        if(user.formularios.some(form => form.nombre === "Estadisticas"))
+            reportes.current = true
+    }
+        
         
     const onClickGestion = () => {
         window.innerWidth < 960 ? setGestionDropdown(false) : setGestionDropdown(!gestionDropdown)
@@ -54,6 +59,13 @@ const NavbarItems = ({user, click, setClick}) => {
     }
     return(
         <ul onClick={closeMenu} className={click ? 'nav-menu active' : 'nav-menu'}>
+            {reportes.current && 
+            <li className="nav-item venta">
+                <Link to="/reportes" className="nav-links" >
+                    Reportes
+                </Link>
+            </li>
+            }
             <li className="nav-item venta" onMouseEnter={onMouseEnterVenta} onMouseLeave={onMouseLeaveVenta}>
                 <Link to="/propiedades/venta" className="nav-links" >
                     Venta <FontAwesomeIcon icon="caret-down"/>

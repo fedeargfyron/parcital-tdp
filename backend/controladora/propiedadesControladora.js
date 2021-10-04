@@ -218,7 +218,9 @@ const updatePropiedad = async (req, res) => {
         editPropiedad.imagenes = req.body.imagenes
         editPropiedad.precio = req.body.precio
         editPropiedad.superficie = req.body.superficie
-        editPropiedad.ubicacion = req.body.ubicacion
+        editPropiedad.ubicacion = req.body.ubicacion,
+        editPropiedad.latitud = resultado[0].latitude,
+        editPropiedad.longitud = resultado[0].longitude
         editPropiedad.estadoPropiedad()
         await tipo_propiedad.save()
         await editPropiedad.save()

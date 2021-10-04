@@ -27,9 +27,10 @@ import Visitas from './screens/MiPerfil/Visitas';
 import Ofertas from './screens/MiPerfil/Ofertas';
 import Reservas from './screens/MiPerfil/Reservas';
 import Compras from './screens/MiPerfil/Compras';
+import Reportes from './screens/Forms/Reportes';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
-import { faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus, faUpload, faDoorOpen } from '@fortawesome/free-solid-svg-icons'
+import { faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus, faUpload, faDoorOpen, faMapMarkerAlt, faBath, faExpandArrowsAlt} from '@fortawesome/free-solid-svg-icons'
 import PrivateRoute from './PrivateRoute';
 import PermissionRoute from './PermissionRoute';
 import ReactNotification from 'react-notifications-component'
@@ -54,7 +55,7 @@ function App() {
     }
     buscarUser()
 }, [])
-  library.add(fab, faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus, faUpload, faDoorOpen)
+  library.add(fab, faCheckSquare, faCoffee, faUserCog, faTimes, faCheck, faCaretRight, faBars, faCaretDown, faSearch, faPlus, faEdit, faQuestion, faTrash, faRedo, faMinus, faUpload, faDoorOpen, faMapMarkerAlt, faBath, faExpandArrowsAlt)
   return !render ? <></> : (
     <Router>
       <div className="App">
@@ -108,6 +109,9 @@ function App() {
             <Route exact path="/servicioVenta/:id">
               <PermissionRoute component={<ServicioVentaScreen />} userReload={userReload.current} formulario={"Gestionar servicio venta"}/>
             </Route>
+            <Route exact path="/reportes">
+              <PermissionRoute component={<Reportes />} userReload={userReload.current} formulario={"Estadisticas"}/>
+            </Route>
             <Route exact path="/perfil">
               <PrivateRoute component={<Perfil />} userReload={userReload.current}/>
             </Route>
@@ -126,7 +130,6 @@ function App() {
             <Route exact path="/compras">
               <PrivateRoute component={<Compras />} userReload={userReload.current}/>
             </Route>
-            {/* Fin permisos de PrivateRoute normal */}
           </Switch> 
         </main>
       </div>

@@ -31,14 +31,6 @@ const PerfilDropdown = () => {
                         Compras
                     </Link>
                 </li>
-                
-                {/*user.tipo === "Dueño" &&
-                <li>
-                    <Link className="dropdown-link" to ="/misPropiedades">
-                        Mis propiedades
-                    </Link>
-                </li>*/
-                }
             </ul>
         </>
     )

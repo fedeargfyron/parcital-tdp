@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { getPropiedades } from '../redux/ducks/propiedadesReducer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExpandArrowsAlt, faCarAlt, faBath } from '@fortawesome/free-solid-svg-icons'
 import { CircularProgress } from '@material-ui/core'
 import Map from '../components/ReactMapGL'
 
@@ -21,7 +20,7 @@ const PropiedadesScreen = ({match}) => {
     return(
         <div className="propiedadesScreen">
             <div id="mapContainer" className="leftside">
-            <Map />
+            <Map propiedades={propiedades} tipo={filtroSplit[0]} />
             </div>
             <div className="rightside">
                 <div className="rightside-container">
@@ -46,7 +45,7 @@ const PropiedadesScreen = ({match}) => {
                         <div key={propiedad._id}>
                             <Link to ={`/propiedad/${propiedad._id}/${filtroSplit[0]}`}className="propiedad-container">
                                 <div className="img-container">
-                                    <img onMouseEnter={() => console.log("hola")} src={propiedad.imagenes[0]} alt="asd"></img>
+                                    <img src={propiedad.imagenes[0]} alt="asd"></img>
                                 </div>
                                 <div className="propiedad-info">
                                     <div>
@@ -56,9 +55,9 @@ const PropiedadesScreen = ({match}) => {
                                         <p className="descripcion">{propiedad.descripcion}</p>
                                     </div>
                                     <div className="sub-info">
-                                        <p><FontAwesomeIcon icon={faExpandArrowsAlt} className="fas fa-expand-arrows-alt"/><span>{propiedad.superficie}m²</span></p>
-                                        {propiedad.tipoDatos.cochera && <p><FontAwesomeIcon icon={faCarAlt} className="fas fa-car-alt" /><span>Cochera</span></p> }
-                                        <p><FontAwesomeIcon icon={faBath} className="fas fa-bath" /><span>{propiedad.tipoDatos.cantidad_baños}</span></p>
+                                        <p><FontAwesomeIcon icon="expand-arrows-alt" className="fas fa-expand-arrows-alt"/><span>{propiedad.superficie}m²</span></p>
+                                        {propiedad.tipoDatos.cochera && <p><FontAwesomeIcon icon="car-alt" className="fas fa-car-alt" /><span>Cochera</span></p> }
+                                        {propiedad.tipoDatos.cantidad_baños && <p><FontAwesomeIcon icon="bath" className="fas fa-bath" /><span>{propiedad.tipoDatos.cantidad_baños}</span></p> }
                                     </div>
                                 </div>
                             </Link>
