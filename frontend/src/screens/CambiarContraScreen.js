@@ -20,6 +20,7 @@ const CambiarContraScreen = () => {
         setData(newdata)
     }
 
+
     const cambiarContraseña = async (e) => {
         e.preventDefault()
         dispatch({
@@ -39,6 +40,7 @@ const CambiarContraScreen = () => {
                 history.push('/perfil')
         })
     }
+    
     return(
         <div className="CambiarContraScreen">
             <div className="form-container">
