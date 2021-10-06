@@ -40,7 +40,6 @@ const CambiarContraScreen = () => {
                 history.push('/perfil')
         })
     }
-    
     return(
         <div className="CambiarContraScreen">
             <div className="form-container">
