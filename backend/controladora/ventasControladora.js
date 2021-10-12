@@ -2,7 +2,7 @@ const Venta = require('../modelos/Venta')
 const { propiedad } = require('../modelos/Propiedad')
 const { persona } = require('../modelos/Persona')
 const mongoose = require('mongoose')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 const getVentas = async (req, res) => {
     try {
         if(!req.user)

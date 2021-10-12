@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-const Accion = ({accion, formularioChecked, grupo}) => {
-    const [accionChecked, setAccionChecked] = useState(false)
+const Accion = ({accion, formularioChecked, formularioClicked, setFormularioClicked, grupo}) => {
     const [render, setRender] = useState(true)
+    const [accionChecked, setAccionChecked] = useState(false)
     useEffect(() => {
-        formularioChecked ? setAccionChecked(true) : setAccionChecked(false)
+        if(formularioClicked){
+            console.log("asdasd")
+            formularioChecked ? setAccionChecked(true) : setAccionChecked(false)
+            setFormularioClicked(false)
+        }
+
         const verificarAcciones = () => {
             setRender(false)
-            grupo.acciones.forEach(accionInGrupo => {
-                if(accionInGrupo === accion._id)
-                    setAccionChecked(true)
-            })
-            
+            if(grupo.acciones.includes(accion._id))
+                setAccionChecked(true)
+            else
+                setAccionChecked(false)
         }
         grupo && render && verificarAcciones()
-    }, [formularioChecked, grupo, accion._id, render])
+    }, [formularioChecked, grupo, accion._id, formularioClicked, setFormularioClicked, render])
     return(
         <div className="accion-acciones-container">
             <div className="border-line-accion"></div>
@@ -30,7 +34,6 @@ const Accion = ({accion, formularioChecked, grupo}) => {
                     />}
                 </div>
                 <p>{accion.nombre}</p>
-                
             </div>
         </div>
     )

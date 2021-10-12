@@ -1,6 +1,6 @@
 const Reserva = require('../modelos/Reserva')
 const { servicioVenta, servicio } = require('../modelos/Servicio')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 const { propiedad } = require('../modelos/Propiedad')
 const Venta = require('../modelos/Venta')
 const { persona } = require('../modelos/Persona')

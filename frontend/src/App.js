@@ -41,7 +41,6 @@ import 'react-notifications-component/dist/theme.css'
 function App() {
   const [render, setRender] = useState(false)
   const loadingScreen = useSelector(state => state.generalLoading)
-
   const userReload = useRef("")
   useEffect(() => {
       const buscarUser = async () => {

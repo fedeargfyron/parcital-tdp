@@ -11,19 +11,19 @@ const Modulo = ({modulo, grupo}) => {
         const verificarModulo = () => {
             setRender(false)
             let difference = []
-            modulo.subModulos.forEach(subModulo => {
+            modulo.children.forEach(subModulo => {
                 let differenceSub = []
-                subModulo.formularios.forEach(formulario => {
-                    let differenceForm = formulario.acciones.filter(accionInForm => grupo.acciones.includes(accionInForm._id))
-                    if(differenceForm.length === formulario.acciones.length){
+                subModulo.children.forEach(formulario => {
+                    let differenceForm = formulario.children.filter(accionInForm => grupo.acciones.includes(accionInForm._id))
+                    if(differenceForm.length === formulario.children.length){
                         differenceSub.push(formulario)
                     }
                 })
-                if(differenceSub.length === subModulo.formularios.length){
+                if(differenceSub.length === subModulo.children.length){
                     difference.push(subModulo)
                 }
             })
-            if(difference.length === modulo.subModulos.length)
+            if(difference.length === modulo.children.length)
                 setModuloChecked(true)
         }
         
@@ -50,13 +50,13 @@ const Modulo = ({modulo, grupo}) => {
                 <p>{modulo.nombre}</p>
             </div>
             <div className={notDisplay ? "not-display" : ""}>
-                {modulo.subModulos && modulo.subModulos.map(subModulo => 
+                {modulo.children && modulo.children.map(subModulo => 
                     <SubModulo 
                     onClickChangedModulo={onClickChangedModulo} 
                     setOnClickChangedModulo={setOnClickChangedModulo} 
                     subModulo={subModulo} grupo={grupo} 
                     moduloChecked={moduloChecked} 
-                    key={subModulo.id}
+                    key={subModulo._id}
                     />
                 )}
             </div>

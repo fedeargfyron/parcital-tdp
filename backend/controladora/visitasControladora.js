@@ -2,7 +2,7 @@ const Visita = require('../modelos/Visita')
 const { servicio } = require('../modelos/Servicio')
 const { persona } = require('../modelos/Persona')
 const mongoose = require('mongoose')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 
 const getVisitas = async (req, res) => {
     try {

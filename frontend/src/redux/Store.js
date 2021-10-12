@@ -26,6 +26,7 @@ import { getReservasGestionReducer } from './ducks/reservasGestionReducer'
 import { getComprasReducer } from './ducks/comprasReducer'
 import { getUserDataReducer } from './ducks/userDataReducer'
 import { setLoadingReducer } from './ducks/loadingReducer'
+import { filtrosReportesReducer } from './ducks/reportesFiltersReducer'
 const reducer = combineReducers({
     user: getUserReducer,
     propiedades: getPropiedadesReducer,
@@ -51,7 +52,8 @@ const reducer = combineReducers({
     reservasGestion: getReservasGestionReducer,
     compras: getComprasReducer,
     userData: getUserDataReducer,
-    generalLoading: setLoadingReducer
+    generalLoading: setLoadingReducer,
+    filtrosReportes: filtrosReportesReducer
 })
 
 const middleware = [thunk]

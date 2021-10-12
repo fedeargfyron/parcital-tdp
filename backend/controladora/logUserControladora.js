@@ -1,5 +1,5 @@
 const { persona } = require('../modelos/Persona')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 const mongoose = require('mongoose')
 
 module.exports = function(passport){
@@ -84,10 +84,14 @@ module.exports = function(passport){
 
   const pipelineForUser = (id) => {
       return [
-          {
-            '$match': {
-              '_id': id
-            }
+            {
+              '$search': {
+                  'index': 'userIndex', 
+                  'equals': {
+                      'path': '_id', 
+                      'value': id
+                  }
+              }
           }, {
             '$lookup': {
               'from': 'grupos', 
@@ -134,7 +138,18 @@ module.exports = function(passport){
               '_id': '$_id', 
               'usuario': {
                 '$first': '$usuario'
-              }, 
+              },
+              'reportes': {
+                '$addToSet': {
+                  '$cond': {
+                    'if': {
+                      '$eq': ["Estadisticas", '$formularioDatos.nombre']
+                    },
+                    'then': '$accionesDatos.nombre',
+                    'else': '$$REMOVE'
+                  }
+                }
+              },
               'acciones': {
                 '$addToSet': '$accionesDatos.nombre'
               }, 

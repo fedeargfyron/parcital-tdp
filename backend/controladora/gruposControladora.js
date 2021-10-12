@@ -1,6 +1,6 @@
 const Grupo = require('../modelos/Grupo')
 const Usuario = require('../modelos/Usuario')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 const mongoose = require('mongoose')
 
 const getGrupos = async (req, res) => {

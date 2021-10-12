@@ -74,7 +74,7 @@ const FormNewGrupo = ({sendGrupo}) => {
                 {loadingModulos ? <CircularProgress/> 
                 : errorModulos ? <p>Ocurrió un error cargando los modulos</p> 
                 : modulos && modulos.map(modulo => 
-                    <Modulo modulo={modulo} key={modulo.id}/>
+                    <Modulo modulo={modulo} key={modulo._id}/>
                 )}
             </div>
             <div className="form-buttons-container">

@@ -1,7 +1,7 @@
 require('dotenv').config()
 const { propiedad } = require('../modelos/Propiedad')
 const Horario = require('../modelos/Horario')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 const mongoose = require('mongoose')
 const { Tipo_Propiedad, casa, departamento } = require('../modelos/Tipo_Propiedad')
 const NodeGeocoder = require('node-geocoder')

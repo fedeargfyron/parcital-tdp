@@ -2,8 +2,8 @@ require('dotenv').config()
 const Usuario = require('../modelos/Usuario')
 const bcrypt = require('bcryptjs')
 const { MongoClient } = require('mongodb')
-const MongoClientCreator = require('./client')
-const transporter = require('./emailHost')
+const MongoClientCreator = require('./Common/client')
+const transporter = require('./Common/emailHost')
 const { persona } = require('../modelos/Persona')
 
 const getUsuarios = async (req, res) => {
