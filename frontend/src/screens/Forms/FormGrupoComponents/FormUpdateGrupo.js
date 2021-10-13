@@ -98,7 +98,7 @@ const FormUpdateGrupo = ({id, sendGrupo}) => {
                 {loadingModulos ? <CircularProgress/> 
                 : errorModulos ? <p>Ocurrió un error cargando los modulos</p> 
                 : modulos && modulos.map(modulo => 
-                    <Modulo modulo={modulo} grupo={grupo} key={modulo.id}/>
+                    <Modulo modulo={modulo} grupo={grupo} key={modulo._id}/>
                 )}
             </div>
             <div className="form-buttons-container">

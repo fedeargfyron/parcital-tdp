@@ -41,7 +41,7 @@ const CambiarContraScreen = () => {
         })
     }
 
-    
+
     return(
         <div className="CambiarContraScreen">
             <div className="form-container">
@@ -54,7 +54,6 @@ const CambiarContraScreen = () => {
                 </form>
             </div>
         </div>
-        
     )
 }
 

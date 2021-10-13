@@ -2,7 +2,7 @@ const { servicio, servicioVenta } = require('../modelos/Servicio')
 const { propiedad } = require('../modelos/Propiedad')
 const { persona } = require('../modelos/Persona')
 const mongoose = require('mongoose')
-const MongoClientCreator = require('./client')
+const MongoClientCreator = require('./Common/client')
 
 const getServicios = async (req, res) => {
     try {

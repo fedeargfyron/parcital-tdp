@@ -1,0 +1,18 @@
+.reportes-select{
+    margin: .5rem;
+}
+
+.reportes-filter-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.reportes-filter-container > div{
+    margin: .5rem;
+    margin-left: 0;
+    grid-template-columns: .625fr .625fr;
+}
+
+.reporte-item-container > input{
+    font-size: .75rem;
+}

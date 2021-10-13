@@ -16,19 +16,19 @@ const SubModulo = ({subModulo, moduloChecked, grupo, onClickChangedModulo, setOn
             setRender(false)
             moduloChecked ? setSubModuloChecked(true) : setSubModuloChecked(false)
             let difference = []
-            subModulo.formularios.forEach(formulario => {
-                let differenceForm = formulario.acciones.filter(accionInForm => grupo.acciones.includes(accionInForm._id))
-                if(differenceForm.length === formulario.acciones.length){
+            subModulo.children.forEach(formulario => {
+                let differenceForm = formulario.children.filter(accionInForm => grupo.acciones.includes(accionInForm._id))
+                if(differenceForm.length === formulario.children.length){
                     difference.push(formulario)
                 }
             })
-            if(difference.length === subModulo.formularios.length){
+            if(difference.length === subModulo.children.length){
                 setSubModuloChecked(true)
             }
         }
         
         grupo && render && verificarSubmodulo()
-    }, [moduloChecked, grupo, render, subModulo.formularios, onClickChangedModulo, setOnClickChangedModulo])
+    }, [moduloChecked, grupo, render, subModulo.children, onClickChangedModulo, setOnClickChangedModulo])
     return(
         <div className="submodulo-acciones-container">
             <div className="border-line"></div>
@@ -52,14 +52,14 @@ const SubModulo = ({subModulo, moduloChecked, grupo, onClickChangedModulo, setOn
                 <p>{subModulo.nombre}</p>
             </div>
             <div className={notDisplay ? "not-display" : ""}>
-            {subModulo.formularios && subModulo.formularios.map(formulario => 
+            {subModulo.children && subModulo.children.map(formulario => 
                 <Formulario 
                 formulario={formulario} 
                 setOnClickChangedSubModulo={setOnClickChangedSubModulo} 
                 onClickChangedSubModulo={onClickChangedSubModulo}
                 grupo={grupo} 
                 subModuloChecked={subModuloChecked} 
-                key={formulario.id}
+                key={formulario._id}
                 />
             )}
             </div>
