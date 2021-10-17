@@ -8,6 +8,11 @@ const tipoPropiedadSchema = new mongoose.Schema({
     }
 }, herencia)
 
+
+tipoPropiedadSchema.methods.rellenarCampos = function({tipo_propiedad}){
+    this.tipo = tipo_propiedad
+}
+
 const Tipo_Propiedad = mongoose.model('Tipo Propiedad', tipoPropiedadSchema)
 
 const tipoCasaSchema = new mongoose.Schema({
@@ -27,6 +32,16 @@ const tipoCasaSchema = new mongoose.Schema({
         type: String
     }
 })
+
+
+tipoCasaSchema.methods.rellenarCampos = function({cochera, cant_baños, cant_habitaciones, cant_pisos, antiguedad}){
+    this.cochera = cochera
+    this.cantidad_baños = cant_baños
+    this.cantidad_habitaciones = cant_habitaciones
+    this.cantidad_pisos = cant_pisos
+    this.antiguedad = antiguedad
+    return this
+}
 
 const casa = Tipo_Propiedad.discriminator('Casa', tipoCasaSchema)
 
@@ -50,6 +65,16 @@ const tipoDepartamentoSchema = new mongoose.Schema({
         type: String
     }
 })
+
+tipoDepartamentoSchema.methods.rellenarCampos = function({piso, acceso, cochera, cant_baños, cant_habitaciones, restricciones}){
+    this.piso = piso
+    this.acceso = acceso
+    this.cochera = cochera
+    this.cantidad_baños = cant_baños
+    this.cantidad_habitaciones = cant_habitaciones
+    this.restricciones = restricciones
+    return this
+}
 
 const departamento = Tipo_Propiedad.discriminator('Departamento', tipoDepartamentoSchema)
 

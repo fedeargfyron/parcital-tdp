@@ -121,10 +121,10 @@ const FormNewPropiedad = ({sendPropiedad}) => {
                 </div>
             }
             <div className="inputs-container">
-                <textarea placeholder="Descripcion" />
+                <textarea id="descripcion" onChange={e => handle(e)} placeholder="Descripcion" />
             </div>
             <div className="inputs-container">
-                <textarea placeholder="Entorno" />
+                <textarea id="entorno" onChange={e => handle(e)} placeholder="Entorno" />
             </div>
             <div className="inputs-container  upload-image-container">
                 <p className="imagenes-title">Imagenes:  <span>{data.imagenes.length}</span></p>

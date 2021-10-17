@@ -23,8 +23,8 @@ const getActividadServicios = async (req, res) => {
         if(!req.user)
             return res.send(noUserMsg())
         //Crear strategy acá y pasarla
-        let reporte = await setStrategyInClient(strategy)
-        res.json(reporte)
+        //let reporte = await setStrategyInClient()
+        res.json({})
     } catch (err) {
         console.error(err)
         res.status(500).send({
@@ -40,8 +40,8 @@ const getIngresoPropiedades = async (req, res) => {
         if(!req.user)
             return res.send(noUserMsg())
         //Crear strategy acá y pasarla
-        let reporte = await setStrategyInClient(strategy)
-        res.json(reporte)
+        //let reporte = await setStrategyInClient()
+        res.json({})
     } catch (err) {
         console.error(err)
         res.status(500).send({
@@ -57,8 +57,8 @@ const getDuracionServicios = async (req, res) => {
         if(!req.user)
             return res.send(noUserMsg())
         //Crear strategy acá y pasarla
-        let reporte = await setStrategyInClient(strategy)
-        res.json(reporte)
+        //let reporte = await setStrategyInClient()
+        res.json({})
     } catch (err) {
         console.error(err)
         res.status(500).send({

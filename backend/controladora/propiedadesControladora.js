@@ -5,6 +5,11 @@ const MongoClientCreator = require('./Common/client')
 const mongoose = require('mongoose')
 const { Tipo_Propiedad, casa, departamento } = require('../modelos/Tipo_Propiedad')
 const NodeGeocoder = require('node-geocoder')
+const LogsPropiedad = require('./Auditoria/LogsPropiedad')
+const CasaBuilder = require('./PropiedadBuilder/CasaBuilder')
+const DefaultBuilder = require('./PropiedadBuilder/DefaultBuilder')
+const DepartamentoBuilder = require('./PropiedadBuilder/DepartamentoBuilder')
+const PropiedadMaker = require('./PropiedadBuilder/PropiedadMaker')
 
 const getPropiedades = async (req, res) => {
     try {
@@ -86,89 +91,69 @@ const options = {
   provider: 'google',
   apiKey: 'AIzaSyAgn3CVY9Th3srJUj3JfuUwqcvgzp0a6fQ'
 }
-
 const setPropiedad = async (req, res) => {
-    try {
-        const geocoder = NodeGeocoder(options)
-        const resultado = await geocoder.geocode({
-          address: req.body.ubicacion + 'Rosario, Santa Fe',
-          country: 'Argentina',
-          zipCode: 'S2000',
-          countryCode: 'AR',
-          minConfidence: 0.6
-        })
-        if(resultado.length == 0){
-            return res.send({
-              type: 'danger',
-              title: 'Gestion de propiedades',
-              message: 'No existe la propiedad en Rosario'
-            })
-        }
-        if(!resultado[0].streetNumber){
+  try {
+      const geocoder = NodeGeocoder(options)
+      const resultado = await geocoder.geocode({
+        address: req.body.ubicacion + 'Rosario, Santa Fe',
+        country: 'Argentina',
+        zipCode: 'S2000',
+        countryCode: 'AR',
+        minConfidence: 0.6
+      })
+      if(resultado.length == 0){
           return res.send({
-              type: 'danger',
-              title: 'Gestion de propiedades',
-              message: 'No existe o especifique el número de calle'
-            })
-        }
-        let tipo_propiedad
-        if(req.body.tipo_propiedad === "Departamento"){
-            tipo_propiedad = new departamento({
-                piso: req.body.piso,
-                acceso: req.body.acceso,
-                cochera: req.body.cochera,
-                cantidad_baños: req.body.cant_baños,
-                cantidad_habitaciones: req.body.cant_habitaciones,
-                restricciones: req.body.restricciones
-            })
-        }
-        else if(req.body.tipo_propiedad === "Casa"){
-            
-            tipo_propiedad = new casa({
-                cantidad_habitaciones: req.body.cant_habitaciones,
-                cantidad_pisos: req.body.cant_pisos,
-                cochera: req.body.cochera,
-                cantidad_baños: req.body.cant_baños,
-                antiguedad: req.body.antiguedad
-            })
-            
-        }
-        else{
-            tipo_propiedad = new Tipo_Propiedad({
-                tipo: req.body.tipo_propiedad
-            })
-        }
-        const newPropiedad = new propiedad({
-            ubicacion: req.body.ubicacion,
-            tipo: tipo_propiedad._id,
-            estado_propiedad: req.body.estado_propiedad,
-            descripcion: req.body.descripcion,
-            entorno: req.body.entorno,
-            imagenes: req.body.imagenes,
-            precio: req.body.precio,
-            superficie: req.body.superficie,
-            latitud: resultado[0].latitude,
-            longitud: resultado[0].longitude
-        })
-        if(req.body.dueño !== ""){
-            newPropiedad.dueño = req.body.dueño
-        }
-        newPropiedad.estadoPropiedad()
-        await tipo_propiedad.save()
-        await newPropiedad.save()
-        res.send({
-          type: 'success',
-          title: 'Gestion de propiedades',
-          message: 'Propiedad creada'
-        })
-    } catch (err) {
-        console.error(err)
-        res.status(500).send({
-          type: 'danger',
-          title: 'Gestion de propiedades',
-          message: 'Server error'
-        })
-    }
+            type: 'danger',
+            title: 'Gestion de propiedades',
+            message: 'No existe la propiedad en Rosario'
+          })
+      }
+      if(!resultado[0].streetNumber){
+        return res.send({
+            type: 'danger',
+            title: 'Gestion de propiedades',
+            message: 'No existe o especifique el número de calle'
+          })
+      }
+      let builder
+      if(req.body.tipo_propiedad === "Departamento"){
+        builder = new DepartamentoBuilder()
+      }
+      else if(req.body.tipo_propiedad === "Casa"){
+        builder = new CasaBuilder()
+      }
+      else{
+        builder = new DefaultBuilder()
+      }
+      let tipo_propiedad = new PropiedadMaker(req.body).construct(builder)
+
+      const newPropiedad = new propiedad({
+          tipo: tipo_propiedad._id,
+          latitud: resultado[0].latitude,
+          longitud: resultado[0].longitude
+      }).rellenarCampos(req.body)
+      
+      if(req.body.dueño !== ""){
+          newPropiedad.dueño = req.body.dueño
+      }
+      newPropiedad.estadoPropiedad()
+      await tipo_propiedad.save()
+      await newPropiedad.save()
+      
+      LogsPropiedad(newPropiedad, tipo_propiedad, req.user._id, "Agregar")
+      res.send({
+        type: 'success',
+        title: 'Gestion de propiedades',
+        message: 'Propiedad creada'
+      })
+  } catch (err) {
+      console.error(err)
+      res.status(500).send({
+        type: 'danger',
+        title: 'Gestion de propiedades',
+        message: 'Server error'
+      })
+  }
 }
 
 const updatePropiedad = async (req, res) => {
@@ -197,33 +182,14 @@ const updatePropiedad = async (req, res) => {
               message: 'No existe o especifique el número de calle'
             })
         }
-        if(tipo_propiedad.tipo === "Departamento"){
-            tipo_propiedad.cantidad_habitaciones = req.body.cant_habitaciones
-            tipo_propiedad.piso = req.body.piso
-            tipo_propiedad.acceso = req.body.acceso
-            tipo_propiedad.cochera = req.body.cochera
-            tipo_propiedad.cantidad_baños = req.body.cant_baños
-            tipo_propiedad.restricciones = req.body.restricciones
-        }
-        else if(tipo_propiedad.tipo === "Casa"){
-            tipo_propiedad.cantidad_habitaciones = req.body.cant_habitaciones
-            tipo_propiedad.cantidad_pisos = req.body.cant_pisos
-            tipo_propiedad.cochera = req.body.cochera
-            tipo_propiedad.cantidad_baños = req.body.cant_baños
-            tipo_propiedad.antiguedad = req.body.antiguedad
-        }
-        editPropiedad.estado_propiedad = req.body.estado_propiedad
-        editPropiedad.descripcion = req.body.descripcion
-        editPropiedad.entorno = req.body.entorno
-        editPropiedad.imagenes = req.body.imagenes
-        editPropiedad.precio = req.body.precio
-        editPropiedad.superficie = req.body.superficie
-        editPropiedad.ubicacion = req.body.ubicacion,
+        tipo_propiedad.rellenarCampos(req.body)
+        editPropiedad.rellenarCampos(req.body)
         editPropiedad.latitud = resultado[0].latitude,
         editPropiedad.longitud = resultado[0].longitude
         editPropiedad.estadoPropiedad()
         await tipo_propiedad.save()
         await editPropiedad.save()
+        LogsPropiedad(editPropiedad, tipo_propiedad, req.user._id, "Modificar")
         res.send({
           type: 'success',
           title: 'Gestion de propiedades',
@@ -242,14 +208,16 @@ const updatePropiedad = async (req, res) => {
 const removePropiedad = async (req, res) => {
   try {
     const deletePropiedad = await propiedad.findById(req.params.id)
+    const tipo_propiedad = await Tipo_Propiedad.findById(deletePropiedad.tipo)
     if(deletePropiedad.servicios.length > 0) 
         return res.send({
           type: 'danger',
           title: 'Gestion de propiedades',
           message: 'No se puede eliminar la propiedad porque tiene un servicio activo'
         })
-
     await deletePropiedad.remove()
+    await tipo_propiedad.remove()
+    LogsPropiedad(deletePropiedad, tipo_propiedad, req.user._id, "Eliminar")
     res.send({
       type: 'success',
       title: 'Gestion de propiedades',

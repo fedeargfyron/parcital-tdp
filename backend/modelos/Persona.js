@@ -52,7 +52,11 @@ const agenteSchema = new mongoose.Schema({
     horarios:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Horario'
-    }]
+    }],
+    sueldo:{
+        type: Number,
+        required: true
+    }
 })
 const agente = persona.discriminator('Agente', agenteSchema)
 

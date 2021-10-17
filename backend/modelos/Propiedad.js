@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const {servicio} = require('./Servicio')
 
 
 const propiedadSchema = new mongoose.Schema({
@@ -54,6 +53,16 @@ propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
     }    
     return this.estado = "No disponible"
 }
+propiedadSchema.methods.rellenarCampos = function({ubicacion, estado_propiedad, descripcion, entorno, imagenes, precio, superficie}){
+    this.ubicacion = ubicacion
+    this.estado_propiedad = estado_propiedad
+    this.descripcion = descripcion
+    this.entorno = entorno
+    this.imagenes = imagenes
+    this.precio = precio
+    this.superficie = superficie
+}
+
 const propiedad = mongoose.model('Propiedad', propiedadSchema)
 
 module.exports = {

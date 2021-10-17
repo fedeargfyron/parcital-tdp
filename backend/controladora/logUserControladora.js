@@ -1,5 +1,6 @@
 const { persona } = require('../modelos/Persona')
 const MongoClientCreator = require('./Common/client')
+const LogsUsuario = require('./Auditoria/LogsUsuario')
 const mongoose = require('mongoose')
 
 module.exports = function(passport){
@@ -33,6 +34,7 @@ module.exports = function(passport){
             
           req.logIn(user, err => {
               if(err) throw err
+              LogsUsuario(user._id, "LogIn")
               res.send({
                 type: 'success',
                 title: 'Gestion de usuarios',
@@ -69,10 +71,12 @@ module.exports = function(passport){
       }
   }
   const logOut = async (req, res) => {
+      LogsUsuario(req.user._id, "LogOut")
       req.session.destroy(err => {
               if(err){
                   console.log(err)
               }
+              
               res.send({
                 type: 'success',
                 title: 'Gestion de usuarios',
