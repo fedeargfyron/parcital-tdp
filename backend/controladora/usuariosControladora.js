@@ -80,6 +80,15 @@ const getUsuario = async (req, res) => {
 
 const setUsuario = async (req, res) => {
     try {
+        let usuarioExistente = Usuario.findOne({
+            usuario: req.body.usuario
+        })
+        if(usuarioExistente)
+            return res.send({
+                type: 'danger',
+                title: 'Gestion de usuarios',
+                message: 'Usuario existente!'
+            })
         const usuario = new Usuario({
             usuario: req.body.usuario,
             grupos: req.body.grupos,
@@ -134,7 +143,7 @@ const removeUsuario = async (req, res) => {
         })
         if(personaExistente){
             personaExistente.usuario = null
-            await personaExistente.save()
+            personaExistente.save()
         }
         let usuario = await Usuario.findById(req.params.id)
         await usuario.remove()

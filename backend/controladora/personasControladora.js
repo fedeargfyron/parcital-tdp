@@ -108,19 +108,18 @@ const getPersona = async (req, res) => {
 
 const setPersona = async (req, res) => {
     try {
-        let personaExistente = await persona.findOne({
-            telefono: req.body.telefono
-        })
-        if(personaExistente)
+        let validacion = await validarNuevo(req.body)
+        if(validacion !== null){
             return res.send({
                 type: 'danger',
-                title: 'Gestion de personas',
-                message: 'Telefono existente'
+                title: 'Registro de usuario',
+                message: validacion
             })
+        }
 
         let setPersona
         if(req.body.tipoPersona === 'Dueño'){
-            personaExistente = await persona.findOne({
+            let personaExistente = await persona.findOne({
                 cuil: req.body.cuil
             })
             if(personaExistente)
@@ -171,13 +170,13 @@ const setPersona = async (req, res) => {
 const updatePersona = async (req, res) => {
     try {
         const id = mongoose.Types.ObjectId(req.params.id)
-        let personaExistente = await persona.find({
+        let personaExistente = await persona.findOne({
             $and: [
                 {telefono: req.body.telefono},
                 {_id: { $ne: id } }
             ]
         })
-        if(personaExistente.length > 0)
+        if(personaExistente)
             return res.send({
                 type: 'danger',
                 title: 'Gestion de personas',
@@ -186,13 +185,13 @@ const updatePersona = async (req, res) => {
 
         const updatePersona = await persona.findById(req.params.id)
         if (updatePersona.tipo === 'Agente'){
-            personaExistente = await persona.find({
+            personaExistente = await persona.findOne({
                 $and: [
                     {cuil: req.body.cuil},
                     {_id: { $ne: id } }
                 ]
             })
-            if(personaExistente.length > 0)
+            if(personaExistente)
                 return res.send({
                     type: 'danger',
                     title: 'Gestion de personas',
@@ -239,11 +238,11 @@ const removePersona = async (req, res) => {
                 message: 'No se puede eliminar una persona con usuario activo'
             })
         if(removePersona.tipo === "Agente"){
-            const servicios = await servicio.find({
+            const servicios = await servicio.findOne({
                 agente: removePersona._id,
                 estado: "activo"
             })
-            if(servicios !== null) 
+            if(servicios) 
                 return res.send({
                     type: 'danger',
                     title: 'Gestion de personas',
@@ -282,7 +281,7 @@ const removePersona = async (req, res) => {
 const registrarPersona = async (req, res) => {
     try{
         
-        let validacion = await validarNuevo(req.body.usuario, req.body.email, req.body.telefono, req.body.contraseña)
+        let validacion = await validarNuevo(req.body)
         if(validacion !== null){
             return res.send({
                 type: 'danger',
@@ -295,7 +294,8 @@ const registrarPersona = async (req, res) => {
         const newUsuario = new Usuario({
             usuario: req.body.usuario,
             contraseña: passwordEncriptada,
-            estado: true
+            estado: true,
+            grupos: ['617e885c4aeb422d9029d69e']
         })
         await newUsuario.save()
         const newPersona = new persona({
@@ -326,18 +326,23 @@ const encriptarPassword = async (contraseña) => {
     return await bcrypt.hash(contraseña, 10)
 }
 
-const validarNuevo = async (usuario, email, telefono, contraseña) => {
+const validarNuevo = async ({usuario, email, telefono, contraseña}) => {
     const buscarUsuario = await Usuario.findOne({
         usuario: usuario
     })
+    if(buscarUsuario) return 'Usuario existente'
+    let buscarTelefono = await persona.findOne({
+        telefono: telefono
+    })
+    if(buscarTelefono) return 'Telefono existente'
     const buscarEmail = await persona.findOne({
         email: email
     })
-    if(buscarUsuario !== null) return 'usuario existente'
-    if(buscarEmail !== null) return 'email existente'
-    if(telefono < 1000000000) return ('Telefono no valido')
-    if(contraseña.length < 8) return ('Contraseña demasiado corta')
-    //Validar email
+    if(buscarEmail) return 'Email existente'
+    
+    
+    if(telefono < 1000000000) return 'Telefono no valido'
+    if(contraseña.length < 8) return 'Contraseña demasiado corta'
     return null
 }
 

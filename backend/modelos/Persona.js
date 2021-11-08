@@ -44,18 +44,17 @@ const dueño = persona.discriminator('Dueño', dueñoSchema)
 
 const agenteSchema = new mongoose.Schema({
     cuil:{
-        type: Number,
+        type: Number
     },
     titulo:{
-        type: String,
+        type: String
     },
     horarios:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Horario'
     }],
     sueldo:{
-        type: Number,
-        required: true
+        type: Number
     }
 })
 const agente = persona.discriminator('Agente', agenteSchema)

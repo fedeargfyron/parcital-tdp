@@ -35,11 +35,7 @@ const servicioVentaSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Persona"
-    },
-    reserva: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Reserva"
-    },
+    }
 })
 
 

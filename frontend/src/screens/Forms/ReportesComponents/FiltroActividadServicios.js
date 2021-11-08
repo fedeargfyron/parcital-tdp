@@ -6,24 +6,25 @@ const FiltroActividadServicios = () => {
     const dispatch = useDispatch()
     const filtros = useSelector(state => state.filtrosReportes)
     const handle = (e) => {
-        let filtrosDto = filtros
+        let filtrosDto = {...filtros}
         filtrosDto[e.target.id] = e.target.value
         dispatch(updateFiltrosReportes(filtrosDto))
         dispatch(getReporte(filtros, "ActividadServicios"))
     }
+    
     return(
         <div className="reportes-filter-container">
             <div className="item-container reporte-item-container">
                 <p>Desde</p>
-                <input id="fechaInicio" type="date" value={filtros["fechaInicio"]} onChange={(e) => handle(e)}/>
+                <input id="fechaInicio" type="date" value={filtros.fechaInicio} onChange={(e) => handle(e)}/>
             </div>
             <div className="item-container reporte-item-container">
                 <p>Hasta</p>
-                <input id="fechaFin" type="date" value={filtros["fechaFin"]} onChange={(e) => handle(e)}/>
+                <input id="fechaFin" type="date" value={filtros.fechaFin} onChange={(e) => handle(e)}/>
             </div>
             <div className="item-container reporte-item-container">
                 <p>Agente</p>
-                <input id="agente" value={filtros["agente"]} placeholder="Fede" onChange={(e) => handle(e)}/>
+                <input id="agente" value={filtros.agente} placeholder="Fede" onChange={(e) => handle(e)}/>
             </div>
             {
              /* DIV PARA LOS CHECKBOXES DIV PARA LOS CHECKBOXES DIV PARA LOS CHECKBOXES DIV PARA LOS CHECKBOXES

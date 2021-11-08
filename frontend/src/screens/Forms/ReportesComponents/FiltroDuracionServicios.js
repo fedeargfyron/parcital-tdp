@@ -6,7 +6,7 @@ const FiltroDuracionServicios = () => {
     const dispatch = useDispatch()
     const filtros = useSelector(state => state.filtrosReportes)
     const handle = (e) => {
-        let filtrosDto = filtros
+        let filtrosDto = {...filtros}
         filtrosDto[e.target.id] = e.target.value
         dispatch(updateFiltrosReportes(filtrosDto))
         dispatch(getReporte(filtros, "DuracionServicios"))

@@ -17,7 +17,6 @@ const Map = ({propiedades, tipo}) => {
     const mostrarPropiedad = (propiedad) => {
         setPropiedad(propiedad)
     }
-    console.log(propiedad)
     return(
         <ReactMapGL 
         mapboxApiAccessToken = {"pk.eyJ1IjoiZnlyb24yMCIsImEiOiJja3RyamkzZHkwbDlyMnVxaXBqeGd3eWFiIn0.-TdxEuTZ74I-BMDmIFqoSg"}

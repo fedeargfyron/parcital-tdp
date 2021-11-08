@@ -23,6 +23,7 @@ const getPropiedades = async (req, res) => {
       await aggCursor.forEach(propiedad => {
           propiedades.push(propiedad)
       })
+
       res.json(propiedades)
     } catch (err) {
         console.error(err)
@@ -91,6 +92,7 @@ const options = {
   provider: 'google',
   apiKey: 'AIzaSyAgn3CVY9Th3srJUj3JfuUwqcvgzp0a6fQ'
 }
+
 const setPropiedad = async (req, res) => {
   try {
       const geocoder = NodeGeocoder(options)

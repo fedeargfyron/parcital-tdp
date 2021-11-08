@@ -53,6 +53,7 @@ propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
     }    
     return this.estado = "No disponible"
 }
+
 propiedadSchema.methods.rellenarCampos = function({ubicacion, estado_propiedad, descripcion, entorno, imagenes, precio, superficie}){
     this.ubicacion = ubicacion
     this.estado_propiedad = estado_propiedad

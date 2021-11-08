@@ -6,7 +6,6 @@ const GET_REPORTE_FAIL = 'GET_REPORTE_FAIL'
 
 export const getReporte = (filtros, reporte) => async (dispatch) => {
     try{
-        console.log(reporte)
         dispatch({
             type: GET_REPORTE_REQUEST
         })

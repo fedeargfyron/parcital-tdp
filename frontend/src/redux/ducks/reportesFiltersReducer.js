@@ -9,7 +9,9 @@ export const updateFiltrosReportes = (filtros) => async (dispatch) => {
 }
 
 const initialState = {
-    
+    reporte: "",
+    fechaInicio: "",
+    fechaFin: ""
 }
 
 export const filtrosReportesReducer = (state = initialState, action) => {

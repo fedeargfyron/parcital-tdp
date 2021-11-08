@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './PropiedadesScreen.css'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -14,9 +14,28 @@ const PropiedadesScreen = ({match}) => {
     const filtro = match.params.tipo
     const filtroSplit = filtro.split("_")
     const stringTitulo = `${filtroSplit[0]} ${filtroSplit[1] ? `de ${filtroSplit[1]}` : ""} ${filtroSplit[2] ? ` ${filtroSplit[2]} dormitorios` : ""}`
+
+    const [sort, setSort] = useState("Alfabeticamente")
     useEffect(() => {
         dispatch(getPropiedades(filtro))
     }, [dispatch, filtro])
+    if(propiedades && propiedades.length > 0){
+        switch(sort){
+            case "Alfabeticamente":{
+                propiedades.sort((a, b) => (a.ubicacion > b.ubicacion) ? 1 : -1)
+                break
+            } 
+            case "Mayor menor":{
+                propiedades.sort((a, b) => (a.precio < b.precio) ? 1 : -1)
+                break
+            } 
+            case "Menor mayor":{
+                propiedades.sort((a, b) => (a.precio > b.precio) ? 1 : -1)
+                break
+            }
+        }
+    }
+
     return(
         <div className="propiedadesScreen">
             <div id="mapContainer" className="leftside">
@@ -29,10 +48,10 @@ const PropiedadesScreen = ({match}) => {
                         <div className="line"></div>
                         <div className="filter-container">
                             <p className="filter-label">Ordenar por:</p>
-                            <select className="filter-select">
-                                <option>Alfabeticamente</option>
-                                <option>$ Mayor a menor</option>
-                                <option>$ Menor a mayor</option>
+                            <select onChange={(e) => setSort(e.target.value)} className="filter-select">
+                                <option value="Alfabeticamente">Alfabeticamente</option>
+                                <option value="Mayor menor">$ Mayor a menor</option>
+                                <option value="Menor mayor">$ Menor a mayor</option>
                             </select>
                         </div>
                         <div className="line"></div>

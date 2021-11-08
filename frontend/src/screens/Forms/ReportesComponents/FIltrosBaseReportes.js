@@ -5,7 +5,8 @@ import FiltroDuracionServicios from './FiltroDuracionServicios'
 import FiltroActividadServicios from './FiltroActividadServicios'
 
 const FiltrosBaseReportes = () => {
-    return new FiltrosFactory()
+    const filtrosFactory = new FiltrosFactory()
+    return filtrosFactory
 }
 
 function FiltrosFactory(){

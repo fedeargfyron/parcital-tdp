@@ -71,19 +71,22 @@ module.exports = function(passport){
       }
   }
   const logOut = async (req, res) => {
-      LogsUsuario(req.user._id, "LogOut")
-      req.session.destroy(err => {
-              if(err){
-                  console.log(err)
-              }
-              
-              res.send({
-                type: 'success',
-                title: 'Gestion de usuarios',
-                message: 'Deslogueado satisfactoriamente'
-              })
-          }
-      )
+    if(!req.user)
+      return
+      
+    LogsUsuario(req.user._id, "LogOut")
+    req.session.destroy(err => {
+            if(err){
+                console.log(err)
+            }
+            
+            res.send({
+              type: 'success',
+              title: 'Gestion de usuarios',
+              message: 'Deslogueado satisfactoriamente'
+            })
+        }
+    )
   }
 
   const pipelineForUser = (id) => {
@@ -107,6 +110,10 @@ module.exports = function(passport){
             '$unwind': {
               'path': '$gruposDatos',
               'preserveNullAndEmptyArrays': true
+            }
+          }, {
+            '$match': {
+              'gruposDatos.estado': true
             }
           }, {
             '$lookup': {

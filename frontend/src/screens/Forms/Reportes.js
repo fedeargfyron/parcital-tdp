@@ -1,13 +1,13 @@
 import React from 'react'
 import './Reportes.css'
 import Header from './ReportesComponents/Header'
-
+import ActividadServiciosChart from './ReportesCharts/ActividadServiciosChart'
 const Reportes = () => {
     return(
     <div className="reportesScreen">
         <Header />
         <div className="reporteContainer">
-            {/* Ver que librerias usar para los distintos reportes */}
+            <ActividadServiciosChart />
         </div>
     </div>
     )

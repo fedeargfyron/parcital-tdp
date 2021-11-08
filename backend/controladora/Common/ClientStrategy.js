@@ -13,13 +13,14 @@ ClientStrategy.prototype = {
         this.collection = strategy.collection
     },
     pipelineCreator: (filtros) => {
-        pipeline = this.strategy.pipelineCreator(filtros)
+        this.pipeline = this.strategy.pipelineCreator(JSON.parse(filtros))
     },
     execute: async () => {
         const uri = process.env.MONGO_URL
         const client = new MongoClient(uri, { useUnifiedTopology: true })
+        
         await client.connect()
-        return client.db('Inmobiliaria').collection(this.collection).aggregate(this.pipeline)
+        return aggCursor = client.db('Inmobiliaria').collection(this.collection).aggregate(this.pipeline)
     }
 }
 
