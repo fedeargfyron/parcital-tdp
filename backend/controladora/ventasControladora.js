@@ -1,6 +1,7 @@
 const Venta = require('../modelos/Venta')
 const { propiedad } = require('../modelos/Propiedad')
 const { persona } = require('../modelos/Persona')
+const { servicio } = require('../modelos/Servicio')
 const mongoose = require('mongoose')
 const MongoClientCreator = require('./Common/client')
 const getVentas = async (req, res) => {
@@ -50,16 +51,34 @@ const setVenta = async (req, res) => {
                 message: 'Inicie sesión'
             })
 
-        const prop = await propiedad.findById(req.body.propId)
+        const servicioFinalizado = servicio.find({
+            propiedad: req.body.propiedad,
+            tipo: "venta"
+        })
+
+        servicioFinalizado.estado = "Finalizado"
+        servicioFinalizado.fecha_fin = Date.now()
         const venta = new Venta({
             propiedad: req.body.propiedad,
             agente: req.body.agente,
             cliente: req.body.cliente,
-            total: req.body.total
+            total: req.body.total,
+            ingreso: servicioFinalizado.coste * 2
         })
+
+        const prop = await propiedad.findById(req.body.propId)
         prop.estado = "Vendida"
+        const index = prop.servicios.indexOf("venta");
+        if (index > -1) {
+            prop.servicios.splice(index, 1);
+        }
+        console.log(venta)
+        console.log(servicioFinalizado)
+        /*
+        await servicioFinalizado.save()
         await prop.save()
         await venta.save()
+        */
         res.send({
             type: 'success',
             title: 'Gestion de ventas',

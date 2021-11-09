@@ -131,11 +131,13 @@ const aceptarVenta = async (req, res) => {
       reserva.estado = "Compra confirmada"
       prop.estado = "Vendida"
       servicioReserva.estado = "Finalizado"
+      servicioReserva.fecha_fin = Date.now()
       const venta = new Venta({
           propiedad: prop._id,
           cliente: reserva.cliente,
           agente: servicioReserva.agente,
-          total: prop.precio
+          total: prop.precio,
+          ingreso: servicioReserva.coste * 2
       })
       await venta.save()
       await reserva.save()

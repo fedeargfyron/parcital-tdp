@@ -149,7 +149,7 @@ const setServicioVenta = async (req, res) => {
             agente: agente._id,
             propiedad: prop._id
         })
-        servicio.coste = servicio.calcularCoste(prop.precio)
+        servicio.coste = servicio.calcularCoste(req.body.coste, prop.precio)
         await servicio.save()
         await prop.save()
         res.send({

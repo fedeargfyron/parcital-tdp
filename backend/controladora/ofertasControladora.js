@@ -86,9 +86,16 @@ const setOferta = async (req, res) => {
             usuario: req.user._id
         })
 
+        const servicio = await servicioVenta.findOne({
+            propiedad: mongoose.Types.ObjectId(req.body.propiedad),
+            estado: "Activo",
+            tipo: req.body.servicio
+        })
+
         const ofertaPendiente = await Oferta.findOne({
             interesado: interesado._id,
-            estado: "Pendiente"
+            estado: "Pendiente",
+            servicio: servicio._id
         })
         if(ofertaPendiente)
             return res.send({
@@ -96,12 +103,6 @@ const setOferta = async (req, res) => {
                 title: 'Gestion de ofertas',
                 message: 'Ya tiene una oferta pendiente en esta propiedad'
             })
-        
-        const servicio = await servicioVenta.findOne({
-            propiedad: mongoose.Types.ObjectId(req.body.propiedad),
-            estado: "Activo",
-            tipo: req.body.servicio
-        })
 
         const oferta = new Oferta({
             monto: req.body.oferta,

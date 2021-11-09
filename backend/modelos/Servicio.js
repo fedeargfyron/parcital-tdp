@@ -25,8 +25,11 @@ const servicioSchema = new mongoose.Schema({
     },
 }, herencia)
 
-servicioSchema.methods.calcularCoste = function calcularCoste(precioProp) {
-    return 0
+servicioSchema.methods.calcularCoste = function calcularCoste(coste, precioProp) {
+    if(coste > 3){
+        coste = 3
+    }
+    return precioProp * coste / 100;
 }
 const servicio = mongoose.model('Servicio', servicioSchema)
 

@@ -24,6 +24,10 @@ const ventaSchema = new mongoose.Schema({
     total:{
         type: Number,
         required: true,
+    },
+    ingreso:{
+        type: Number,
+        default: 0
     }
 })
 

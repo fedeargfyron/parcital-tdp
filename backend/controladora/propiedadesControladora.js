@@ -95,6 +95,14 @@ const options = {
 
 const setPropiedad = async (req, res) => {
   try {
+      if(!req.user){
+          return res.send({
+            type: 'danger',
+            title: 'Gestion de propiedades',
+            message: 'Inicie sesión'
+          })
+      }
+
       const geocoder = NodeGeocoder(options)
       const resultado = await geocoder.geocode({
         address: req.body.ubicacion + 'Rosario, Santa Fe',
@@ -129,12 +137,13 @@ const setPropiedad = async (req, res) => {
       }
       let tipo_propiedad = new PropiedadMaker(req.body).construct(builder)
 
-      const newPropiedad = new propiedad({
+      let newPropiedad = new propiedad({
           tipo: tipo_propiedad._id,
           latitud: resultado[0].latitude,
           longitud: resultado[0].longitude
-      }).rellenarCampos(req.body)
-      
+      })
+      newPropiedad.rellenarCampos(req.body)
+
       if(req.body.dueño !== ""){
           newPropiedad.dueño = req.body.dueño
       }

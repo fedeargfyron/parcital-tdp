@@ -152,3 +152,7 @@
 .centerCircularProgress{
     text-align: center;
 }
+
+.inputCosteServicio{
+    width: 75px;
+}

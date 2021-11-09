@@ -42,13 +42,18 @@ const GestionServiciosVentaScreen = () => {
             messageAdder(res.data)
         })
     }
-    const setServicioVenta = async (id) => {
+    const setServicioVenta = async (e, id) => {
+        e.preventDefault()
+        let coste = e.target.elements["costeServicio"].value;
         dispatch({
             type: 'LOADING_TRUE'
         })
         await axios({
             method: 'POST',
             withCredentials: true,
+            data:{
+                coste: coste
+            },
             url: `http://localhost:4000/api/servicios/${id}`
         }).then(res => {
             dispatch({
@@ -112,7 +117,7 @@ const GestionServiciosVentaScreen = () => {
                             <tr>
                                 <th>Propiedad</th>
                                 <th>Ubicacion</th>
-                                <th>Acciones</th>
+                                <th>Agregar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -123,9 +128,10 @@ const GestionServiciosVentaScreen = () => {
                                     <td>{propiedad._id}</td>
                                     <td>{propiedad.ubicacion}</td>
                                     <td>
-                                        <div className="gestion-buttons-container">
-                                            <button className="btn-green" id="Agregar servicio venta" onClick={() => setServicioVenta(propiedad._id)}><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
-                                        </div>
+                                        <form onSubmit={(e) => setServicioVenta(e, propiedad._id)} className="gestion-buttons-container">
+                                            <input name="costeServicio" type="number" step="0.01" max="3" className="inputCosteServicio" placeholder="3" required/>
+                                            <button className="btn-green" id="Agregar servicio venta"><FontAwesomeIcon icon='plus' className="fas fa-plus"/></button>
+                                        </form>
                                     </td>
                                 </tr>
                             ))}
