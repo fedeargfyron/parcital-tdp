@@ -17,7 +17,7 @@ const ActividadServiciosChart = () => {
                     labels: ['Visitas', 'Ofertas', 'Reservas', 'Ventas'],
                     datasets: [{
                         label: 'Cantidad de cada actividad',
-                        data: [reporte.totalVisitas, reporte.totalOfertas, reporte.totalReservas, reporte.totalVentas],
+                        data: [reporte.totalVisitas, reporte.totalOfertas, reporte.totalReservas, reporte.totalVentas != 0 ? reporte.totalVentas : reporte.totalVentas2],
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',

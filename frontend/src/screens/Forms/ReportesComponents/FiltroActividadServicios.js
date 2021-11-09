@@ -9,7 +9,7 @@ const FiltroActividadServicios = () => {
         let filtrosDto = {...filtros}
         filtrosDto[e.target.id] = e.target.value
         dispatch(updateFiltrosReportes(filtrosDto))
-        dispatch(getReporte(filtros, "ActividadServicios"))
+        dispatch(getReporte(filtrosDto, "ActividadServicios"))
     }
     
     return(
@@ -26,13 +26,6 @@ const FiltroActividadServicios = () => {
                 <p>Agente</p>
                 <input id="agente" value={filtros.agente} placeholder="Fede" onChange={(e) => handle(e)}/>
             </div>
-            {
-             /* DIV PARA LOS CHECKBOXES DIV PARA LOS CHECKBOXES DIV PARA LOS CHECKBOXES DIV PARA LOS CHECKBOXES
-                <div className="item-container reporte-item-container">
-
-                </div>
-             */ 
-            }
         </div>
     )
 }
