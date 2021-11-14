@@ -9,7 +9,7 @@ const FiltroIngresoPropiedades = () => {
         let filtrosDto = {...filtros}
         filtrosDto[e.target.id] = e.target.value
         dispatch(updateFiltrosReportes(filtrosDto))
-        dispatch(getReporte(filtros, "IngresoPropiedades"))
+        dispatch(getReporte(filtrosDto, "IngresoPropiedades"))
     }
 
     return(

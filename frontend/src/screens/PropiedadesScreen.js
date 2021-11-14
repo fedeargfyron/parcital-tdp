@@ -33,6 +33,10 @@ const PropiedadesScreen = ({match}) => {
                 propiedades.sort((a, b) => (a.precio > b.precio) ? 1 : -1)
                 break
             }
+            default: {
+                propiedades.sort((a, b) => (a.ubicacion > b.ubicacion) ? 1 : -1)
+                break
+            }
         }
     }
 

@@ -1,14 +1,22 @@
 const ClientStrategy = require("./Common/ClientStrategy")
 const IngresosStrategy = require("./Strategies/IngresosStrategy")
 const ActividadServiciosStrategy = require('./Strategies/ActividadServiciosStrategy')
-const MongoClientCreator = require('./Common/client')
+const DuracionServiciosStrategy = require('./Strategies/DuracionServiciosStrategy')
+const moment = require('moment')
+moment().format()
 
 const getIngresos = async (req, res) => {
     try {
         if(!req.user)
             return res.send(noUserMsg())
         let strategy = new IngresosStrategy()
-        let reporte = await setStrategyInClient(strategy, req.query.filtros)
+        let reporteDto = await setStrategyInClient(strategy, req.query.filtros)
+        
+        let reporte = []
+        if(!reporteDto.datos[0].ventas){
+            return res.json(reporte)
+        }
+        reporte = sortDates(reporteDto.datos[0].ventas, reporteDto.datos[1].sueldo)
         res.json(reporte)
     } catch (err) {
         console.error(err)
@@ -18,6 +26,33 @@ const getIngresos = async (req, res) => {
             message: 'Server error'
         })
     }
+}
+
+const sortDates = (ventas, sueldos) => {
+    let currentDate = moment(ventas[0].fecha)
+    let lastDate = {
+        ingreso: 0
+    }
+    let endDate = moment(ventas[ventas.length - 1].fecha).add(1, 'month')
+    let reporte = []
+
+    while (currentDate.isBefore(endDate)) {
+        let dateNowObject = {
+            fecha: currentDate.format("YYYY-MM"),
+            ingreso: lastDate.ingreso - sueldos
+        }
+        let fechasCoincidentes = ventas.filter(x => x.fecha == currentDate.format("YYYY-MM") && x.ingreso)
+        if(fechasCoincidentes.length > 0){
+            fechasCoincidentes.forEach(x => {
+                dateNowObject.ingreso += x.ingreso
+            })
+        }
+        reporte.push(dateNowObject)
+        lastDate = dateNowObject
+        currentDate.add(1, 'month');
+    }
+
+    return reporte
 }
 
 const getActividadServicios = async (req, res) => {
@@ -41,9 +76,9 @@ const getIngresoPropiedades = async (req, res) => {
     try {
         if(!req.user)
             return res.send(noUserMsg())
-        //Crear strategy acá y pasarla
-        //let reporte = await setStrategyInClient()
-        res.json({})
+        let strategy
+        let reporte = await setStrategyInClient(strategy, req.query.filtros)
+        res.json(reporte)
     } catch (err) {
         console.error(err)
         res.status(500).send({
@@ -58,9 +93,10 @@ const getDuracionServicios = async (req, res) => {
     try {
         if(!req.user)
             return res.send(noUserMsg())
-        //Crear strategy acá y pasarla
-        //let reporte = await setStrategyInClient()
-        res.json({})
+
+        let strategy = new DuracionServiciosStrategy()
+        let reporte = await setStrategyInClient(strategy, req.query.filtros)
+        res.json(reporte)
     } catch (err) {
         console.error(err)
         res.status(500).send({

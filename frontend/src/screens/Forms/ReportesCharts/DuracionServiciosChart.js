@@ -2,8 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 import { CircularProgress } from '@material-ui/core';
-const ActividadServiciosChart = () => {
-
+const DuracionServiciosChart = () => {
     const reporteInfo = useSelector(state => state.reportes)
     const { reporte, loadingReporte, errorReporte} = reporteInfo
     return(
@@ -14,10 +13,10 @@ const ActividadServiciosChart = () => {
             reporte && 
             <Bar 
                 data={{
-                    labels: ['Visitas', 'Ofertas', 'Reservas', 'Ventas'],
+                    labels: reporte.agentes.map(agente => agente.nombre),
                     datasets: [{
-                        label: 'Cantidad de cada actividad',
-                        data: [reporte.totalVisitas, reporte.totalOfertas, reporte.totalReservas, reporte.totalVentas !== 0 ? reporte.totalVentas : reporte.totalVentas2],
+                        label: 'Duracion en días de los servicios por agente',
+                        data: reporte.agentes.map(agente => agente.promedio),
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -32,6 +31,7 @@ const ActividadServiciosChart = () => {
                         ],
                         borderWidth: 1
                     },
+
                 ]
                 }}
                 height={400}
@@ -42,4 +42,4 @@ const ActividadServiciosChart = () => {
     )
 }
 
-export default ActividadServiciosChart
+export default DuracionServiciosChart
