@@ -1,5 +1,5 @@
 function IngresosStrategy() { 
-    this.collection = "ventas" //Colección a la que apunta la strategy
+    this.collection = "ventas"
     this.pipeline = [
         {
           '$match': {}
