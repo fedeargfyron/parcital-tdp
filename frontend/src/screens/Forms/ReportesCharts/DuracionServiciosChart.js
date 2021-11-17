@@ -8,7 +8,7 @@ const DuracionServiciosChart = () => {
     return(
         <div>
             {
-            loadingReporte ? <CircularProgress /> : 
+            loadingReporte ? <div className="centerCircularProgress"><CircularProgress /></div> : 
             errorReporte ? <h2>Error!</h2> :
             reporte && 
             <Bar 

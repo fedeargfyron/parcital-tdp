@@ -1,15 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import '../../../components/HeaderPage.css'
 import { useSelector, useDispatch } from 'react-redux'
 import  FiltrosBaseReportes from './FIltrosBaseReportes'
 import { updateFiltrosReportes } from '../../../redux/ducks/reportesFiltersReducer'
 import { getReporte } from '../../../redux/ducks/reporteReducer'
 
-const Header = () => {
+const Header = ({currentReporte, setCurrentReporte}) => {
     const dispatch = useDispatch()
     const userInfo = useSelector(state => state.user)
     const filtros = useSelector(state => state.filtrosReportes)
-    const [currentReporte, setCurrentReporte] = useState(filtros.reporte)
     const { user } = userInfo
     const handle = (e) => {
         let filtrosDto = filtros

@@ -2,6 +2,7 @@ const ClientStrategy = require("./Common/ClientStrategy")
 const IngresosStrategy = require("./Strategies/IngresosStrategy")
 const ActividadServiciosStrategy = require('./Strategies/ActividadServiciosStrategy')
 const DuracionServiciosStrategy = require('./Strategies/DuracionServiciosStrategy')
+const IngresoPropiedadesStrategy = require('./Strategies/IngresoPropiedadesStrategy')
 const moment = require('moment')
 moment().format()
 
@@ -76,7 +77,7 @@ const getIngresoPropiedades = async (req, res) => {
     try {
         if(!req.user)
             return res.send(noUserMsg())
-        let strategy
+        let strategy = new IngresoPropiedadesStrategy()
         let reporte = await setStrategyInClient(strategy, req.query.filtros)
         res.json(reporte)
     } catch (err) {

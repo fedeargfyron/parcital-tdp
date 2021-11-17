@@ -3,6 +3,7 @@ import './Reportes.css'
 import Header from './ReportesComponents/Header'
 import ActividadServiciosChart from './ReportesCharts/ActividadServiciosChart'
 import DuracionServiciosChart from './ReportesCharts/DuracionServiciosChart'
+import IngresoPropiedadesChart from './ReportesCharts/IngresoPropiedadesChart'
 import IngresosChart from './ReportesCharts/IngresosChart'
 import { useSelector } from 'react-redux'
 const Reportes = () => {
@@ -11,16 +12,18 @@ const Reportes = () => {
 
     return(
     <div className="reportesScreen">
-        <Header />
+        <Header 
+        currentReporte = {currentReporte} 
+        setCurrentReporte = {setCurrentReporte}
+        />
         <div className="reporteContainer">
-            <ActividadServiciosChart />
             {
-                /*
-                currentReporte === "ActividadServicios" ? <ActividadServiciosChart />
+                currentReporte === "Actividad servicios" ? <ActividadServiciosChart />
                 : currentReporte === "Ingresos" ? <IngresosChart />
-                : currentReporte === "DuracionServicios" ? <DuracionServiciosChart />
-                : <h4>Sin reporte</h4>
-                */
+                : currentReporte === "Duracion servicios" ? <DuracionServiciosChart />
+                : currentReporte === "Ingreso propiedades" ? <IngresoPropiedadesChart />
+                : <div></div>
+
             }
         </div>
     </div>

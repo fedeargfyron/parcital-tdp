@@ -1,9 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import { CircularProgress } from '@material-ui/core';
-const ActividadServiciosChart = () => {
-
+const IngresoPropiedadesChart = () => {
     const reporteInfo = useSelector(state => state.reportes)
     const { reporte, loadingReporte, errorReporte} = reporteInfo
     return(
@@ -11,13 +10,13 @@ const ActividadServiciosChart = () => {
             {
             loadingReporte ? <div className="centerCircularProgress"><CircularProgress /></div> : 
             errorReporte ? <h2>Error!</h2> :
-            reporte && 
-            <Bar 
+            reporte && reporte.datos &&
+            <Line 
                 data={{
-                    labels: ['Visitas', 'Ofertas', 'Reservas', 'Ventas'],
+                    labels: reporte.datos.map(x => x.fecha),
                     datasets: [{
-                        label: 'Cantidad de cada actividad',
-                        data: [reporte.totalVisitas, reporte.totalOfertas, reporte.totalReservas, reporte.totalVentas !== 0 ? reporte.totalVentas : reporte.totalVentas2],
+                        label: 'Ingreso de propiedades',
+                        data: reporte.datos.map(x => x.cantidad),
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -30,16 +29,22 @@ const ActividadServiciosChart = () => {
                             'rgba(75, 192, 192, 1)',
                             'rgba(153, 102, 255, 1)'
                         ],
-                        borderWidth: 1
+                        
+                        borderWidth: 3,
+                        pointHoverRadius: 10,
+                        pointRadius: 6,
+                        pointBorderWidth: 4
                     },
+                    
                 ]
                 }}
                 height={400}
                 width={600}
+                
             />
             }
         </div>
     )
 }
 
-export default ActividadServiciosChart
+export default IngresoPropiedadesChart
