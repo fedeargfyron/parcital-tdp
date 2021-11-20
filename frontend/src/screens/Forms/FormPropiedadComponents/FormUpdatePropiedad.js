@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHistory } from 'react-router'
 import { CircularProgress } from '@material-ui/core'
 import { getTiposPropiedad } from '../../../redux/ducks/tiposPropiedadReducer'
+import messageAdder from '../../../MessageAdder'
+import axios from 'axios'
 const FormUpdatePropiedad = ({id, sendPropiedad}) => {
     const history = useHistory()
     const dispatch = useDispatch()
@@ -96,6 +98,28 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
         })
     }
 
+    const deleteTipo = async () => {
+        dispatch({
+            type: 'LOADING_TRUE'
+        })
+        await axios({
+            method: 'DELETE',
+            withCredentials: true,
+            url: `http://localhost:4000/api/tiposPropiedad/${data.tipo}`
+        }).then(res => {
+            dispatch({
+                type: 'LOADING_FALSE'
+            })
+            messageAdder(res.data)
+            if(res.data.type === "success"){
+                dispatch(getTiposPropiedad())
+                let newData = {...data}
+                newData.tipo = "Nuevo"
+                setData(newData)
+            }
+        })
+    }
+
     useEffect(() => {
         const handleUpdate = () => {
             let newData = actualizarData(propiedad)
@@ -138,7 +162,7 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
                 <select><option>{data.dueño}</option></select>
             </div>
             
-            <div className="inputs-container">
+            <div className="inputs-container offsetInputContainer">
                 <p>Tipo</p> 
                 <select id="tipo" onChange={(e) => handleTipo(e)}>
                     <option value={propiedad.tipoDatos._id}>{data.tipo_descripcion}</option>
@@ -147,6 +171,7 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
                     : errorTiposPropiedad ? <option>Error</option>
                     : tiposPropiedad && tiposPropiedad.map(tipoPropiedad => <option key={tipoPropiedad._id} value={tipoPropiedad._id}>{tipoPropiedad.descripcion}</option>)}
                 </select>
+                {data.tipo !== "Nuevo" && <button className="btn-red offsetButton" onClick={() => {deleteTipo()}}><FontAwesomeIcon icon='trash' className="fas fa-trash"/></button>}
             </div>
             <div className="inputs-container">
                 <p>Tipo de propiedad</p> 

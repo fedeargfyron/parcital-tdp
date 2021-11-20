@@ -12,7 +12,8 @@ const initialState = {
     reporte: "",
     fechaInicio: "",
     fechaFin: "",
-    agente: ""
+    agente: "",
+    usuario: ""
 }
 
 export const filtrosReportesReducer = (state = initialState, action) => {

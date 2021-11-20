@@ -340,3 +340,17 @@
     background-position: center;
     overflow: hidden;
 }
+
+.offsetButton{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    right: -35px;
+}
+
+.offsetInputContainer{
+    position: relative;
+}

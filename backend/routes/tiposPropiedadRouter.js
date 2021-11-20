@@ -3,10 +3,13 @@ const express = require('express')
 const Router = express.Router()
 
 const {
-    getTiposPropiedad
+    getTiposPropiedad,
+    removeTipoPropiedad
 } = require('../controladora/tiposPropiedadControladora')
 
 Router.get('/', getTiposPropiedad)
+
+Router.delete('/:id', removeTipoPropiedad)
 
 
 

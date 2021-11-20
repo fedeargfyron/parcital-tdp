@@ -145,7 +145,6 @@ const setPropiedad = async (req, res) => {
           newPropiedad.dueño = req.body.dueño
       }
       newPropiedad.estadoPropiedad()
-      await 
       await newPropiedad.save()
       
       LogsPropiedad(newPropiedad, tipo_propiedad, req.user._id, "Agregar")
@@ -199,7 +198,6 @@ const updatePropiedad = async (req, res) => {
         
         editPropiedad.rellenarCampos(req.body)
         editPropiedad.tipo = tipo_propiedad._id
-        console.log(tipo_propiedad)
         editPropiedad.latitud = resultado[0].latitude
         editPropiedad.longitud = resultado[0].longitude
         editPropiedad.estadoPropiedad()

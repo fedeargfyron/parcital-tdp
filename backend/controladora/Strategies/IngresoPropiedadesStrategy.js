@@ -1,46 +1,46 @@
 function IngresoPropiedadesStrategy() { 
     this.collection = "audpropiedads"
     this.pipeline = [
-        {
-          '$match': {
-            'accion': 'Agregar'
-          }
-        }, {
-          '$project': {
-            'fecha': {
-              '$dateToString': {
-                'format': '%Y-%m', 
-                'date': '$fecha'
-              }
+      {
+        '$match': {
+          'accion': 'Agregar'
+        }
+      }, {
+        '$project': {
+          'fecha': {
+            '$dateToString': {
+              'format': '%Y-%m', 
+              'date': '$fecha'
             }
-          }
-        }, {
-          '$group': {
-            '_id': '$fecha', 
-            'cantidad': {
-              '$sum': 1
-            }
-          }
-        }, {
-          '$group': {
-            '_id': null, 
-            'datos': {
-              '$push': {
-                'cantidad': '$cantidad', 
-                'fecha': '$_id'
-              }
-            }
-          }
-        }, {
-          '$project': {
-            '_id': 0
-          }
-        }, {
-          '$sort': {
-            'datos.fecha': -1
           }
         }
-      ]
+      }, {
+        '$group': {
+          '_id': '$fecha', 
+          'cantidad': {
+            '$sum': 1
+          }
+        }
+      }, {
+        '$sort': {
+          '_id': 1
+        }
+      }, {
+        '$group': {
+          '_id': null, 
+          'datos': {
+            '$push': {
+              'cantidad': '$cantidad', 
+              'fecha': '$_id'
+            }
+          }
+        }
+      }, {
+        '$project': {
+          '_id': 0
+        }
+      }
+    ]
     
     this.pipelineCreator = (filtros) => { 
         let matchByFecha
@@ -89,6 +89,7 @@ function IngresoPropiedadesStrategy() {
             })
             
         }
+        console.log(this.pipeline)
         return this.pipeline
     }
 }
