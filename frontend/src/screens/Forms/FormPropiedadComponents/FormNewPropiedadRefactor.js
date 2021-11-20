@@ -1,19 +1,15 @@
-import React, {useEffect, useState} from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getPropiedad } from '../../../redux/ducks/propiedadReducer'
+import React, {useState, useEffect} from 'react'
+import SelectDueños from './Dueños'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useHistory } from 'react-router'
-import { CircularProgress } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
 import { getTiposPropiedad } from '../../../redux/ducks/tiposPropiedadReducer'
-const FormUpdatePropiedad = ({id, sendPropiedad}) => {
+const FormNewPropiedadRefactor = ({sendPropiedad}) => {
     const history = useHistory()
     const dispatch = useDispatch()
-    const setPropiedad = useSelector((state) => state.propiedad)
-    const { propiedad, loadingPropiedad, errorPropiedad } = setPropiedad
+    const [cochera, setCochera] = useState(false)
     const tiposPropiedadInfo = useSelector(state => state.tipos_propiedad)
     const {tiposPropiedad, loadingTiposPropiedad, errorTiposPropiedad} = tiposPropiedadInfo
-    const [cochera, setCochera] = useState(false)
-    const [render, setRender] = useState(true)
     const [data, setData] = useState({
         ubicacion: "",
         estado_propiedad: "",
@@ -41,6 +37,29 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
         setData(newdata)
     }
 
+    useEffect(() => {
+        dispatch(getTiposPropiedad())
+    }, [dispatch])
+
+    const handleTipo = (e) => {
+        const newdata = {...data}
+        newdata.tipo = e.target.value
+        if(e.target.value === "Nuevo"){
+            setData(newdata)
+            return
+        }
+        let tipoDto = tiposPropiedad.find(x => x._id === e.target.value)
+        newdata.tipo_descripcion = tipoDto.descripcion ? tipoDto.descripcion : ""
+        newdata.cant_habitaciones = tipoDto.cantidad_habitaciones ? tipoDto.cantidad_habitaciones : ""
+        newdata.tipo_propiedad = tipoDto.tipo ? tipoDto.tipo : ""
+        newdata.cant_baños = tipoDto.cantidad_baños ? tipoDto.cantidad_baños : ""
+        newdata.cant_pisos = tipoDto.cantidad_pisos ? tipoDto.cantidad_pisos : ""
+        newdata.cochera = tipoDto.cochera ? tipoDto.cochera : false
+        newdata.piso = tipoDto.piso ? tipoDto.piso : ""
+        newdata.acceso = tipoDto.acceso ? tipoDto.acceso : ""
+        setData(newdata)
+    }
+
     const handleCochera = () => {
         setCochera(!cochera)
         const newdata = {...data}
@@ -51,26 +70,6 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
     const preview = async (e) => {
         const newdata ={...data}
         newdata["imagenes"] = await previewData([...e.target.files])
-        setData(newdata)
-    }
-
-    const handleTipo = (e) => {
-        const newdata = {...data}
-        newdata.tipo = e.target.value
-        if(e.target.value === "Nuevo"){
-            setData(newdata)
-            return
-        }
-        
-        let tipoDto = tiposPropiedad.find(x => x._id === e.target.value)
-        newdata.tipo_descripcion = tipoDto.descripcion ? tipoDto.descripcion : ""
-        newdata.cant_habitaciones = tipoDto.cantidad_habitaciones ? tipoDto.cantidad_habitaciones : ""
-        newdata.tipo_propiedad = tipoDto.tipo ? tipoDto.tipo : ""
-        newdata.cant_baños = tipoDto.cantidad_baños ? tipoDto.cantidad_baños : ""
-        newdata.cant_pisos = tipoDto.cantidad_pisos ? tipoDto.cantidad_pisos : ""
-        newdata.cochera = tipoDto.cochera ? tipoDto.cochera : false
-        newdata.piso = tipoDto.piso ? tipoDto.piso : ""
-        newdata.acceso = tipoDto.acceso ? tipoDto.acceso : ""
         setData(newdata)
     }
 
@@ -96,77 +95,51 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
         })
     }
 
-    useEffect(() => {
-        const handleUpdate = () => {
-            let newData = actualizarData(propiedad)
-            setCochera(newData.cochera)
-            setData(newData)
-        }
-        if(render){
-            dispatch(getPropiedad(id))
-            dispatch(getTiposPropiedad())
-            setRender(false)
-        }
-        if(propiedad)
-            handleUpdate()
-
-    }, [dispatch, id, propiedad, render])
     return(
         <form className="form-container" onSubmit={(e) => sendPropiedad(e, data)}>
-            <label className="form-title">Modificar propiedad</label>
-            {loadingPropiedad ? <CircularProgress /> 
-            : errorPropiedad ? <h2>Error!</h2>
-            : propiedad && 
-            <>
+            <label className="form-title">Agregar propiedad refactor</label>
             <div className="inputs-container">
-                <input onChange={e => handle(e)} value={data.ubicacion} id="ubicacion" type="text" placeholder="Ubicacion" required/>
+                <input onChange={e => handle(e)} id="ubicacion" type="text" placeholder="Ubicacion" required/>
             </div>
             <div className="inputs-container">
-                <input onChange={e => handle(e)} value={data.estado_propiedad} id="estado_propiedad" type="text" placeholder="Estado de propiedad" />
+                <input onChange={e => handle(e)} id="estado_propiedad" type="text" placeholder="Estado de propiedad" />
             </div>
             <div className="inputs-container">
-                <input onChange={e => handle(e)} value={data.precio} type="number" id="precio" placeholder="Precio" />
-                <input onChange={e => handle(e)} value={data.superficie} type="number" id="superficie" placeholder="Superficie m²" />
+                <input onChange={e => handle(e)} type="number" id="precio" placeholder="Precio" />
+                <input onChange={e => handle(e)} type="number" id="superficie" placeholder="Superficie m²" />
             </div>
-
             <div className="inputs-container">
-                <input onChange={e => handle(e)} value={data.antiguedad} id="antiguedad" type="text" placeholder="Antiguedad" />
+                <input onChange={e => handle(e)} value={data.antiguedad} id="antiguedad" type="text" placeholder="Antiguedad"/>
             </div>
-            
             <div className="inputs-container">
                 <p>Dueño</p> 
-                <select><option>{data.dueño}</option></select>
+                <SelectDueños handle={handle} />
             </div>
+
             
             <div className="inputs-container">
                 <p>Tipo</p> 
                 <select id="tipo" onChange={(e) => handleTipo(e)}>
-                    <option value={propiedad.tipoDatos._id}>{data.tipo_descripcion}</option>
                     <option value="Nuevo">Nuevo</option>
                     { loadingTiposPropiedad ? <option>Cargando...</option>
                     : errorTiposPropiedad ? <option>Error</option>
-                    : tiposPropiedad && tiposPropiedad.map(tipoPropiedad => <option key={tipoPropiedad._id} value={tipoPropiedad._id}>{tipoPropiedad.descripcion}</option>)}
+                    : tiposPropiedad && tiposPropiedad.map(tipoPropiedad => <option key={tipoPropiedad._id} value={tipoPropiedad._id}>{tipoPropiedad.descripcion}<button>Asd</button></option>)}
                 </select>
             </div>
             <div className="inputs-container">
                 <p>Tipo de propiedad</p> 
                 <select id="tipo_propiedad" onChange={(e) => handle(e)} value={data.tipo_propiedad}>
-                    {data.tipo === "Nuevo" ? <>
                     <option value="Casa">Casa</option>
                     <option value="Departamento">Departamento</option>
                     <option value="Cochera">Cochera</option>
                     <option value="Terreno">Terreno</option>
                     <option value="Galpon">Galpon</option>
-                    </>
-                    : <option value={data.tipo_propiedad}>{data.tipo_propiedad}</option>}
-                    
                 </select>
             </div>
-
             <div className="inputs-container">
                 <input onChange={e => handle(e)} value={data.tipo_descripcion} id="tipo_descripcion" type="text" placeholder="Descripcion tipo de propiedad" />
             </div>
-
+            
             {(data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") && 
                 <div className="inputs-container">
                     <input onChange={e => handle(e)} value={data.cant_habitaciones} id="cant_habitaciones" type="number" placeholder="Cant. habitaciones" disabled={data.tipo !== "Nuevo"} />
@@ -175,13 +148,13 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
             }
             {data.tipo_propiedad === "Casa" && 
                 <div className="inputs-container">
-                    <input onChange={e => handle(e)} value={data.cant_pisos}id="cant_pisos" type="number" placeholder="Cant. pisos" disabled={data.tipo !== "Nuevo"} />
+                    <input onChange={e => handle(e)} value={data.cant_pisos} id="cant_pisos" type="number" placeholder="Cant. pisos" disabled={data.tipo !== "Nuevo"} />
                 </div>
             }
             {data.tipo_propiedad === "Departamento" && 
                 <div className="inputs-container">
                     <input onChange={e => handle(e)} value={data.piso} id="piso" type="text" placeholder="Piso" disabled={data.tipo !== "Nuevo"} />
-                    <input onChange={e => handle(e)} value={data.acceso} id="acceso" type="text" placeholder="Acceso" disabled={data.tipo !== "Nuevo"}/>
+                    <input onChange={e => handle(e)} value={data.acceso} id="acceso" type="text" placeholder="Acceso" disabled={data.tipo !== "Nuevo"} />
                 </div>
             }
             { (data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") &&
@@ -191,16 +164,17 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
                             handleCochera()
                         }
                     }}>
-                        <FontAwesomeIcon icon={cochera ? 'check' : 'times'} className={cochera ? "fas fa-check" : "fas fa-times"}/>
+                        <FontAwesomeIcon icon={cochera ? 'check' : 'times'} className={cochera ? "fas fa-check" : "fas fa-times"}/><i></i>
                     </div>
                     <p>Cochera</p>
                 </div>
             }
+            
             <div className="inputs-container">
-                <textarea id="descripcion" onChange={e => handle(e)} value={data.descripcion} placeholder="Descripcion" />
+                <textarea id="descripcion" onChange={e => handle(e)} placeholder="Descripcion" />
             </div>
             <div className="inputs-container">
-                <textarea id="entorno" onChange={e => handle(e)} value={data.entorno} placeholder="Entorno" />
+                <textarea id="entorno" onChange={e => handle(e)} placeholder="Entorno" />
             </div>
             <div className="inputs-container  upload-image-container">
                 <p className="imagenes-title">Imagenes:  <span>{data.imagenes.length}</span></p>
@@ -218,38 +192,10 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
             <div className="form-buttons-container">
                 <button className="btn-green"><FontAwesomeIcon icon='check' className="fas fa-check"/></button>
                 <button type="button" className="btn-red" onClick={() => history.goBack()}><FontAwesomeIcon icon='times' className="fas fa-times" /></button>
+                
             </div>
-            </>
-        }
         </form>
     )
 }
 
-const actualizarData = (propiedad) => {
-    let newData
-    if(!propiedad) return newData 
-    newData = {
-    ubicacion: propiedad.ubicacion,
-    estado_propiedad: propiedad.estado_propiedad,
-    dueño: `${propiedad.dueñoDatos.nombre} ${propiedad.dueñoDatos.apellido}`,
-    tipo_propiedad: propiedad.tipoDatos.tipo,
-    precio: propiedad.precio,
-    superficie: propiedad.superficie,
-    descripcion: propiedad.descripcion,
-    entorno: propiedad.entorno, 
-    cochera: propiedad.tipoDatos.cochera,
-    piso: propiedad.tipoDatos.piso,
-    acceso: propiedad.tipoDatos.acceso,
-    cant_baños: propiedad.tipoDatos.cantidad_baños,
-    cant_habitaciones: propiedad.tipoDatos.cantidad_habitaciones,
-    cant_pisos: propiedad.tipoDatos.cantidad_pisos,
-    imagenes: propiedad.imagenes
-    }
-    newData.tipo_descripcion = propiedad.tipoDatos.descripcion ? propiedad.tipoDatos.descripcion : ""
-    newData.antiguedad = propiedad.antiguedad ? propiedad.antiguedad : ""
-    if(newData.cochera === undefined)
-        newData.cochera = false
-    return newData
-}
-
-export default FormUpdatePropiedad
+export default FormNewPropiedadRefactor

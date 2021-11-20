@@ -28,6 +28,7 @@ import { getUserDataReducer } from './ducks/userDataReducer'
 import { setLoadingReducer } from './ducks/loadingReducer'
 import { filtrosReportesReducer } from './ducks/reportesFiltersReducer'
 import { getReporteReducer } from './ducks/reporteReducer'
+import { getTiposPropiedadReducer } from './ducks/tiposPropiedadReducer'
 const reducer = combineReducers({
     user: getUserReducer,
     propiedades: getPropiedadesReducer,
@@ -55,7 +56,8 @@ const reducer = combineReducers({
     userData: getUserDataReducer,
     generalLoading: setLoadingReducer,
     filtrosReportes: filtrosReportesReducer,
-    reportes: getReporteReducer
+    reportes: getReporteReducer,
+    tipos_propiedad: getTiposPropiedadReducer
 })
 
 const middleware = [thunk]

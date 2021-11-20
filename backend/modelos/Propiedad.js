@@ -43,6 +43,9 @@ const propiedadSchema = new mongoose.Schema({
     },
     longitud: {
         type: Number
+    },
+    antiguedad:{
+        type: String
     }
 })
 propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
@@ -54,7 +57,7 @@ propiedadSchema.methods.estadoPropiedad = function estadoPropiedad(){
     return this.estado = "No disponible"
 }
 
-propiedadSchema.methods.rellenarCampos = function({ubicacion, estado_propiedad, descripcion, entorno, imagenes, precio, superficie}){
+propiedadSchema.methods.rellenarCampos = function({ubicacion, estado_propiedad, descripcion, entorno, imagenes, precio, superficie, antiguedad}){
     this.ubicacion = ubicacion
     this.estado_propiedad = estado_propiedad
     this.descripcion = descripcion
@@ -62,6 +65,7 @@ propiedadSchema.methods.rellenarCampos = function({ubicacion, estado_propiedad, 
     this.imagenes = imagenes
     this.precio = precio
     this.superficie = superficie
+    this.antiguedad = antiguedad
 }
 
 const propiedad = mongoose.model('Propiedad', propiedadSchema)

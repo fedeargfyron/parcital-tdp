@@ -5,12 +5,17 @@ const tipoPropiedadSchema = new mongoose.Schema({
     tipo: {
         type: String,
         required: true
-    }
+    },
+    descripcion: {
+        type: String,
+        required: true
+    },
 }, herencia)
 
 
-tipoPropiedadSchema.methods.rellenarCampos = function({tipo_propiedad}){
+tipoPropiedadSchema.methods.rellenarCampos = function({tipo_propiedad, tipo_descripcion}){
     this.tipo = tipo_propiedad
+    this.descripcion = tipo_descripcion
 }
 
 const Tipo_Propiedad = mongoose.model('Tipo Propiedad', tipoPropiedadSchema)
@@ -27,19 +32,16 @@ const tipoCasaSchema = new mongoose.Schema({
     },
     cantidad_baños:{
         type: Number
-    },
-    antiguedad:{
-        type: String
     }
 })
 
 
-tipoCasaSchema.methods.rellenarCampos = function({cochera, cant_baños, cant_habitaciones, cant_pisos, antiguedad}){
+tipoCasaSchema.methods.rellenarCampos = function({cochera, cant_baños, cant_habitaciones, cant_pisos, tipo_descripcion}){
     this.cochera = cochera
     this.cantidad_baños = cant_baños
     this.cantidad_habitaciones = cant_habitaciones
     this.cantidad_pisos = cant_pisos
-    this.antiguedad = antiguedad
+    this.descripcion = tipo_descripcion
     return this
 }
 
@@ -66,13 +68,14 @@ const tipoDepartamentoSchema = new mongoose.Schema({
     }
 })
 
-tipoDepartamentoSchema.methods.rellenarCampos = function({piso, acceso, cochera, cant_baños, cant_habitaciones, restricciones}){
+tipoDepartamentoSchema.methods.rellenarCampos = function({piso, acceso, cochera, cant_baños, cant_habitaciones, restricciones, tipo_descripcion}){
     this.piso = piso
     this.acceso = acceso
     this.cochera = cochera
     this.cantidad_baños = cant_baños
     this.cantidad_habitaciones = cant_habitaciones
     this.restricciones = restricciones
+    this.descripcion = tipo_descripcion
     return this
 }
 

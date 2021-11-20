@@ -37,7 +37,7 @@ function IngresoPropiedadesStrategy() {
           }
         }, {
           '$sort': {
-            'datos.fecha': 1
+            'datos.fecha': -1
           }
         }
       ]

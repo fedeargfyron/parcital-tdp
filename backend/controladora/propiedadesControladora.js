@@ -125,30 +125,27 @@ const setPropiedad = async (req, res) => {
             message: 'No existe o especifique el número de calle'
           })
       }
-      let builder
-      if(req.body.tipo_propiedad === "Departamento"){
-        builder = new DepartamentoBuilder()
-      }
-      else if(req.body.tipo_propiedad === "Casa"){
-        builder = new CasaBuilder()
+      let tipo_propiedad
+      if(req.body.tipo === "Nuevo"){
+        tipo_propiedad = await BuildPropiedad(req.body)
       }
       else{
-        builder = new DefaultBuilder()
+        tipo_propiedad = await Tipo_Propiedad.findById(req.body.tipo)
       }
-      let tipo_propiedad = new PropiedadMaker(req.body).construct(builder)
-
+      
       let newPropiedad = new propiedad({
           tipo: tipo_propiedad._id,
           latitud: resultado[0].latitude,
           longitud: resultado[0].longitude
       })
+
       newPropiedad.rellenarCampos(req.body)
 
       if(req.body.dueño !== ""){
           newPropiedad.dueño = req.body.dueño
       }
       newPropiedad.estadoPropiedad()
-      await tipo_propiedad.save()
+      await 
       await newPropiedad.save()
       
       LogsPropiedad(newPropiedad, tipo_propiedad, req.user._id, "Agregar")
@@ -170,7 +167,6 @@ const setPropiedad = async (req, res) => {
 const updatePropiedad = async (req, res) => {
     try {
         const editPropiedad = await propiedad.findById(req.params.id)
-        const tipo_propiedad = await Tipo_Propiedad.findById(editPropiedad.tipo)
         const geocoder = NodeGeocoder(options)
         const resultado = await geocoder.geocode({
           address: req.body.ubicacion + 'Rosario, Santa Fe',
@@ -193,12 +189,20 @@ const updatePropiedad = async (req, res) => {
               message: 'No existe o especifique el número de calle'
             })
         }
-        tipo_propiedad.rellenarCampos(req.body)
+        let tipo_propiedad
+        if(req.body.tipo === "Nuevo"){
+          tipo_propiedad = await BuildPropiedad(req.body)
+        }
+        else{
+          tipo_propiedad = await Tipo_Propiedad.findById(req.body.tipo)
+        }
+        
         editPropiedad.rellenarCampos(req.body)
-        editPropiedad.latitud = resultado[0].latitude,
+        editPropiedad.tipo = tipo_propiedad._id
+        console.log(tipo_propiedad)
+        editPropiedad.latitud = resultado[0].latitude
         editPropiedad.longitud = resultado[0].longitude
         editPropiedad.estadoPropiedad()
-        await tipo_propiedad.save()
         await editPropiedad.save()
         LogsPropiedad(editPropiedad, tipo_propiedad, req.user._id, "Modificar")
         res.send({
@@ -216,6 +220,23 @@ const updatePropiedad = async (req, res) => {
     }
 }
 
+const BuildPropiedad = async (body) => {
+  let builder
+  if(body.tipo_propiedad === "Departamento"){
+    builder = new DepartamentoBuilder()
+  }
+  else if(body.tipo_propiedad === "Casa"){
+    builder = new CasaBuilder()
+  }
+  else{
+    builder = new DefaultBuilder()
+  }
+  let tipoPropiedad = new PropiedadMaker(body).construct(builder)
+
+  await tipoPropiedad.save()
+  return tipoPropiedad
+}
+
 const removePropiedad = async (req, res) => {
   try {
     const deletePropiedad = await propiedad.findById(req.params.id)
@@ -227,7 +248,6 @@ const removePropiedad = async (req, res) => {
           message: 'No se puede eliminar la propiedad porque tiene un servicio activo'
         })
     await deletePropiedad.remove()
-    await tipo_propiedad.remove()
     LogsPropiedad(deletePropiedad, tipo_propiedad, req.user._id, "Eliminar")
     res.send({
       type: 'success',

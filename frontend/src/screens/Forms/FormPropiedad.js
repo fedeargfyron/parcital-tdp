@@ -3,7 +3,7 @@ import './Forms.css'
 import HeaderPage from '../../components/HeaderPage'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import FormNewPropiedad from './FormPropiedadComponents/FormNewPropiedad'
+import FormNewPropiedadRefactor from './FormPropiedadComponents/FormNewPropiedadRefactor'
 import axios from 'axios'
 import FormUpdatePropiedad from './FormPropiedadComponents/FormUpdatePropiedad'
 import messageAdder from '../../MessageAdder'
@@ -55,7 +55,7 @@ const FormPropiedad = () => {
                 <HeaderPage titulo="Propiedad"/>
                 {modoUpdate 
                 ? <FormUpdatePropiedad id={id} sendPropiedad={sendPropiedad}/>
-                : <FormNewPropiedad sendPropiedad={sendPropiedad}/>
+                : <FormNewPropiedadRefactor sendPropiedad={sendPropiedad}/>
                 }
             </div>
         </div>
