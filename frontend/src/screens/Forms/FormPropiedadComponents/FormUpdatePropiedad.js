@@ -189,7 +189,7 @@ const FormUpdatePropiedad = ({id, sendPropiedad}) => {
             </div>
 
             <div className="inputs-container">
-                <input onChange={e => handle(e)} value={data.tipo_descripcion} id="tipo_descripcion" type="text" placeholder="Descripcion tipo de propiedad" />
+                <input onChange={e => handle(e)} value={data.tipo_descripcion} id="tipo_descripcion" type="text" placeholder="Descripcion tipo de propiedad" required />
             </div>
 
             {(data.tipo_propiedad === "Casa" || data.tipo_propiedad === "Departamento") && 
