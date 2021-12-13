@@ -30,4 +30,6 @@ const FiltroIngresoPropiedades = () => {
     )
 }
 
+
+
 export default FiltroIngresoPropiedades

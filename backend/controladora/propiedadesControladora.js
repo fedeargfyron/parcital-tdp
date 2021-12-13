@@ -67,10 +67,13 @@ const getPropiedad = async (req, res) => {
         pipeline[0].$match._id = mongoose.Types.ObjectId(req.params.id)
         if(req.query.gestion)
           pipeline = pipelineForVisits(pipeline)
+
+        console.log(pipeline)
         const aggCursor = await MongoClientCreator('propiedads', pipeline)
         await aggCursor.forEach(propiedad => {
             propiedadDto = propiedad
         })
+
         if(req.query.gestion){
           if(propiedadDto.agenteDatos.horarios)
           propiedadDto.agenteDatos.horarios = await Promise.all(propiedadDto.agenteDatos.horarios.map(async horario => {
@@ -290,12 +293,14 @@ const pipelineGenerator = () => {
           }
           },{
           '$unwind': {
-            'path': '$tipoDatos'
+            'path': '$tipoDatos',
+            'preserveNullAndEmptyArrays': true
             }
         },
         {
         '$unwind': {
-            'path': '$dueñoDatos'
+            'path': '$dueñoDatos',
+            'preserveNullAndEmptyArrays': true
             }
         }
       ]
@@ -373,7 +378,8 @@ const pipelineForVisits = (pipeline) => {
         }
       }, {
         '$unwind': {
-          'path': '$servicioDatos'
+          'path': '$servicioDatos',
+          'preserveNullAndEmptyArrays': true
         }
       }, {
         '$lookup': {
@@ -401,7 +407,8 @@ const pipelineForVisits = (pipeline) => {
         }
       }, {
         '$unwind': {
-          'path': '$agenteDatos'
+          'path': '$agenteDatos',
+          'preserveNullAndEmptyArrays': true
         }
       }, {'$lookup': {
         'from': 'visitas',

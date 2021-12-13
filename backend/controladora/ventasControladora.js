@@ -72,13 +72,9 @@ const setVenta = async (req, res) => {
         if (index > -1) {
             prop.servicios.splice(index, 1);
         }
-        console.log(venta)
-        console.log(servicioFinalizado)
-        /*
         await servicioFinalizado.save()
         await prop.save()
         await venta.save()
-        */
         res.send({
             type: 'success',
             title: 'Gestion de ventas',
